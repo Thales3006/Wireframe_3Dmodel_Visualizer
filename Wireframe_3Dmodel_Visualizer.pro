@@ -10,9 +10,11 @@ CONFIG += c++17
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    geometry.cpp
 
 HEADERS += \
+    geometry.h \
     mainwindow.h
 
 FORMS += \
