@@ -20,12 +20,17 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         point.y = (float)i;
     }
 
-    Point point1(canvas.width()/2, canvas.height()/2, 10, 255, 0, 0);
-    Point point2(canvas.width()/2, canvas.height()/2+1, 10, 255, 255, 0);
-    Point point3(canvas.width()/2+10, canvas.height()/2+45, 0, 20, 100, 244);
-    point1.draw(canvas);
-    point2.draw(canvas);
-    point3.draw(canvas);
+    Point point1(canvas.width()/2-100, canvas.height()/2, 10, 255, 0, 0);
+    Point point2(canvas.width()/2+200, canvas.height()/2-145, 0, 0, 255, 0);
+    Point point3(canvas.width()/2+100, canvas.height()/2+145, 0, 0, 0, 255);
+
+
+    Line linha1(point1, point3);
+    Line linha2(point1, point2);
+    Line linha3(point3, point2);
+    linha1.draw(canvas);
+    linha2.draw(canvas);
+    linha3.draw(canvas);
     // fim da brincadeira
 
     ui -> myFrame -> setPixmap( QPixmap::fromImage(canvas));
