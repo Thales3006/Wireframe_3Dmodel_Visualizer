@@ -14,13 +14,18 @@ public:
     void draw(QImage& canvas);
 };
 
-/* Não implementados ainda
 class Line
 {
 public:
-    Line(Point p1, Point p2);
+    Point p1;
+    Point p2;
+
+    Line(Point p10, Point p20);
+
+    void draw(QImage& canvas);
 };
 
+/* Não implementados ainda
 class Polygon
 {
 public:
