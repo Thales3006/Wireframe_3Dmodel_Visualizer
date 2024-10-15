@@ -46,5 +46,5 @@ MainWindow::~MainWindow()
 
 void MainWindow::paintEvent(QPaintEvent *event){
     QPainter painter(this);
-    painter.drawRect(QRect(canvas.x()-1, canvas.y()-1, canvas.width()+1,canvas.height()+1);
+//    painter.drawRect(QRect(canvas.x()-1, canvas.y()-1, canvas.width()+1,canvas.height()+1);
 }
