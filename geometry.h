@@ -25,12 +25,17 @@ public:
     void draw(QImage& canvas);
 };
 
-/* Não implementados ainda
 class Polygon
 {
 public:
-    Polygon(Point p1, Point p2, Point p3);
+    Point p1;
+    Point p2;
+    Point p3;
+
+    Polygon(Point q1, Point q2, Point q3);
+
+    void draw(QImage& canvas);
+    void drawHollow(QImage& canvas);
 };
-*/
 
 #endif // GEOMETRY_H

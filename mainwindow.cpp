@@ -24,13 +24,16 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     Point point2(canvas.width()/2+200, canvas.height()/2-145, 0, 0, 255, 0);
     Point point3(canvas.width()/2+100, canvas.height()/2+145, 0, 0, 0, 255);
 
-
+    /*
     Line linha1(point1, point3);
     Line linha2(point1, point2);
     Line linha3(point3, point2);
     linha1.draw(canvas);
     linha2.draw(canvas);
     linha3.draw(canvas);
+    */
+    Polygon poly(point1,point2,point3);
+    poly.draw(canvas);
     // fim da brincadeira
 
     ui -> myFrame -> setPixmap( QPixmap::fromImage(canvas));
