@@ -43,7 +43,7 @@ void Polygon::draw(QImage& canvas){
     Line l(p1,p2);
     float dist1 = 1/sqrt(pow(p1.x-p3.x,2)+pow(p1.y-p3.y,2));
     float dist2 = 1/sqrt(pow(p1.x-p3.x,2)+pow(p1.y-p3.y,2));
-    float dist = dist1 > dist2? dist1 : dist2;
+    float dist = (dist1 > dist2? dist1 : dist2) * 0.95;
 
     for(float t=0; t<=1; t+=dist){
         //coords transition
