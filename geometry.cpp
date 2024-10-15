@@ -21,7 +21,9 @@ Line::Line(Point p10, Point p20) : p1(p10.x,p10.y,p10.z, p10.r,p10.g,p10.b), p2(
 void Line::draw(QImage& canvas){
     Point p(p1.x-p2.x, p1.y-p2.y, 0, 0,0,0);
     float dist = 1/sqrt(pow(p.x,2)+pow(p.y,2));
-    for(float t=0; t<=1; t+=dist){
+
+    float t = 0;
+    while(t <= 1){
         //coords transition
         p.x = (1-t)*p1.x + t*p2.x;
         p.y = (1-t)*p1.y + t*p2.y;
@@ -32,6 +34,7 @@ void Line::draw(QImage& canvas){
         p.b = (1-t)*p1.b + t*p2.b;
 
         p.draw(canvas);
+        t += dist;
     }
 }
 
@@ -45,7 +48,8 @@ void Polygon::draw(QImage& canvas){
     float dist2 = 1/sqrt(pow(p1.x-p3.x,2)+pow(p1.y-p3.y,2));
     float dist = (dist1 > dist2? dist1 : dist2) * 0.95;
 
-    for(float t=0; t<=1; t+=dist){
+    float t = 0;
+    while(t <= 1){
         //coords transition
         l.p1.x = (1-t)*p1.x + t*p3.x;
         l.p2.x = (1-t)*p2.x + t*p3.x;
@@ -67,6 +71,7 @@ void Polygon::draw(QImage& canvas){
         l.p2.b = (1-t)*p2.b + t*p3.b;
 
         l.draw(canvas);
+        t += dist;
     }
 }
 
