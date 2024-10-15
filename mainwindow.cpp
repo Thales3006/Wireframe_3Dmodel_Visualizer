@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     // brincando com pontos
     Point point(0, 0, 0, 255, 255, 255);
-    for(int i=0; i < canvas.height(); i++){
+    for(int i=0; i <= canvas.height(); i++){//essa igualdade me incomoda
         for(int j=0; j < canvas.width(); j++){
             point.x = (float)j;
             point.draw(canvas);
@@ -42,4 +42,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::paintEvent(QPaintEvent *event){
+    QPainter painter(this);
+    painter.drawRect(QRect(canvas.x()-1, canvas.y()-1, canvas.width()+1,canvas.height()+1);
 }
