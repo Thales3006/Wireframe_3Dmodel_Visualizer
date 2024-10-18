@@ -2,6 +2,7 @@
 #define GEOMETRY_H
 
 #include <QMainWindow>
+#include <iostream>
 
 class Geometry{};
 
@@ -38,6 +39,7 @@ public:
 
     void draw(QImage& canvas);
     void drawHollow(QImage& canvas);
+
 };
 
 #endif // GEOMETRY_H

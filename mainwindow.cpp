@@ -53,13 +53,11 @@ MainWindow::~MainWindow()
 
 void MainWindow::paintEvent(QPaintEvent *event){
     QPainter painter(this);
-    painter.drawPoint(QPoint(point.x,point.y));
+    painter.drawPoint(QPoint(point.x,point.y));// posteriormente retirar
 
-    for(int i=0; i<displayFile.size();i++){
-        if(typeof(displayFile[i])==Polygon){
-            Polygon poly = displayFile[i];
-            poly.draw(canvas);
-        }
+    for(int i = 0; i < displayFile.size(); i++){
+        displayFile[i].draw(canvas);
     }
+    ui -> myFrame -> setPixmap( QPixmap::fromImage(canvas));
 
 }
