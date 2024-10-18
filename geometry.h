@@ -3,7 +3,9 @@
 
 #include <QMainWindow>
 
-class Point
+class Geometry{};
+
+class Point : public Geometry
 {
 public:
     float x, y, z;
@@ -14,7 +16,7 @@ public:
     void draw(QImage& canvas);
 };
 
-class Line
+class Line : public Geometry
 {
 public:
     Point p1;
@@ -25,7 +27,7 @@ public:
     void draw(QImage& canvas);
 };
 
-class Polygon
+class Polygon : public Geometry
 {
 public:
     Point p1;
