@@ -4,7 +4,12 @@
 #include <QMainWindow>
 #include <iostream>
 
-class Geometry{};
+class Geometry{
+public:
+    virtual void draw(QImage& canvas){
+        std::cout << "Rewrite this function!" << std::endl;
+    }
+};
 
 class Point : public Geometry
 {

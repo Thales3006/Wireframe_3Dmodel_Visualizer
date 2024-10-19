@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QTimer>
 #include "geometry.h"
 #include <math.h>
 
@@ -11,10 +12,14 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     canvas = QImage(ui->myFrame->width(), ui->myFrame->height(), QImage::Format_RGB888);
 
+    QTimer* timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this, QOverload<>::of(&MainWindow::update));
+    timer->start(16); // 16ms entre cada atualização (~60 FPS)
+
     // brincando com pontos
     Point corner1(0,0,0, 255,255,255);
-    Point corner2(0,canvas.height(),0, 255,255,255);
-    Point corner3(canvas.width(),0,0, 255,255,255);
+    Point corner2(0,canvas.height()-1,0, 255,255,255);
+    Point corner3(canvas.width()-1,0,0, 255,255,255);
     Point corner4(canvas.width(),canvas.height(),0, 255,255,255);
 
     Polygon back1(corner2, corner1, corner3);
@@ -34,13 +39,17 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     linha2.draw(canvas);
     linha3.draw(canvas);
     */
+    Line linha1(Point(0,0,0, 255,0,0), Point(40,500,0, 0,255,0));
+    Point point(120,80,20, 0,0,255);
 
     Polygon poly(point1,point2,point3);
     // poly.draw(canvas);
 
-    displayFile.push_back(back1);
-    displayFile.push_back(back2);
-    displayFile.push_back(poly);
+    displayFile.push_back(std::make_unique<Polygon>(back1));
+    displayFile.push_back(std::make_unique<Polygon>(back2));
+    displayFile.push_back(std::make_unique<Polygon>(poly));
+    displayFile.push_back(std::make_unique<Line>(linha1));
+    displayFile.push_back(std::make_unique<Point>(point));
     // fim da brincadeira
 
     ui -> myFrame -> setPixmap( QPixmap::fromImage(canvas));
@@ -54,9 +63,10 @@ MainWindow::~MainWindow()
 void MainWindow::paintEvent(QPaintEvent *event){
     QPainter painter(this);
     painter.drawPoint(QPoint(point.x,point.y));// posteriormente retirar
+    point.x++;
 
-    for(int i = 0; i < displayFile.size(); i++){
-        displayFile[i].draw(canvas);
+    for(int i = 0; i < (int)displayFile.size(); i++){
+        displayFile[i]->draw(canvas);
     }
     ui -> myFrame -> setPixmap( QPixmap::fromImage(canvas));
 

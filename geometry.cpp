@@ -12,7 +12,9 @@ Point::Point(float x0, float y0, float z0, unsigned char r0, unsigned char g0, u
 }
 
 void Point::draw(QImage& canvas){
-    canvas.setPixel(x,y, qRgb(r,g,b));
+    int nY = canvas.height()-y;
+    if(x >= 0 && x < canvas.width() && nY >= 0 && nY < canvas.height())
+        canvas.setPixel(x,nY, qRgb(r,g,b));
 }
 
 Line::Line(Point p10, Point p20) : p1(p10.x,p10.y,p10.z, p10.r,p10.g,p10.b), p2(p20.x,p20.y,p20.z, p20.r,p20.g,p20.b){
