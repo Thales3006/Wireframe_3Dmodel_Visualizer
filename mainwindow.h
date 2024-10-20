@@ -25,6 +25,7 @@ public:
     QGraphicsScene* scene;
     QGraphicsView* view;
     QGraphicsPixmapItem* pixmapItem;
+    QImage canvas;
 
     DisplayFile displayFile;
 
