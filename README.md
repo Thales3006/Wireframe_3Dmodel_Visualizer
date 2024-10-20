@@ -11,7 +11,7 @@ and diving in a lesser abstract tool like [OpenGL](https://www.opengl.org).
 
 ## Project Objectives
 
-- [ ] Create a display file and display its contents on screen
+- [x] Create a display file and display its contents on screen
 
 - [ ] implement Transformations using matrices
 
