@@ -33,11 +33,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     Polygon poly(point1,point2,point3);
 
-    displayFile.insert(poly);
-    displayFile.insert(linha1);
-    displayFile.insert(point11);
-    displayFile.insert(point12);
-    displayFile.insert(point13);
+    displayFile.insert("triangulo", poly);
+    displayFile.insert("linha", linha1);
+    displayFile.insert("ponto_cima", point11);
+    displayFile.insert("ponto_esquerda", point12);
+    displayFile.insert("ponto_direita", point13);
 
     displayFile.drawAll(canvas);
 
