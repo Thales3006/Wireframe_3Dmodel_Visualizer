@@ -2,9 +2,6 @@
 #include "ui_mainwindow.h"
 #include "geometry.h"
 
-
-QImage canvas;
-
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
