@@ -3,8 +3,8 @@
 
 #include <QMainWindow>
 #include <QPainter>
-//#include <memory>
 #include "geometry.h"
+#include "displayfile.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -17,8 +17,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    std::vector<std::unique_ptr<Geometry>> displayFile;
-    Point point = Point(10,10,0, 0,0,0);
+    DisplayFile displayFile;
 
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
