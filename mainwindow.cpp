@@ -33,16 +33,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 
     Polygon poly(point1,point2,point3);
 
-    //adicionando no displayFile
-    /*
-    displayFile.insert("a", poly);
-    displayFile.insert("a", linha1);
-    displayFile.insert("a", point11);
-    displayFile.insert("a", point12);
-    displayFile.insert("a", point13);
-*/
-
-
     displayFile.insert(poly);
     displayFile.insert(linha1);
     displayFile.insert(point11);
