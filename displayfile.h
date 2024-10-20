@@ -16,6 +16,8 @@ public:
     void remove(int index);
     void pop();
 
+    std::string getName(int index);
+
     void drawAll(QImage& canvas);
 
 };

@@ -16,11 +16,10 @@ void DisplayFile::insert(std::string name, Polygon obj){
 }
 
 void DisplayFile::remove(int index){
-    if(displayFileList.size() <= 0) return;
+    if(displayFileList.size() <= 0 ||index < 0) return;
 
     displayFileList.erase(displayFileList.begin() + index);
     names.erase(names.begin() + index);
-
 }
 
 void DisplayFile::pop(){
@@ -28,6 +27,12 @@ void DisplayFile::pop(){
 
     displayFileList.pop_back();
     names.pop_back();
+}
+
+std::string DisplayFile::getName(int index){
+    if((int)displayFileList.size() <= index) return NULL;
+
+    return names[index];
 }
 
 void DisplayFile::drawAll(QImage& canvas){
