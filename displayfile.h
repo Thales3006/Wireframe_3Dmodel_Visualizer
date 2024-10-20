@@ -13,6 +13,7 @@ public:
     void insert(Polygon obj);
 
     void remove(int index);
+    void pop();
 
     void drawAll(QImage& canvas);
 

@@ -13,11 +13,20 @@ void DisplayFile::insert(Polygon obj){
 }
 
 void DisplayFile::remove(int index){
+    if(displayFileList.size() <= 0) return;
+
     displayFileList.erase(displayFileList.begin() + index);
+
+}
+
+void DisplayFile::pop(){
+    if(displayFileList.size() <= 0) return;
+
+    displayFileList.pop_back();
 }
 
 void DisplayFile::drawAll(QImage& canvas){
-    for(int i = 0; i < (int)displayFileList.size(); i++){
-        displayFileList[i]->draw(canvas);
+    for(const auto& object : displayFileList){
+        object->draw(canvas);
     }
 }
