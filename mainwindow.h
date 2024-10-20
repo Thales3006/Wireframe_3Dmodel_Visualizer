@@ -3,7 +3,11 @@
 
 #include <QMainWindow>
 #include <QPainter>
-#include "geometry.h"
+#include <QTimer>
+#include <QGraphicsView>
+#include <QGraphicsScene>
+#include <QGraphicsPixmapItem>
+
 #include "displayfile.h"
 
 QT_BEGIN_NAMESPACE
@@ -17,6 +21,11 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+    QTimer* timer;
+    QGraphicsScene* scene;
+    QGraphicsView* view;
+    QGraphicsPixmapItem* pixmapItem;
+
     DisplayFile displayFile;
 
     MainWindow(QWidget *parent = nullptr);

@@ -14,17 +14,14 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QLabel" name="myFrame">
+   <widget class="QGraphicsView" name="visualizador">
     <property name="geometry">
      <rect>
-      <x>30</x>
-      <y>30</y>
-      <width>501</width>
-      <height>431</height>
+      <x>20</x>
+      <y>20</y>
+      <width>511</width>
+      <height>371</height>
      </rect>
-    </property>
-    <property name="text">
-     <string>canvas</string>
     </property>
    </widget>
   </widget>
@@ -34,7 +31,7 @@
      <x>0</x>
      <y>0</y>
      <width>800</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

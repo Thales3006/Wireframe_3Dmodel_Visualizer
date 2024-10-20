@@ -7,6 +7,7 @@
 class Geometry{
 public:
     virtual void draw(QImage& canvas){
+        Q_UNUSED(canvas);
         std::cout << "Rewrite this function!" << std::endl;
     }
 };
