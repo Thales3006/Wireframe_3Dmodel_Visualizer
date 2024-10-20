@@ -2,8 +2,16 @@
 #define GEOMETRY_H
 
 #include <QMainWindow>
+#include <iostream>
 
-class Point
+class Geometry{
+public:
+    virtual void draw(QImage& canvas){
+        std::cout << "Rewrite this function!" << std::endl;
+    }
+};
+
+class Point : public Geometry
 {
 public:
     float x, y, z;
@@ -14,7 +22,7 @@ public:
     void draw(QImage& canvas);
 };
 
-class Line
+class Line : public Geometry
 {
 public:
     Point p1;
@@ -25,7 +33,7 @@ public:
     void draw(QImage& canvas);
 };
 
-class Polygon
+class Polygon : public Geometry
 {
 public:
     Point p1;
@@ -36,6 +44,7 @@ public:
 
     void draw(QImage& canvas);
     void drawHollow(QImage& canvas);
+
 };
 
 #endif // GEOMETRY_H
