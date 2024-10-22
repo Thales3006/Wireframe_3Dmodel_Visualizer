@@ -17,7 +17,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     scene = new QGraphicsScene(this);
     view = new QGraphicsView(scene, ui->visualizador);
 
-    // brincando com formas geometricas
 
     Point point1(canvas.width()/2-100, canvas.height()/2, 10, 255, 0, 0);
     Point point2(canvas.width()/2+200, canvas.height()/2-145, 0, 0, 255, 0);
