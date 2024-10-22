@@ -30,7 +30,7 @@ void DisplayFile::pop(){
 }
 
 std::string DisplayFile::getName(int index){
-    if((int)displayFileList.size() <= index) return NULL;
+    if((int)displayFileList.size() <= index) return "";
 
     return names[index];
 }
