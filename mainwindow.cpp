@@ -2,19 +2,23 @@
 #include "ui_mainwindow.h"
 #include "geometry.h"
 #include "matrix.h"
+#include "matrix4x4.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
 
-    Matrix m({
-      {0, 0, 0, 0},
-      {1, 2, 3, 4},
-      {1, 2, 3, 4},
-      {1, 2, 3, 4}
-    });
-
+    float a[4][4] = {
+        {1, 2, 3, 4},
+        {1, 2, 3, 4},
+        {1, 2, 3, 4},
+        {1, 2, 3, 4}
+    };
+    Matrix4x4 m(a);
+    Matrix4x4 n = Matrix4x4::identity();
     m.print();
+    n.print();
+    (n*4.0).print();
 
     canvas = QImage(ui->visualizador->width(), ui->visualizador->height(), QImage::Format_RGB888);
     canvas.fill(Qt::white);
