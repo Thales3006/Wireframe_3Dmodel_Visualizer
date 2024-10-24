@@ -12,12 +12,14 @@ SOURCES += \
     displayfile.cpp \
     main.cpp \
     mainwindow.cpp \
-    geometry.cpp
+    geometry.cpp \
+    matrix.cpp
 
 HEADERS += \
     displayfile.h \
     geometry.h \
-    mainwindow.h
+    mainwindow.h \
+    matrix.h
 
 FORMS += \
     mainwindow.ui
