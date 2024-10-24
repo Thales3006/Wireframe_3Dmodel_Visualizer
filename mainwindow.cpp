@@ -1,10 +1,20 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "geometry.h"
+#include "matrix.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    Matrix m({
+      {0, 0, 0, 0},
+      {1, 2, 3, 4},
+      {1, 2, 3, 4},
+      {1, 2, 3, 4}
+    });
+
+    m.print();
 
     canvas = QImage(ui->visualizador->width(), ui->visualizador->height(), QImage::Format_RGB888);
     canvas.fill(Qt::white);
