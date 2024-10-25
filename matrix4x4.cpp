@@ -111,3 +111,19 @@ Matrix4x4 Matrix4x4::identity() {
         I.set(i,i,1.0);
     return I;
 }
+
+void Matrix4x4::rotate(float angle, int planeI, int planeJ) {
+    Matrix4x4 id = Matrix4x4::identity();
+    id.set(planeI, planeI, cos(angle));
+    id.set(planeI, planeJ, -sin(angle));
+    id.set(planeJ, planeI, sin(angle));
+    id.set(planeJ, planeJ, cos(angle));
+
+    Matrix4x4 result = (*this) * id;
+
+    *this = result;
+}
+
+void Matrix4x4::transform() {
+    //
+}

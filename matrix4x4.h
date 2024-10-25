@@ -1,5 +1,6 @@
 #ifndef MATRIX4X4_H
 #define MATRIX4X4_H
+#include <cmath>
 
 class Matrix4x4 {
     float arr[4][4];
@@ -20,6 +21,9 @@ public:
     Matrix4x4 operator*(float const& f);
 
     Matrix4x4 transpose();
+
+    void rotate(float angle, int planeI, int planeJ);
+    void transform();
 
     void print();
 
