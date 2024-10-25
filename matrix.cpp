@@ -91,3 +91,24 @@ template <typename T> void Matrix<T>::print() {
     }
     std::cout << "\n}\n";
 }
+
+template <typename T>
+Matrix<T> Matrix<T>::identity(size_t n){
+    Matrix<T> id(n,n);
+    for(size_t i=0; i<n; i++){
+        id.set(i,i, static_cast<T>(1));
+    }
+    return id;
+}
+
+template <typename T> void Matrix<T>::rotate(Matrix<T> angle, int planeI, int planeJ){
+    Matrix<T> id = identity(dimensions[1]);
+    id.set(planeI, planeI, cos(angle));
+    id.set(planeI, planeJ, -sin(angle));
+    id.set(planeJ, planeI, sin(angle));
+    id.set(planeJ, planeJ, cos(angle));
+
+    Matrix<T> result = (*this) * id;
+
+    *this = result;
+}

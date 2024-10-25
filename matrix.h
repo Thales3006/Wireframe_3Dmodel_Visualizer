@@ -2,6 +2,8 @@
 #define MATRIX_H
 #include <optional>
 
+#include <cmath>
+
 template <typename T> class Matrix {
     T** arr;
     public:
@@ -11,8 +13,12 @@ template <typename T> class Matrix {
         template <typename Fn> Matrix(size_t rows, size_t cols, Fn const& func);
         ~Matrix();
 
+        Matrix<T> identity(size_t n);
+
         void set(int i, int j, T val);
         std::optional<T> get(int i, int j);
+        void rotate(Matrix<T>, int plane1, int plane2);
+
 
         std::optional<Matrix<T>> operator+(Matrix<T>& m);
         std::optional<Matrix<T>> operator*(Matrix<T>& m);
