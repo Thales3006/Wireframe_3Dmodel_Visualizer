@@ -101,7 +101,7 @@ Matrix<T> Matrix<T>::identity(size_t n){
     return id;
 }
 
-template <typename T> void Matrix<T>::rotate(Matrix<T> angle, int planeI, int planeJ){
+template <typename T> void Matrix<T>::rotate(float angle, int planeI, int planeJ){
     Matrix<T> id = identity(dimensions[1]);
     id.set(planeI, planeI, cos(angle));
     id.set(planeI, planeJ, -sin(angle));

@@ -1,7 +1,6 @@
 #ifndef MATRIX_H
 #define MATRIX_H
 #include <optional>
-
 #include <cmath>
 
 template <typename T> class Matrix {
@@ -17,7 +16,7 @@ template <typename T> class Matrix {
 
         void set(int i, int j, T val);
         std::optional<T> get(int i, int j);
-        void rotate(Matrix<T>, int plane1, int plane2);
+        void rotate(float angle, int plane1, int plane2);
 
 
         std::optional<Matrix<T>> operator+(Matrix<T>& m);
