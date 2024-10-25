@@ -19,7 +19,8 @@ HEADERS += \
     displayfile.h \
     geometry.h \
     mainwindow.h \
-    matrix.h
+    matrix.h \
+    vectorn.h
 
 FORMS += \
     mainwindow.ui
