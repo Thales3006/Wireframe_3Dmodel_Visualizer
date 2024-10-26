@@ -1,4 +1,5 @@
 #include "geometry.h"
+#include "matrix.h"
 #include <math.h>
 
 Point::Point(float x0, float y0, float z0, unsigned char r0, unsigned char g0, unsigned char b0){
@@ -42,6 +43,21 @@ void Line::draw(QImage& canvas){
 
 Polygon::Polygon(Point q1, Point q2, Point q3) : p1(q1.x,q1.y,q1.z,q1.r,q1.g,q1.b), p2(q2.x,q2.y,q2.z,q2.r,q2.g,q2.b), p3(q3.x,q3.y,q3.z,q3.r,q3.g,q3.b){
 
+}
+
+void Polygon::rotate3d(Vector3<float> rot){
+    Matrix4x4 m = Matrix4x4::identity();
+    m.set(0,0,p1.x);
+    m.set(0,1,p1.y);
+    m.set(0,2,p1.z);
+
+    m.rotate(rot.x, 1,2);
+    m.rotate(rot.y, 0,2);
+    m.rotate(rot.z, 0,1);
+
+    p1.x = m.get(0,0);
+    p1.y = m.get(0,1);
+    p1.x = m.get(0,2);
 }
 
 void Polygon::draw(QImage& canvas){

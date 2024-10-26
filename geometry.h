@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include <iostream>
+#include "matrix4x4.h"
+#include "vectorn.h"
 
 class Geometry{
 public:
@@ -42,6 +44,8 @@ public:
     Point p3;
 
     Polygon(Point q1, Point q2, Point q3);
+
+    void rotate3d(Vector3<float> rot);
 
     void draw(QImage& canvas);
     void drawHollow(QImage& canvas);

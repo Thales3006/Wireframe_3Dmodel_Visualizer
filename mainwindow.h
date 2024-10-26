@@ -9,6 +9,7 @@
 #include <QGraphicsPixmapItem>
 
 #include "displayfile.h"
+#include "vectorn.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {

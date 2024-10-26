@@ -21,8 +21,8 @@ HEADERS += \
     geometry.h \
     mainwindow.h \
     matrix.h \
-    vectorn.h \
-    matrix4x4.h
+    matrix4x4.h \
+    vectorn.h
 
 FORMS += \
     mainwindow.ui
