@@ -8,6 +8,9 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 {
     ui->setupUi(this);
 
+    Matrix<float> b(3, 2);
+    b.print();
+
     float a[4][4] = {
         {1, 2, 3, 4},
         {1, 2, 3, 4},
