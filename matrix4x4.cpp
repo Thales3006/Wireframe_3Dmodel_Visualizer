@@ -124,6 +124,13 @@ void Matrix4x4::rotate(float angle, int planeI, int planeJ) {
     *this = result;
 }
 
-void Matrix4x4::transform() {
-    //
+void Matrix4x4::transform(float x, float y, float z) {
+    Matrix4x4 id = Matrix4x4::identity();
+    id.set(0,3, x);
+    id.set(1,3, y);
+    id.set(2,3, z);
+
+    Matrix4x4 result = (*this) * id;
+
+    *this = result;
 }
