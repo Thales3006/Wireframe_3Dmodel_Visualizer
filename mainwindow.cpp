@@ -1,27 +1,11 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "geometry.h"
-#include "matrix.h"
 #include "matrix4x4.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
-    Matrix<float> b(3, 2);
-    b.print();
-
-    float a[4][4] = {
-        {1, 2, 3, 4},
-        {1, 2, 3, 4},
-        {1, 2, 3, 4},
-        {1, 2, 3, 4}
-    };
-    Matrix4x4 m(a);
-    Matrix4x4 n = Matrix4x4::identity();
-    m.print();
-    n.print();
-    (n*4.0).print();
 
     canvas = QImage(ui->visualizador->width(), ui->visualizador->height(), QImage::Format_RGB888);
     canvas.fill(Qt::white);
@@ -40,13 +24,18 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     Point point3(canvas.width()/2+100, canvas.height()/2+145, 0, 0, 0, 255);
 
     Line linha1(Point(0,0,0, 255,0,0), Point(40,500,0, 0,255,0));
-    Point point11(120,280,20, 0,0,255);
+    Point point11(10,10,20, 0,0,255);
     Point point12(115,270,20, 0,0,255);
     Point point13(125,270,20, 0,0,255);
 
-    Vector3<float> rot1(2.f,0.f,0.f);
     Polygon poly(point1,point2,point3);
-    poly.rotate3d(rot1);
+
+    //Matrix4x4 m = m.identity();
+    //m.rotate(1.14159265359, 0,1);
+    //poly.multiply(m);
+
+    //m.print();
+
 
     displayFile.insert("triangulo", poly);
     displayFile.insert("linha", linha1);
@@ -68,6 +57,12 @@ MainWindow::~MainWindow()
 void MainWindow::paintEvent(QPaintEvent *event){
     Q_UNUSED(event);
     scene->removeItem(pixmapItem);
+
+    static Matrix4x4 m = Matrix4x4::identity();
+    m.rotate(-0.05, 0,1);
+
+    displayFile.setMatrix("triangulo", m);
+
 
     canvas.fill(Qt::white);
     displayFile.drawAll(canvas);
