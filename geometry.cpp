@@ -1,5 +1,4 @@
 #include "geometry.h"
-#include "matrix.h"
 #include <math.h>
 
 Point::Point(float x0, float y0, float z0, unsigned char r0, unsigned char g0, unsigned char b0){
@@ -16,6 +15,16 @@ void Point::draw(QImage& canvas){
     int nY = canvas.height()-y;
     if(x >= 0 && x < canvas.width() && nY >= 0 && nY < canvas.height())
         canvas.setPixel(x,nY, qRgb(r,g,b));
+}
+
+std::unique_ptr<Geometry> Point::multiply(Matrix4x4& matrix){
+    return std::make_unique<Point>(
+        x*matrix.get(0,0) + y*matrix.get(0,1) + z*matrix.get(0,2) + matrix.get(0,3),
+        x*matrix.get(1,0) + y*matrix.get(1,1) + z*matrix.get(1,2) + matrix.get(1,3),
+        x*matrix.get(2,0) + y*matrix.get(2,1) + z*matrix.get(2,2) + matrix.get(2,3),
+        r,
+        g,
+        b);
 }
 
 Line::Line(Point p10, Point p20) : p1(p10.x,p10.y,p10.z, p10.r,p10.g,p10.b), p2(p20.x,p20.y,p20.z, p20.r,p20.g,p20.b){
@@ -39,6 +48,13 @@ void Line::draw(QImage& canvas){
         p.draw(canvas);
         t += dist;
     }
+}
+
+std::unique_ptr<Geometry> Line::multiply(Matrix4x4& matrix){
+    std::unique_ptr<Geometry> newP1 = p1.multiply(matrix);
+    std::unique_ptr<Geometry> newP2 = p2.multiply(matrix);
+
+    return std::make_unique<Line>(*(Point*)newP1.get(), *(Point*)newP2.get() );
 }
 
 Polygon::Polygon(Point q1, Point q2, Point q3) : p1(q1.x,q1.y,q1.z,q1.r,q1.g,q1.b), p2(q2.x,q2.y,q2.z,q2.r,q2.g,q2.b), p3(q3.x,q3.y,q3.z,q3.r,q3.g,q3.b){
@@ -100,4 +116,12 @@ void Polygon::drawHollow(QImage& canvas){
     l1.draw(canvas);
     l2.draw(canvas);
     l3.draw(canvas);
+}
+
+std::unique_ptr<Geometry> Polygon::multiply(Matrix4x4& matrix){
+    std::unique_ptr<Geometry> newP1 = p1.multiply(matrix);
+    std::unique_ptr<Geometry> newP2 = p2.multiply(matrix);
+    std::unique_ptr<Geometry> newP3 = p3.multiply(matrix);
+
+    return std::make_unique<Polygon>(*(Point*)newP1.get(), *(Point*)newP2.get(), *(Point*)newP3.get() );
 }
