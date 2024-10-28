@@ -30,7 +30,7 @@
       <x>546</x>
       <y>20</y>
       <width>241</width>
-      <height>371</height>
+      <height>430</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="edit">
@@ -63,6 +63,13 @@
          </property>
          <property name="orientation">
           <enum>Qt::Orientation::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="scaleBarSubtitle">
+         <property name="text">
+          <string>de 0 até 4</string>
          </property>
         </widget>
        </item>
@@ -234,9 +241,9 @@
    <widget class="QLabel" name="explanation">
     <property name="geometry">
      <rect>
-      <x>30</x>
+      <x>20</x>
       <y>400</y>
-      <width>741</width>
+      <width>501</width>
       <height>51</height>
      </rect>
     </property>
@@ -253,7 +260,7 @@
    <widget class="QLabel" name="label">
     <property name="geometry">
      <rect>
-      <x>10</x>
+      <x>20</x>
       <y>450</y>
       <width>321</width>
       <height>111</height>

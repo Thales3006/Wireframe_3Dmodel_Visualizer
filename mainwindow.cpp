@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     canvas = QImage(ui->visualizador->width(), ui->visualizador->height(), QImage::Format_RGB888);
     canvas.fill(Qt::white);
 
-    ui->scaleBar->setValue(50);
+    ui->scaleBar->setValue(25);
 
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, QOverload<>::of(&MainWindow::update));
@@ -89,7 +89,7 @@ void MainWindow::on_applyTransform_clicked()
     float rotX = center.x + ui->rotateCoordX->text().toFloat();
     float rotY = center.y + ui->rotateCoordY->text().toFloat();
 
-    float escalar = (float)ui->scaleBar->value()/99.0*4;
+    float escalar = (float)ui->scaleBar->value()/100.0*4;
 
     float newX = ui->translateCoordX->text().toFloat();
     float newY = ui->translateCoordX->text().toFloat();
