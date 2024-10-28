@@ -119,7 +119,7 @@ void Matrix4x4::rotate(float angle, int planeI, int planeJ) {
     id.set(planeJ, planeI, sin(angle));
     id.set(planeJ, planeJ, cos(angle));
 
-    Matrix4x4 result = (*this) * id;
+    Matrix4x4 result = id * (*this);
 
     *this = result;
 }
@@ -130,7 +130,7 @@ void Matrix4x4::transform(float x, float y, float z) {
     id.set(1,3, y);
     id.set(2,3, z);
 
-    Matrix4x4 result = (*this) * id;
+    Matrix4x4 result = id * (*this);
 
     *this = result;
 }
