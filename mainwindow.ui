@@ -28,89 +28,182 @@
     <property name="geometry">
      <rect>
       <x>580</x>
-      <y>40</y>
-      <width>171</width>
-      <height>271</height>
+      <y>20</y>
+      <width>191</width>
+      <height>381</height>
      </rect>
     </property>
-    <layout class="QVBoxLayout" name="rotator">
+    <layout class="QVBoxLayout" name="edit">
      <item>
-      <widget class="QLabel" name="rotatorLabel">
-       <property name="text">
-        <string>Rotacionar Objeto</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <spacer name="horizontalSpacer">
-       <property name="orientation">
-        <enum>Qt::Orientation::Horizontal</enum>
-       </property>
-       <property name="sizeHint" stdset="0">
-        <size>
-         <width>40</width>
-         <height>20</height>
-        </size>
-       </property>
-      </spacer>
-     </item>
-     <item>
-      <widget class="QLabel" name="coordLabel">
-       <property name="text">
-        <string>Ponto de rotação</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <layout class="QHBoxLayout" name="coord">
+      <layout class="QVBoxLayout" name="escale">
        <item>
-        <widget class="QLineEdit" name="coordX">
-         <property name="inputMethodHints">
-          <set>Qt::InputMethodHint::ImhNone</set>
-         </property>
+        <widget class="QLabel" name="escaleLabel">
          <property name="text">
-          <string/>
+          <string>Escalar Objeto</string>
          </property>
-         <property name="placeholderText">
-          <string>x</string>
+         <property name="alignment">
+          <set>Qt::AlignmentFlag::AlignCenter</set>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QLineEdit" name="coordY">
-         <property name="inputMethodHints">
-          <set>Qt::InputMethodHint::ImhNone</set>
-         </property>
+        <widget class="QLabel" name="escaleBarLabel">
          <property name="text">
-          <string/>
+          <string>Escala</string>
          </property>
-         <property name="placeholderText">
-          <string>y</string>
+         <property name="alignment">
+          <set>Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QSlider" name="escaleBar">
+         <property name="orientation">
+          <enum>Qt::Orientation::Horizontal</enum>
          </property>
         </widget>
        </item>
       </layout>
      </item>
      <item>
-      <layout class="QHBoxLayout" name="angle">
+      <layout class="QVBoxLayout" name="translate">
        <item>
-        <widget class="QLabel" name="angleLabel">
+        <widget class="QLabel" name="translateLabel">
          <property name="text">
-          <string>ângulo</string>
+          <string>Transladar Objeto</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignmentFlag::AlignCenter</set>
          </property>
         </widget>
        </item>
        <item>
-        <widget class="QDial" name="angleDial">
-         <property name="wrapping">
-          <bool>true</bool>
+        <widget class="QLabel" name="translateInputLabel">
+         <property name="text">
+          <string>Ponto de translação</string>
          </property>
         </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="translateCoord">
+         <item>
+          <widget class="QLineEdit" name="translateCoordX">
+           <property name="inputMethodHints">
+            <set>Qt::InputMethodHint::ImhNone</set>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="placeholderText">
+            <string>x</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="translateCoordY">
+           <property name="inputMethodHints">
+            <set>Qt::InputMethodHint::ImhNone</set>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="placeholderText">
+            <string>y</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
       </layout>
      </item>
      <item>
-      <widget class="QComboBox" name="objList"/>
+      <layout class="QVBoxLayout" name="rotate">
+       <item>
+        <widget class="Line" name="line">
+         <property name="orientation">
+          <enum>Qt::Orientation::Horizontal</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="rotatorLabel">
+         <property name="text">
+          <string>Rotacionar Objeto</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignmentFlag::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="rotateCoordLabel">
+         <property name="text">
+          <string>Ponto de rotação</string>
+         </property>
+         <property name="alignment">
+          <set>Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft</set>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="rotateCoord">
+         <item>
+          <widget class="QLineEdit" name="rotateCoordX">
+           <property name="inputMethodHints">
+            <set>Qt::InputMethodHint::ImhNone</set>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="placeholderText">
+            <string>x</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLineEdit" name="rotateCoordY">
+           <property name="inputMethodHints">
+            <set>Qt::InputMethodHint::ImhNone</set>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="placeholderText">
+            <string>y</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="angle">
+         <item>
+          <widget class="QLabel" name="angleLabel">
+           <property name="text">
+            <string>ângulo</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QDial" name="angleDial">
+           <property name="wrapping">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QComboBox" name="objList">
+       <property name="placeholderText">
+        <string>Selecionar Objeto</string>
+       </property>
+      </widget>
      </item>
      <item>
       <widget class="QPushButton" name="rotatorConfirm">

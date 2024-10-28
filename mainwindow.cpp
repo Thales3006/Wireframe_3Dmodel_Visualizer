@@ -91,8 +91,8 @@ void MainWindow::on_rotatorConfirm_clicked()
     Matrix4x4 matrix = Matrix4x4::identity();
 
     float angle = ((float)ui->angleDial->value()/100)*3.14*2;
-    float x = ui->coordXRot->text().toFloat();
-    float y = ui->coordYRot->text().toFloat();
+    float x = ui->rotateCoordX->text().toFloat();
+    float y = ui->rotateCoordY->text().toFloat();
 
     matrix.transform(-x,-y,0);
     matrix.rotate(angle, 0, 1);
