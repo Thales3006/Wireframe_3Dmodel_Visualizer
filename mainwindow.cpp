@@ -18,36 +18,16 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     scene = new QGraphicsScene(this);
     view = new QGraphicsView(scene, ui->visualizador);
 
+    //configurando o displayFile
+    inicialSetupDisplayFile();
 
-    Point point1(canvas.width()/2-100, canvas.height()/2, 10, 255, 0, 0);
-    Point point2(canvas.width()/2+200, canvas.height()/2-145, 0, 0, 255, 0);
-    Point point3(canvas.width()/2+100, canvas.height()/2+145, 0, 0, 0, 255);
-
-    Line linha1(Point(-100,-100,0, 255,0,0), Point(40,300,0, 0,255,0));
-    Point point11(0,20,20, 0,0,255);
-    Point point12(20,-20,20, 0,0,255);
-    Point point13(-20,-20,20, 0,0,255);
-
-    Polygon poly(point11,point12,point13);
-
-    //Matrix4x4 m = m.identity();
-    //m.rotate(1.14159265359, 0,1);
-    //poly.multiply(m);
-
-    //m.print();
-
-
-    displayFile.insert("triangulo", poly);
-    displayFile.insert("linha", linha1);
-    displayFile.insert("ponto_cima", point11);
-    displayFile.insert("ponto_esquerda", point12);
-    displayFile.insert("ponto_direita", point13);
-
-    displayFile.drawAll(canvas);
+    for(std::string& name : displayFile.names)
+        ui->objList->addItem(QString::fromStdString(name));
 
     pixmapItem = new QGraphicsPixmapItem(QPixmap::fromImage(canvas));
     scene->addItem(pixmapItem);  // Adicionando o item à cena
 }
+
 
 MainWindow::~MainWindow()
 {
@@ -71,10 +51,35 @@ void MainWindow::paintEvent(QPaintEvent *event){
 
     displayFile.setMatrix("linha", ma);
 
+    ma.transform(200,50,-100);
+
+    displayFile.setMatrix("ponto_direita", ma);
+
 
     canvas.fill(Qt::white);
     displayFile.drawAll(canvas);
     pixmapItem = new QGraphicsPixmapItem(QPixmap::fromImage(canvas));
 
     scene->addItem(pixmapItem);
+}
+
+void MainWindow::inicialSetupDisplayFile(){
+    Point point1(canvas.width()/2-100, canvas.height()/2, 10, 255, 0, 0);
+    Point point2(canvas.width()/2+200, canvas.height()/2-145, 0, 0, 255, 0);
+    Point point3(canvas.width()/2+100, canvas.height()/2+145, 0, 0, 0, 255);
+
+    Line linha1(Point(-100,-100,0, 255,0,0), Point(40,300,0, 0,255,0));
+    Point point11(0,20,20, 0,0,255);
+    Point point12(20,-20,20, 0,0,255);
+    Point point13(-20,-20,20, 0,0,255);
+
+    Polygon poly(point11,point12,point13);
+
+    displayFile.insert("triangulo", poly);
+    displayFile.insert("linha", linha1);
+    displayFile.insert("ponto_cima", point1);
+    displayFile.insert("ponto_esquerda", point2);
+    displayFile.insert("ponto_direita", point3);
+
+    displayFile.drawAll(canvas);
 }

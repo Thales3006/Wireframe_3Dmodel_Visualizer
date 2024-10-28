@@ -33,6 +33,7 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    void inicialSetupDisplayFile();
     void paintEvent(QPaintEvent *event);
 
 private slots:
