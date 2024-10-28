@@ -24,11 +24,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     Point point3(canvas.width()/2+100, canvas.height()/2+145, 0, 0, 0, 255);
 
     Line linha1(Point(0,0,0, 255,0,0), Point(40,500,0, 0,255,0));
-    Point point11(10,10,20, 0,0,255);
-    Point point12(115,270,20, 0,0,255);
-    Point point13(125,270,20, 0,0,255);
+    Point point11(0,20,20, 0,0,255);
+    Point point12(20,-20,20, 0,0,255);
+    Point point13(-20,-20,20, 0,0,255);
 
-    Polygon poly(point1,point2,point3);
+    Polygon poly(point11,point12,point13);
 
     //Matrix4x4 m = m.identity();
     //m.rotate(1.14159265359, 0,1);
@@ -61,7 +61,11 @@ void MainWindow::paintEvent(QPaintEvent *event){
     static Matrix4x4 m = Matrix4x4::identity();
     m.rotate(-0.05, 0,1);
 
-    displayFile.setMatrix("triangulo", m);
+    Matrix4x4 ma = m;
+
+    ma.transform(200,200,200);
+
+    displayFile.setMatrix("triangulo", ma);
 
 
     canvas.fill(Qt::white);
