@@ -45,13 +45,13 @@ void MainWindow::paintEvent(QPaintEvent *event){
 
     ma.transform(200,200,200);
 
-    displayFile.setMatrix("triangulo", ma);
+    //displayFile.setMatrix("triangulo", ma);
 
     ma.transform(-100,20,-100);
 
     displayFile.setMatrix("linha", ma);
 
-    ma.transform(200,50,-100);
+    ma.transform(200,120,-100);
 
     displayFile.setMatrix("ponto_direita", ma);
 
@@ -73,13 +73,33 @@ void MainWindow::inicialSetupDisplayFile(){
     Point point12(20,-20,20, 0,0,255);
     Point point13(-20,-20,20, 0,0,255);
 
-    Polygon poly(point11,point12,point13);
+    Polygon poly(point1,point2,point3);
 
     displayFile.insert("triangulo", poly);
     displayFile.insert("linha", linha1);
-    displayFile.insert("ponto_cima", point1);
-    displayFile.insert("ponto_esquerda", point2);
-    displayFile.insert("ponto_direita", point3);
+    displayFile.insert("ponto_cima", point11);
+    displayFile.insert("ponto_esquerda", point12);
+    displayFile.insert("ponto_direita", point13);
 
     displayFile.drawAll(canvas);
 }
+
+void MainWindow::on_rotatorConfirm_clicked()
+{
+    std::string objName = ui->objList->currentText().toStdString();
+
+    Matrix4x4 matrix = Matrix4x4::identity();
+
+    float angle = ((float)ui->angleDial->value()/100)*3.14*2;
+    float x = ui->coordX->text().toFloat();
+    float y = ui->coordY->text().toFloat();
+
+    matrix.transform(-x,-y,0);
+    matrix.rotate(angle, 0, 1);
+    matrix.transform(x,y,0);
+
+    displayFile.setMatrix(objName, matrix);
+
+    std::cout << angle << std::endl;
+}
+

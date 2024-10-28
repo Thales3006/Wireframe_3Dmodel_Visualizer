@@ -38,6 +38,8 @@ public:
 
 private slots:
 
+    void on_rotatorConfirm_clicked();
+
 private:
     Ui::MainWindow *ui;
 };
