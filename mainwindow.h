@@ -9,7 +9,6 @@
 #include <QGraphicsPixmapItem>
 
 #include "displayfile.h"
-#include "vectorn.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -38,7 +37,7 @@ public:
 
 private slots:
 
-    void on_rotatorConfirm_clicked();
+    void on_applyTransform_clicked();
 
 private:
     Ui::MainWindow *ui;

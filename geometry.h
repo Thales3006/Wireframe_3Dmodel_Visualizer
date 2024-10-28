@@ -20,6 +20,11 @@ public:
         std::cout << "Rewrite this function!" << std::endl;
         return NULL;
     }
+
+    virtual QPoint mean(){
+        std::cout << "Rewrite this function!" << std::endl;
+        return QPoint(0,0);
+    }
 };
 
 class Point : public Geometry
@@ -33,6 +38,8 @@ public:
     void draw(QImage& canvas);
 
     std::unique_ptr<Geometry> multiply(Matrix4x4& matrix);
+
+    QPoint mean();
 };
 
 class Line : public Geometry
@@ -46,6 +53,8 @@ public:
     void draw(QImage& canvas);
 
     std::unique_ptr<Geometry> multiply(Matrix4x4& matrix);
+
+    QPoint mean();
 };
 
 class Polygon : public Geometry
@@ -63,6 +72,8 @@ public:
     void drawHollow(QImage& canvas);
 
     std::unique_ptr<Geometry> multiply(Matrix4x4& matrix);
+
+    QPoint mean();
 
 };
 

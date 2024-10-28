@@ -27,6 +27,10 @@ std::unique_ptr<Geometry> Point::multiply(Matrix4x4& matrix){
         b);
 }
 
+QPoint Point::mean(){
+    return QPoint(x,y);
+}
+
 Line::Line(Point p10, Point p20) : p1(p10.x,p10.y,p10.z, p10.r,p10.g,p10.b), p2(p20.x,p20.y,p20.z, p20.r,p20.g,p20.b){
 }
 
@@ -55,6 +59,10 @@ std::unique_ptr<Geometry> Line::multiply(Matrix4x4& matrix){
     std::unique_ptr<Geometry> newP2 = p2.multiply(matrix);
 
     return std::make_unique<Line>(*(Point*)newP1.get(), *(Point*)newP2.get() );
+}
+
+QPoint Line::mean(){
+    return QPoint( (p1.x+p2.x)/2, (p1.y+p2.y)/2);
 }
 
 Polygon::Polygon(Point q1, Point q2, Point q3) : p1(q1.x,q1.y,q1.z,q1.r,q1.g,q1.b), p2(q2.x,q2.y,q2.z,q2.r,q2.g,q2.b), p3(q3.x,q3.y,q3.z,q3.r,q3.g,q3.b){
@@ -124,4 +132,8 @@ std::unique_ptr<Geometry> Polygon::multiply(Matrix4x4& matrix){
     std::unique_ptr<Geometry> newP3 = p3.multiply(matrix);
 
     return std::make_unique<Polygon>(*(Point*)newP1.get(), *(Point*)newP2.get(), *(Point*)newP3.get() );
+}
+
+QPoint Polygon::mean(){
+    return QPoint( (p1.x+p2.x+p3.x)/3, (p1.y+p2.y+p3.y)/3);
 }

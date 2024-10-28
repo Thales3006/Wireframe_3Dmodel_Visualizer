@@ -206,7 +206,7 @@
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="rotatorConfirm">
+      <widget class="QPushButton" name="applyTransform">
        <property name="text">
         <string>Aplicar</string>
        </property>

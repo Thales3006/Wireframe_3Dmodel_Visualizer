@@ -84,20 +84,39 @@ void MainWindow::inicialSetupDisplayFile(){
     displayFile.drawAll(canvas);
 }
 
-void MainWindow::on_rotatorConfirm_clicked()
+void MainWindow::on_applyTransform_clicked()
 {
     std::string objName = ui->objList->currentText().toStdString();
 
     Matrix4x4 matrix = Matrix4x4::identity();
 
     float angle = ((float)ui->angleDial->value()/100)*3.14*2;
-    float x = ui->rotateCoordX->text().toFloat();
-    float y = ui->rotateCoordY->text().toFloat();
+    float rotX = ui->rotateCoordX->text().toFloat();
+    float rotY = ui->rotateCoordY->text().toFloat();
 
-    matrix.transform(-x,-y,0);
+    //float escalar = ui->escaleBar->value();
+
+    //float newX = ui->translateCoordX->text().toFloat();
+    //float newY = ui->translateCoordX->text().toFloat();
+
+    //ROTAÇÃO
+    matrix.transform(-rotX,-rotY,0);
     matrix.rotate(angle, 0, 1);
-    matrix.transform(x,y,0);
+    matrix.transform(rotX,rotY,0);
 
+    //ESCALA
+    //QPoint center = displayFile.getMean(objName);
+
+    //matrix.transform(-center.x(),-center.y(),0);
+    //matrix*escalar;
+    //matrix.transform(center.x(),center.y(),0);
+
+
+    //TRANSLAÇÃO
+    //matrix.transform(-center.x(),-center.y(),0);
+    //matrix.transform(newX,newY,0);
+
+    //atribui nova matriz ao objeto
     displayFile.setMatrix(objName, matrix);
 
     std::cout << angle << std::endl;
