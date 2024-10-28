@@ -23,7 +23,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     Point point2(canvas.width()/2+200, canvas.height()/2-145, 0, 0, 255, 0);
     Point point3(canvas.width()/2+100, canvas.height()/2+145, 0, 0, 0, 255);
 
-    Line linha1(Point(0,0,0, 255,0,0), Point(40,500,0, 0,255,0));
+    Line linha1(Point(-100,-100,0, 255,0,0), Point(40,300,0, 0,255,0));
     Point point11(0,20,20, 0,0,255);
     Point point12(20,-20,20, 0,0,255);
     Point point13(-20,-20,20, 0,0,255);
@@ -66,6 +66,10 @@ void MainWindow::paintEvent(QPaintEvent *event){
     ma.transform(200,200,200);
 
     displayFile.setMatrix("triangulo", ma);
+
+    ma.transform(-100,20,-100);
+
+    displayFile.setMatrix("linha", ma);
 
 
     canvas.fill(Qt::white);
