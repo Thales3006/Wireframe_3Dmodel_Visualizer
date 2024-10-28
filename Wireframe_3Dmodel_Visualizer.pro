@@ -13,14 +13,12 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     geometry.cpp \
-    matrix.cpp \
     matrix4x4.cpp
 
 HEADERS += \
     displayfile.h \
     geometry.h \
     mainwindow.h \
-    matrix.h \
     matrix4x4.h \
     vectorn.h
 

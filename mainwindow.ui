@@ -35,9 +35,9 @@
     </property>
     <layout class="QVBoxLayout" name="edit">
      <item>
-      <layout class="QVBoxLayout" name="escale">
+      <layout class="QVBoxLayout" name="scale">
        <item>
-        <widget class="QLabel" name="escaleLabel">
+        <widget class="QLabel" name="scaleLabel">
          <property name="text">
           <string>Escalar Objeto</string>
          </property>
@@ -47,7 +47,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QLabel" name="escaleBarLabel">
+        <widget class="QLabel" name="scaleBarLabel">
          <property name="text">
           <string>Escala</string>
          </property>
@@ -57,7 +57,7 @@
         </widget>
        </item>
        <item>
-        <widget class="QSlider" name="escaleBar">
+        <widget class="QSlider" name="scaleBar">
          <property name="minimum">
           <number>1</number>
          </property>
