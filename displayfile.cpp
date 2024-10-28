@@ -30,13 +30,28 @@ void DisplayFile::pop(){
 }
 
 std::string DisplayFile::getName(int index){
-    if((int)displayFileList.size() <= index) return NULL;
+    if((int)displayFileList.size() <= index) return "";
 
     return names[index];
 }
 
-void DisplayFile::drawAll(QImage& canvas){
-    for(const auto& object : displayFileList){
-        object->draw(canvas);
+int DisplayFile::getIndex(std::string nome){
+    for(int i=0; i < (int)names.size(); i++){
+        if(names[i]==nome)
+            return i;
     }
+    return -1;
+}
+
+void DisplayFile::setMatrix(std::string nome, Matrix4x4 matrix){
+    displayFileList[getIndex(nome)]->matrix = matrix;
+}
+
+void DisplayFile::drawAll(QImage& canvas){
+    buffer.clear();
+    for(int i = 0; i < (int)displayFileList.size(); i++)
+        buffer.push_back(displayFileList[i]->multiply(displayFileList[i]->matrix));
+
+    for(const auto& object : buffer)
+        object->draw(canvas);
 }

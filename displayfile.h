@@ -17,8 +17,13 @@ public:
     void pop();
 
     std::string getName(int index);
+    int getIndex(std::string nome);
+
+    void setMatrix(std::string nome, Matrix4x4 matrix);
 
     void drawAll(QImage& canvas);
+private:
+    std::vector<std::unique_ptr<Geometry>> buffer;
 
 };
 
