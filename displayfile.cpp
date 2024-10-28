@@ -43,12 +43,18 @@ int DisplayFile::getIndex(std::string nome){
     return -1;
 }
 
-QPoint DisplayFile::getMean(std::string nome){
-    return displayFileList[getIndex(nome)]->mean();
+Vector3<float> DisplayFile::getMean(std::string nome){
+    int index = getIndex(nome);
+    if(index == -1) return Vector3<float>(0,0,0);
+
+    return displayFileList[index]->mean();
 }
 
 void DisplayFile::setMatrix(std::string nome, Matrix4x4 matrix){
-    displayFileList[getIndex(nome)]->matrix = matrix;
+    int index = getIndex(nome);
+    if(index == -1) return;
+
+    displayFileList[index]->matrix = matrix;
 }
 
 void DisplayFile::drawAll(QImage& canvas){

@@ -23,7 +23,8 @@ public:
     Matrix4x4 transpose();
 
     void rotate(float angle, int planeI, int planeJ);
-    void transform(float x, float y, float z);
+    void translate(float x, float y, float z);
+    void scale(float scalarX,float scalarY,float scalarZ);
 
     void print();
 

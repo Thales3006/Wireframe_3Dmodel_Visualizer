@@ -27,10 +27,10 @@
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>580</x>
+      <x>546</x>
       <y>20</y>
-      <width>191</width>
-      <height>381</height>
+      <width>241</width>
+      <height>371</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="edit">
@@ -58,12 +58,22 @@
        </item>
        <item>
         <widget class="QSlider" name="escaleBar">
+         <property name="minimum">
+          <number>1</number>
+         </property>
          <property name="orientation">
           <enum>Qt::Orientation::Horizontal</enum>
          </property>
         </widget>
        </item>
       </layout>
+     </item>
+     <item>
+      <widget class="Line" name="line">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+      </widget>
      </item>
      <item>
       <layout class="QVBoxLayout" name="translate">
@@ -95,7 +105,7 @@
             <string/>
            </property>
            <property name="placeholderText">
-            <string>x</string>
+            <string>x = 0</string>
            </property>
           </widget>
          </item>
@@ -108,7 +118,7 @@
             <string/>
            </property>
            <property name="placeholderText">
-            <string>y</string>
+            <string>y = 0</string>
            </property>
           </widget>
          </item>
@@ -117,14 +127,14 @@
       </layout>
      </item>
      <item>
+      <widget class="Line" name="line_3">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
       <layout class="QVBoxLayout" name="rotate">
-       <item>
-        <widget class="Line" name="line">
-         <property name="orientation">
-          <enum>Qt::Orientation::Horizontal</enum>
-         </property>
-        </widget>
-       </item>
        <item>
         <widget class="QLabel" name="rotatorLabel">
          <property name="text">
@@ -138,7 +148,7 @@
        <item>
         <widget class="QLabel" name="rotateCoordLabel">
          <property name="text">
-          <string>Ponto de rotação</string>
+          <string>Ponto de rotação (em relação ao objeto)</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft</set>
@@ -156,7 +166,7 @@
             <string/>
            </property>
            <property name="placeholderText">
-            <string>x</string>
+            <string>x = 0</string>
            </property>
           </widget>
          </item>
@@ -169,7 +179,7 @@
             <string/>
            </property>
            <property name="placeholderText">
-            <string>y</string>
+            <string>y = 0</string>
            </property>
           </widget>
          </item>
@@ -199,6 +209,13 @@
       </layout>
      </item>
      <item>
+      <widget class="Line" name="line_2">
+       <property name="orientation">
+        <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="QComboBox" name="objList">
        <property name="placeholderText">
         <string>Selecionar Objeto</string>
@@ -213,6 +230,57 @@
       </widget>
      </item>
     </layout>
+   </widget>
+   <widget class="QLabel" name="explanation">
+    <property name="geometry">
+     <rect>
+      <x>30</x>
+      <y>400</y>
+      <width>741</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Os objetos na tela (pontos, linhas e triângulos) são criados em um ponto de origem, podem ter o seu tamanho modificado por um escalar, rotacionado e transladados para uma posição escolhida pelo usuário. </string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>450</y>
+      <width>321</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>O ponto central da rotação toma o ponto central do próprio objeto como origem relativa. Isso porque ,após rotacionado, o objeto será transladado para onde o usuário desejar. Se a rotação for relativa às coordenadas de mundo pode criar uma pequena confusão por causa da translação.</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>480</x>
+      <y>480</y>
+      <width>321</width>
+      <height>111</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Coordenadas não preenchidas são consideradas como zero.</string>
+    </property>
+    <property name="wordWrap">
+     <bool>true</bool>
+    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">

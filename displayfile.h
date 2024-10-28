@@ -18,7 +18,7 @@ public:
 
     std::string getName(int index);
     int getIndex(std::string nome);
-    QPoint getMean(std::string nome);
+    Vector3<float> getMean(std::string nome);
 
     void setMatrix(std::string nome, Matrix4x4 matrix);
 

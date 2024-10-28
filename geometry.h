@@ -21,9 +21,9 @@ public:
         return NULL;
     }
 
-    virtual QPoint mean(){
+    virtual Vector3<float> mean(){
         std::cout << "Rewrite this function!" << std::endl;
-        return QPoint(0,0);
+        return Vector3<float>(0,0,0);
     }
 };
 
@@ -39,7 +39,7 @@ public:
 
     std::unique_ptr<Geometry> multiply(Matrix4x4& matrix);
 
-    QPoint mean();
+    Vector3<float> mean();
 };
 
 class Line : public Geometry
@@ -54,7 +54,7 @@ public:
 
     std::unique_ptr<Geometry> multiply(Matrix4x4& matrix);
 
-    QPoint mean();
+    Vector3<float> mean();
 };
 
 class Polygon : public Geometry
@@ -73,7 +73,7 @@ public:
 
     std::unique_ptr<Geometry> multiply(Matrix4x4& matrix);
 
-    QPoint mean();
+    Vector3<float> mean();
 
 };
 
