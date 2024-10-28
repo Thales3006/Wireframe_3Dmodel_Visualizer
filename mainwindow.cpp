@@ -34,6 +34,8 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+//FUNÇÃO DESENHO
+// redesenha a tela a cada 16ms
 void MainWindow::paintEvent(QPaintEvent *event){
     Q_UNUSED(event);
     scene->removeItem(pixmapItem);
@@ -45,6 +47,7 @@ void MainWindow::paintEvent(QPaintEvent *event){
     scene->addItem(pixmapItem);
 }
 
+//adiciona alguns objetos iniciais para o display file
 void MainWindow::inicialSetupDisplayFile(){
     Point point1(canvas.width()/2, canvas.height()/2+145, 10, 255, 0, 0);
     Point point2(canvas.width()/2-100, canvas.height()/2-45, 0, 0, 255, 0);
@@ -71,7 +74,7 @@ void MainWindow::inicialSetupDisplayFile(){
 }
 
 
-
+// Botão que aplica a transformação inserida pelo usuário
 void MainWindow::on_applyTransform_clicked()
 {
     std::string objName = ui->objList->currentText().toStdString();
@@ -106,8 +109,6 @@ void MainWindow::on_applyTransform_clicked()
     matrix.translate(newX,newY,0);
 
     //atribui nova matriz ao objeto
-    matrix.print();
-    printf("%f %f", center.x, center.y);
     displayFile.setMatrix(objName, matrix);
 }
 
