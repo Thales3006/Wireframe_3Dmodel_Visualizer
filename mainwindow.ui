@@ -27,13 +27,20 @@
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>546</x>
+      <x>550</x>
       <y>20</y>
       <width>241</width>
-      <height>430</height>
+      <height>446</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="edit">
+     <item>
+      <widget class="QComboBox" name="objList">
+       <property name="placeholderText">
+        <string>Selecionar Objeto</string>
+       </property>
+      </widget>
+     </item>
      <item>
       <layout class="QVBoxLayout" name="scale">
        <item>
@@ -61,6 +68,12 @@
          <property name="minimum">
           <number>1</number>
          </property>
+         <property name="maximum">
+          <number>100</number>
+         </property>
+         <property name="value">
+          <number>25</number>
+         </property>
          <property name="orientation">
           <enum>Qt::Orientation::Horizontal</enum>
          </property>
@@ -79,6 +92,13 @@
       <widget class="Line" name="line">
        <property name="orientation">
         <enum>Qt::Orientation::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QPushButton" name="applyTransform_scale">
+       <property name="text">
+        <string>Aplicar Escala</string>
        </property>
       </widget>
      </item>
@@ -134,6 +154,13 @@
       </layout>
      </item>
      <item>
+      <widget class="QPushButton" name="applyTransform_translate">
+       <property name="text">
+        <string>Aplicar Translação</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <widget class="Line" name="line_3">
        <property name="orientation">
         <enum>Qt::Orientation::Horizontal</enum>
@@ -155,7 +182,7 @@
        <item>
         <widget class="QLabel" name="rotateCoordLabel">
          <property name="text">
-          <string>Ponto de rotação (em relação ao objeto)</string>
+          <string>Ponto de rotação</string>
          </property>
          <property name="alignment">
           <set>Qt::AlignmentFlag::AlignBottom|Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft</set>
@@ -206,6 +233,9 @@
          </item>
          <item>
           <widget class="QDial" name="angleDial">
+           <property name="maximum">
+            <number>100</number>
+           </property>
            <property name="wrapping">
             <bool>true</bool>
            </property>
@@ -213,26 +243,19 @@
          </item>
         </layout>
        </item>
+       <item>
+        <widget class="QPushButton" name="applyTransform">
+         <property name="text">
+          <string>Aplicar Rotação</string>
+         </property>
+        </widget>
+       </item>
       </layout>
      </item>
      <item>
       <widget class="Line" name="line_2">
        <property name="orientation">
         <enum>Qt::Orientation::Horizontal</enum>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QComboBox" name="objList">
-       <property name="placeholderText">
-        <string>Selecionar Objeto</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QPushButton" name="applyTransform">
-       <property name="text">
-        <string>Aplicar</string>
        </property>
       </widget>
      </item>
@@ -248,26 +271,10 @@
      </rect>
     </property>
     <property name="text">
-     <string>Os objetos na tela (pontos, linhas e triângulos) são criados em um ponto de origem, podem ter o seu tamanho modificado por um escalar, rotacionado e transladados para uma posição escolhida pelo usuário. </string>
+     <string>Os objetos na tela (pontos, linhas e triângulos) são criados em um ponto de origem, podem ter o seu tamanho modificado por um escalar, rotacionado e transladados pelo usuário. </string>
     </property>
     <property name="alignment">
      <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
-    </property>
-    <property name="wordWrap">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label">
-    <property name="geometry">
-     <rect>
-      <x>20</x>
-      <y>450</y>
-      <width>321</width>
-      <height>111</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>O ponto central da rotação toma o ponto central do próprio objeto como origem relativa. Isso porque ,após rotacionado, o objeto será transladado para onde o usuário desejar. Se a rotação for relativa às coordenadas de mundo pode criar uma pequena confusão por causa da translação.</string>
     </property>
     <property name="wordWrap">
      <bool>true</bool>
