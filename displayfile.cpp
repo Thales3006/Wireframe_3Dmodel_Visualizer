@@ -35,8 +35,33 @@ std::string DisplayFile::getName(int index){
     return names[index];
 }
 
-void DisplayFile::drawAll(QImage& canvas){
-    for(const auto& object : displayFileList){
-        object->draw(canvas);
+int DisplayFile::getIndex(std::string nome){
+    for(int i=0; i < (int)names.size(); i++){
+        if(names[i]==nome)
+            return i;
     }
+    return -1;
+}
+
+Vector3<float> DisplayFile::getMean(std::string nome){
+    int index = getIndex(nome);
+    if(index == -1) return Vector3<float>(0,0,0);
+
+    return displayFileList[index]->mean();
+}
+
+void DisplayFile::setMatrix(std::string nome, Matrix4x4 matrix){
+    int index = getIndex(nome);
+    if(index == -1) return;
+
+    displayFileList[index]->matrix = matrix;
+}
+
+void DisplayFile::drawAll(QImage& canvas){
+    buffer.clear();
+    for(int i = 0; i < (int)displayFileList.size(); i++)
+        buffer.push_back(displayFileList[i]->multiply(displayFileList[i]->matrix));
+
+    for(const auto& object : buffer)
+        object->draw(canvas);
 }

@@ -17,6 +17,20 @@ void Point::draw(QImage& canvas){
         canvas.setPixel(x,nY, qRgb(r,g,b));
 }
 
+std::unique_ptr<Geometry> Point::multiply(Matrix4x4& matrix){
+    return std::make_unique<Point>(
+        x*matrix.get(0,0) + y*matrix.get(0,1) + z*matrix.get(0,2) + matrix.get(0,3),
+        x*matrix.get(1,0) + y*matrix.get(1,1) + z*matrix.get(1,2) + matrix.get(1,3),
+        x*matrix.get(2,0) + y*matrix.get(2,1) + z*matrix.get(2,2) + matrix.get(2,3),
+        r,
+        g,
+        b);
+}
+
+Vector3<float> Point::mean(){
+    return Vector3<float>(x,y,z);
+}
+
 Line::Line(Point p10, Point p20) : p1(p10.x,p10.y,p10.z, p10.r,p10.g,p10.b), p2(p20.x,p20.y,p20.z, p20.r,p20.g,p20.b){
 }
 
@@ -40,8 +54,34 @@ void Line::draw(QImage& canvas){
     }
 }
 
+std::unique_ptr<Geometry> Line::multiply(Matrix4x4& matrix){
+    std::unique_ptr<Geometry> newP1 = p1.multiply(matrix);
+    std::unique_ptr<Geometry> newP2 = p2.multiply(matrix);
+
+    return std::make_unique<Line>(*(Point*)newP1.get(), *(Point*)newP2.get() );
+}
+
+Vector3<float> Line::mean(){
+    return Vector3<float>( (p1.x+p2.x)/2, (p1.y+p2.y)/2, (p1.z+p2.z)/2);
+}
+
 Polygon::Polygon(Point q1, Point q2, Point q3) : p1(q1.x,q1.y,q1.z,q1.r,q1.g,q1.b), p2(q2.x,q2.y,q2.z,q2.r,q2.g,q2.b), p3(q3.x,q3.y,q3.z,q3.r,q3.g,q3.b){
 
+}
+
+void Polygon::rotate3d(Vector3<float> rot){
+    Matrix4x4 m = Matrix4x4::identity();
+    m.set(0,0,p1.x);
+    m.set(0,1,p1.y);
+    m.set(0,2,p1.z);
+
+    m.rotate(rot.x, 1,2);
+    m.rotate(rot.y, 0,2);
+    m.rotate(rot.z, 0,1);
+
+    p1.x = m.get(0,0);
+    p1.y = m.get(0,1);
+    p1.x = m.get(0,2);
 }
 
 void Polygon::draw(QImage& canvas){
@@ -84,4 +124,16 @@ void Polygon::drawHollow(QImage& canvas){
     l1.draw(canvas);
     l2.draw(canvas);
     l3.draw(canvas);
+}
+
+std::unique_ptr<Geometry> Polygon::multiply(Matrix4x4& matrix){
+    std::unique_ptr<Geometry> newP1 = p1.multiply(matrix);
+    std::unique_ptr<Geometry> newP2 = p2.multiply(matrix);
+    std::unique_ptr<Geometry> newP3 = p3.multiply(matrix);
+
+    return std::make_unique<Polygon>(*(Point*)newP1.get(), *(Point*)newP2.get(), *(Point*)newP3.get() );
+}
+
+ Vector3<float> Polygon::mean(){
+    return Vector3<float>( (p1.x+p2.x+p3.x)/3, (p1.y+p2.y+p3.y)/3, (p1.z+p2.z+p3.z)/3);
 }

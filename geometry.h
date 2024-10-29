@@ -3,12 +3,27 @@
 
 #include <QMainWindow>
 #include <iostream>
+#include "matrix4x4.h"
+#include "vectorn.h"
 
 class Geometry{
 public:
+    Matrix4x4 matrix = Matrix4x4::identity();
+
     virtual void draw(QImage& canvas){
         Q_UNUSED(canvas);
         std::cout << "Rewrite this function!" << std::endl;
+    }
+
+    virtual std::unique_ptr<Geometry> multiply(Matrix4x4& matrix){
+        Q_UNUSED(matrix);
+        std::cout << "Rewrite this function!" << std::endl;
+        return NULL;
+    }
+
+    virtual Vector3<float> mean(){
+        std::cout << "Rewrite this function!" << std::endl;
+        return Vector3<float>(0,0,0);
     }
 };
 
@@ -21,6 +36,10 @@ public:
     Point(float x0, float y0, float z0, unsigned char r0, unsigned char g0, unsigned char b0);
 
     void draw(QImage& canvas);
+
+    std::unique_ptr<Geometry> multiply(Matrix4x4& matrix);
+
+    Vector3<float> mean();
 };
 
 class Line : public Geometry
@@ -32,6 +51,10 @@ public:
     Line(Point p10, Point p20);
 
     void draw(QImage& canvas);
+
+    std::unique_ptr<Geometry> multiply(Matrix4x4& matrix);
+
+    Vector3<float> mean();
 };
 
 class Polygon : public Geometry
@@ -43,8 +66,14 @@ public:
 
     Polygon(Point q1, Point q2, Point q3);
 
+    void rotate3d(Vector3<float> rot);
+
     void draw(QImage& canvas);
     void drawHollow(QImage& canvas);
+
+    std::unique_ptr<Geometry> multiply(Matrix4x4& matrix);
+
+    Vector3<float> mean();
 
 };
 

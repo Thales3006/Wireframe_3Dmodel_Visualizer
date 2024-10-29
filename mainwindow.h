@@ -32,9 +32,12 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+    void inicialSetupDisplayFile();
     void paintEvent(QPaintEvent *event);
 
 private slots:
+
+    void on_applyTransform_clicked();
 
 private:
     Ui::MainWindow *ui;
