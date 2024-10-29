@@ -50,6 +50,13 @@ Vector3<float> DisplayFile::getMean(std::string nome){
     return displayFileList[index]->mean();
 }
 
+Matrix4x4 DisplayFile::getMatrix(std::string nome){
+    int index = getIndex(nome);
+    if(index == -1) return Matrix4x4();
+
+    return displayFileList[index]->matrix;
+}
+
 void DisplayFile::setMatrix(std::string nome, Matrix4x4 matrix){
     int index = getIndex(nome);
     if(index == -1) return;
