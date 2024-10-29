@@ -7,6 +7,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
 {
     ui->setupUi(this);
 
+
     //configurações iniciais
     canvas = QImage(ui->visualizador->width(), ui->visualizador->height(), QImage::Format_RGB888);
     canvas.fill(Qt::white);
@@ -25,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
         ui->objList->addItem(QString::fromStdString(name));
 
     pixmapItem = new QGraphicsPixmapItem(QPixmap::fromImage(canvas));
-    scene->addItem(pixmapItem);  // Adicionando o item à cena
+    scene->addItem(pixmapItem);
 }
 
 
@@ -37,6 +38,7 @@ MainWindow::~MainWindow()
 //FUNÇÃO DESENHO
 // redesenha a tela a cada 16ms
 void MainWindow::paintEvent(QPaintEvent *event){
+    //Função desenha os objetos do display file a cada 16ms
     Q_UNUSED(event);
     scene->removeItem(pixmapItem);
 
