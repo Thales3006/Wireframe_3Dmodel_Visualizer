@@ -11,8 +11,6 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWi
     canvas = QImage(ui->visualizador->width(), ui->visualizador->height(), QImage::Format_RGB888);
     canvas.fill(Qt::white);
 
-    ui->scaleBar->setValue(25);
-
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, QOverload<>::of(&MainWindow::update));
     timer->start(16); // 16ms entre cada atualização (~60 FPS)
@@ -80,37 +78,62 @@ void MainWindow::inicialSetupDisplayFile(){
 void MainWindow::on_applyTransform_clicked()
 {
     std::string objName = ui->objList->currentText().toStdString();
-
-    Matrix4x4 matrix = Matrix4x4::identity();
-
-    Vector3<float> center = displayFile.getMean(objName);
+    Matrix4x4 matrix = displayFile.getMatrix(objName);
 
     float angle = (float)ui->angleDial->value()/100.0 * M_PI * 2;
-    float rotX = center.x + ui->rotateCoordX->text().toFloat();
-    float rotY = center.y + ui->rotateCoordY->text().toFloat();
-
-    float escalar = (float)ui->scaleBar->value()/100.0*4;
-
-    float newX = ui->translateCoordX->text().toFloat();
-    float newY = ui->translateCoordX->text().toFloat();
-
-    //ESCALA
-    matrix.translate(-center.x,-center.y,0);
-    matrix.scale(escalar,escalar,escalar);
-    matrix.translate(center.x,center.y,0);
+    float rotX = ui->rotateCoordX->text().toFloat();
+    float rotY = ui->rotateCoordY->text().toFloat();
 
     //ROTAÇÃO
     matrix.translate(-rotX,-rotY,0);
     matrix.rotate(angle, 0, 1);
     matrix.translate(rotX,rotY,0);
 
-    center = displayFile.getMean(objName);
-
-    //TRANSLAÇÃO
-    matrix.translate(-center.x,-center.y,0);
-    matrix.translate(newX,newY,0);
-
     //atribui nova matriz ao objeto
     displayFile.setMatrix(objName, matrix);
+}
+
+
+void MainWindow::on_applyTransform_scale_clicked()
+{
+    std::string objName = ui->objList->currentText().toStdString();
+    Matrix4x4 matrix = displayFile.getMatrix(objName);
+
+    Vector3<float> center = displayFile.getMean(objName);
+    float escalar = (float)ui->scaleBar->value()/100.0*4;
+    //ESCALA
+    matrix.translate(-center.x,-center.y,0);
+    matrix.scale(escalar,escalar,escalar);
+    matrix.translate(center.x,center.y,0);
+
+    displayFile.setMatrix(objName, matrix);
+}
+
+
+void MainWindow::on_applyTransform_translate_clicked()
+{
+    std::string objName = ui->objList->currentText().toStdString();
+    Matrix4x4 matrix = displayFile.getMatrix(objName);
+
+    float newX = ui->translateCoordX->text().toFloat();
+    float newY = ui->translateCoordY->text().toFloat();
+
+    //TRANSLAÇÃO
+    matrix.translate(newX,newY,0);
+
+    displayFile.setMatrix(objName, matrix);
+}
+
+void MainWindow::on_scaleBar_valueChanged(int value)
+{
+    float escalar = value/100.0*4;
+    QString numero = "x" + QString::number(escalar);
+    ui->scaleBarSubtitle->setText(numero);
+}
+
+
+void MainWindow::on_angleDial_valueChanged(int value)
+{
+    ui->angleLabel->setText(QString::number(value/100.0*360)+"º");
 }
 

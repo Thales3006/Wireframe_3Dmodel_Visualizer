@@ -39,6 +39,14 @@ private slots:
 
     void on_applyTransform_clicked();
 
+    void on_applyTransform_scale_clicked();
+
+    void on_applyTransform_translate_clicked();
+
+    void on_scaleBar_valueChanged(int value);
+
+    void on_angleDial_valueChanged(int value);
+
 private:
     Ui::MainWindow *ui;
 };
