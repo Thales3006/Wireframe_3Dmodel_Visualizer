@@ -13,10 +13,10 @@ and diving in a lesser abstract tool like [OpenGL](https://www.opengl.org).
 
 - [X] Create a display file and display its contents on screen
 
-- [ ] implement Transformations using matrices
+- [X] implement Transformations using matrices
 
 - [ ] include Viewport
 
 - [ ] Read `.obj` files and display them on screen
 
-- [ ] User control of transformations
+- [X] User control of transformations
