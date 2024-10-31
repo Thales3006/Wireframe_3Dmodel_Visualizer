@@ -83,13 +83,12 @@ void MainWindow::on_applyTransform_clicked()
     Matrix4x4 matrix = displayFile.getMatrix(objName);
 
     float angle = (float)ui->angleDial->value()/100.0 * M_PI * 2;
-    float rotX = ui->rotateCoordX->text().toFloat();
-    float rotY = ui->rotateCoordY->text().toFloat();
+    Vector3<float> rot = Vector3<float>(ui->rotateCoordX->text().toFloat(), ui->rotateCoordY->text().toFloat(), 0);
 
     //ROTAÇÃO
-    matrix.translate(-rotX,-rotY,0);
+    matrix.translate(-rot);
     matrix.rotate(angle, 0, 1);
-    matrix.translate(rotX,rotY,0);
+    matrix.translate(rot);
 
     //atribui nova matriz ao objeto
     displayFile.setMatrix(objName, matrix);
@@ -102,11 +101,11 @@ void MainWindow::on_applyTransform_scale_clicked()
     Matrix4x4 matrix = displayFile.getMatrix(objName);
 
     Vector3<float> center = displayFile.getMean(objName);
-    float escalar = (float)ui->scaleBar->value()/100.0*4;
+    Vector3<float> scalar = Vector3<float>(ui->scaleBar->value()/100.0*4, ui->scaleBar->value()/100.0*4, ui->scaleBar->value()/100.0*4);
     //ESCALA
-    matrix.translate(-center.x,-center.y,0);
-    matrix.scale(escalar,escalar,escalar);
-    matrix.translate(center.x,center.y,0);
+    matrix.translate(-center);
+    matrix.scale(scalar);
+    matrix.translate(center);
 
     displayFile.setMatrix(objName, matrix);
 }
@@ -117,11 +116,10 @@ void MainWindow::on_applyTransform_translate_clicked()
     std::string objName = ui->objList->currentText().toStdString();
     Matrix4x4 matrix = displayFile.getMatrix(objName);
 
-    float newX = ui->translateCoordX->text().toFloat();
-    float newY = ui->translateCoordY->text().toFloat();
+    Vector3<float> newCoord = Vector3<float>(ui->translateCoordX->text().toFloat(), ui->translateCoordY->text().toFloat(), 0);
 
     //TRANSLAÇÃO
-    matrix.translate(newX,newY,0);
+    matrix.translate(newCoord);
 
     displayFile.setMatrix(objName, matrix);
 }
