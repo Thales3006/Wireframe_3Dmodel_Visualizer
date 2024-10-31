@@ -124,22 +124,22 @@ void Matrix4x4::rotate(float angle, int planeI, int planeJ) {
     *this = result;
 }
 
-void Matrix4x4::translate(float x, float y, float z) {
+void Matrix4x4::translate(Vector3<float> trans) {
     Matrix4x4 id = Matrix4x4::identity();
-    id.set(0,3, x);
-    id.set(1,3, y);
-    id.set(2,3, z);
+    id.set(0,3, trans.x);
+    id.set(1,3, trans.y);
+    id.set(2,3, trans.z);
 
     Matrix4x4 result = id * (*this);
 
     *this = result;
 }
 
-void Matrix4x4::scale(float scalarX,float scalarY,float scalarZ){
+void Matrix4x4::scale(Vector3<float> scalar){
     Matrix4x4 id = Matrix4x4::identity();
-    id.set(0,0, scalarX);
-    id.set(1,1, scalarY);
-    id.set(2,2, scalarZ);
+    id.set(0,0, scalar.x);
+    id.set(1,1, scalar.y);
+    id.set(2,2, scalar.z);
 
     Matrix4x4 result = id * (*this);
 

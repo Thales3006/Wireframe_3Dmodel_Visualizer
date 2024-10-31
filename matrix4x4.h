@@ -1,6 +1,7 @@
 #ifndef MATRIX4X4_H
 #define MATRIX4X4_H
 #include <cmath>
+#include "vectorn.h"
 
 class Matrix4x4 {
     float arr[4][4];
@@ -23,8 +24,8 @@ public:
     Matrix4x4 transpose();
 
     void rotate(float angle, int planeI, int planeJ);
-    void translate(float x, float y, float z);
-    void scale(float scalarX,float scalarY,float scalarZ);
+    void translate(Vector3<float> pos);
+    void scale(Vector3<float>scalar);
 
     void print();
 
