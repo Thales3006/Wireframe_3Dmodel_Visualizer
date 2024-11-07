@@ -43,12 +43,20 @@ public:
 
     Vector3(T x, T y, T z) : x(x), y(y), z(z) {}
 
+    T length() const {
+        return sqrt(x*x + y*y + z*z);
+    }
+
     Vector3<T> operator+(const Vector3<T>& other) const {
         return Vector3<T>(x + other.x, y + other.y, z + other.z);
     }
 
     Vector3<T> operator-(const Vector3<T>& other) const {
         return Vector3<T>(x - other.x, y - other.y, z - other.z);
+    }
+
+    T operator*(const Vector3<T>& other) const {
+        return x*other.x + y*other.y + z*other.z;
     }
 
     Vector3<T> operator-() const {
