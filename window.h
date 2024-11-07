@@ -6,15 +6,16 @@
 class Window
 {
     Matrix4x4 matrix;
-public:
+private:
     Vector3<float> pos;
-    float angleXY;
-    float angleXZ;
+    Vector3<float> up;
 
-    Window(Vector3<float> pos);
+    void updateMatrix();
+public:
+    Window(Vector3<float> pos, Vector3<float> up);
 
     void setPos(Vector3<float> pos);
-    void setangleXY(float angle);
+    void setUp(Vector3<float> up);
     Matrix4x4 getMatrix();
 };
 
