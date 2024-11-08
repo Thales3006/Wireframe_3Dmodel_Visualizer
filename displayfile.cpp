@@ -64,10 +64,17 @@ void DisplayFile::setMatrix(std::string nome, Matrix4x4 matrix){
     displayFileList[index]->matrix = matrix;
 }
 
-void DisplayFile::drawAll(QImage& canvas){
+void DisplayFile::drawAll(QImage& canvas, Matrix4x4 cameraMatrix, Vector3<float> viewportSize){
+    Matrix4x4 tempMatrix;
     buffer.clear();
-    for(int i = 0; i < (int)displayFileList.size(); i++)
-        buffer.push_back(displayFileList[i]->multiply(displayFileList[i]->matrix));
+
+    for(int i = 0; i < (int)displayFileList.size(); i++){
+        tempMatrix = cameraMatrix * (displayFileList[i]->matrix);
+        tempMatrix.scale(viewportSize);
+        tempMatrix.translate(viewportSize/2.0);
+
+        buffer.push_back( displayFileList[i]->multiply(tempMatrix));
+    }
 
     for(const auto& object : buffer)
         object->draw(canvas);

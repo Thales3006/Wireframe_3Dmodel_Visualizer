@@ -23,6 +23,9 @@
       <height>371</height>
      </rect>
     </property>
+    <property name="renderHints">
+     <set>QPainter::RenderHint::Antialiasing|QPainter::RenderHint::TextAntialiasing</set>
+    </property>
    </widget>
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
@@ -265,7 +268,7 @@
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>400</y>
+      <y>470</y>
       <width>501</width>
       <height>51</height>
      </rect>
