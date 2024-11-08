@@ -6,15 +6,28 @@
 class Window
 {
     Matrix4x4 matrix;
-public:
+private:
     Vector3<float> pos;
-    float angleXY;
-    float angleXZ;
+    Vector3<float> up;
+    Vector3<float> right;
+    Vector3<float> dir;
 
-    Window(Vector3<float> pos);
+    float rightScale;
+
+    void updateMatrix();
+public:
+    Window(Vector3<float> pos, Vector3<float> up, Vector3<float> dir, float rightScale);
 
     void setPos(Vector3<float> pos);
-    void setangleXY(float angle);
+    void setUp(Vector3<float> up);
+    void setDir(Vector3<float> dir);
+    void setRightScale(float scalar);
+
+    Vector3<float> getPos();
+    Vector3<float> getUp();
+    Vector3<float> getDir();
+    Vector3<float> getRight();
+    float getRightScale();
     Matrix4x4 getMatrix();
 };
 

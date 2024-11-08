@@ -7,8 +7,12 @@
 #include <QGraphicsView>
 #include <QGraphicsScene>
 #include <QGraphicsPixmapItem>
+#include <QKeyEvent>
+#include <QSizeGrip>
+#include <QVBoxLayout>
 
 #include "displayfile.h"
+#include "window.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -28,12 +32,19 @@ public:
     QImage canvas;
 
     DisplayFile displayFile;
+    Window camera;
+    QSet<int> keysPressed;
 
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
     void inicialSetupDisplayFile();
-    void paintEvent(QPaintEvent *event);
+    void paint();
+    void updateFrame();
+    void keyHandler();
+
+    void keyPressEvent(QKeyEvent *event);
+    void keyReleaseEvent(QKeyEvent *event);
 
 private slots:
 
