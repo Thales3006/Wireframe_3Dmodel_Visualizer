@@ -23,7 +23,7 @@ public:
 
     void setMatrix(std::string nome, Matrix4x4 matrix);
 
-    void drawAll(QImage& canvas);
+    void drawAll(QImage& canvas, Matrix4x4 cameraMatrix, Vector3<float> viewportSize);
 private:
     std::vector<std::unique_ptr<Geometry>> buffer;
 

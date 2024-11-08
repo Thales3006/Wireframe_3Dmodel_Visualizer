@@ -18,6 +18,7 @@ public:
 
     Matrix4x4 operator+(Matrix4x4& m);
     Matrix4x4 operator*(Matrix4x4& m);
+    Vector3<float> operator*(Vector3<float> vec);
 
     Matrix4x4 operator*(float const& f);
 
