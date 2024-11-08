@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>MainWindow</class>
- <widget class="QMainWindow" name="MainWindow">
+ <class>Janela</class>
+ <widget class="QMainWindow" name="Janela">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -264,36 +264,23 @@
      </item>
     </layout>
    </widget>
-   <widget class="QLabel" name="explanation">
+   <widget class="QLabel" name="explanation_keys">
     <property name="geometry">
      <rect>
       <x>20</x>
-      <y>470</y>
-      <width>501</width>
-      <height>51</height>
+      <y>480</y>
+      <width>241</width>
+      <height>71</height>
      </rect>
     </property>
     <property name="text">
-     <string>Os objetos na tela (pontos, linhas e triângulos) são criados em um ponto de origem, podem ter o seu tamanho modificado por um escalar, rotacionado e transladados pelo usuário. </string>
+     <string>WASD - move a window
+E Q - giram a window
+Z X - aumentam e diminuem o zoom
+←↑→↓ - Mudam o tamanho da viewport </string>
     </property>
     <property name="alignment">
      <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
-    </property>
-    <property name="wordWrap">
-     <bool>true</bool>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_2">
-    <property name="geometry">
-     <rect>
-      <x>480</x>
-      <y>480</y>
-      <width>321</width>
-      <height>111</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Coordenadas não preenchidas são consideradas como zero.</string>
     </property>
     <property name="wordWrap">
      <bool>true</bool>
