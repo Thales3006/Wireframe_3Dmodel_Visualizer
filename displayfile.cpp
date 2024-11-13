@@ -66,6 +66,7 @@ void DisplayFile::setMatrix(std::string nome, Matrix4x4 matrix){
 
 void DisplayFile::drawAll(QImage& canvas, Matrix4x4 cameraMatrix, Vector3<float> viewportSize){
     Matrix4x4 tempMatrix;
+    std::unique_ptr<Geometry> something;
     buffer.clear();
 
     for(int i = 0; i < (int)displayFileList.size(); i++){
@@ -73,7 +74,9 @@ void DisplayFile::drawAll(QImage& canvas, Matrix4x4 cameraMatrix, Vector3<float>
         tempMatrix.scale(viewportSize);
         tempMatrix.translate(viewportSize/2.0);
 
-        buffer.push_back( displayFileList[i]->multiply(tempMatrix));
+        something = displayFileList[i]->multiply(tempMatrix);
+
+        buffer.push_back( std::move(something) );
     }
 
     for(const auto& object : buffer)
