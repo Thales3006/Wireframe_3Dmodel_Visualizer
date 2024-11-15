@@ -10,9 +10,14 @@ class Geometry{
 public:
     Matrix4x4 matrix = Matrix4x4::identity();
 
-    virtual void draw(QImage& canvas){
+    virtual void draw(QImage& canvas) {
         Q_UNUSED(canvas);
         std::cout << "Rewrite this function!" << std::endl;
+    }
+
+    virtual std::unique_ptr<Geometry> drawable() {
+        std::cout << "Rewrite this function!" << std::endl;
+        return NULL;
     }
 
     virtual std::unique_ptr<Geometry> multiply(Matrix4x4& matrix){
@@ -25,6 +30,7 @@ public:
         std::cout << "Rewrite this function!" << std::endl;
         return Vector3<float>(0,0,0);
     }
+
 };
 
 class Point : public Geometry
@@ -37,9 +43,13 @@ public:
 
     void draw(QImage& canvas);
 
+    std::unique_ptr<Geometry> drawable();
+
     std::unique_ptr<Geometry> multiply(Matrix4x4& matrix);
 
     Vector3<float> mean();
+
+    char getRC();
 };
 
 class Line : public Geometry
@@ -51,6 +61,8 @@ public:
     Line(Point p10, Point p20);
 
     void draw(QImage& canvas);
+
+    std::unique_ptr<Geometry> drawable();
 
     std::unique_ptr<Geometry> multiply(Matrix4x4& matrix);
 
@@ -65,6 +77,8 @@ public:
     Point p3;
 
     Polygon(Point q1, Point q2, Point q3);
+
+    std::unique_ptr<Geometry> drawable();
 
     void rotate3d(Vector3<float> rot);
 

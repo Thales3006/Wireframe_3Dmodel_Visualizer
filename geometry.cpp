@@ -17,6 +17,10 @@ void Point::draw(QImage& canvas){
         canvas.setPixel(x,nY, qRgb(r,g,b));
 }
 
+std::unique_ptr<Geometry> Point::drawable() {
+    return this->getRC() == 0 ? std::make_unique<Point>(x, y, z, r, g, b) : NULL;
+}
+
 std::unique_ptr<Geometry> Point::multiply(Matrix4x4& matrix){
     return std::make_unique<Point>(
         x*matrix.get(0,0) + y*matrix.get(0,1) + z*matrix.get(0,2) + matrix.get(0,3),
@@ -29,6 +33,10 @@ std::unique_ptr<Geometry> Point::multiply(Matrix4x4& matrix){
 
 Vector3<float> Point::mean(){
     return Vector3<float>(x,y,z);
+}
+
+char Point::getRC() {
+    return (char)((x<-1 ? 8 : (x>1 ? 4 : 0)) | (y<-1 ? 2 : (y>1 ? 1 : 0)));
 }
 
 Line::Line(Point p10, Point p20) : p1(p10.x,p10.y,p10.z, p10.r,p10.g,p10.b), p2(p20.x,p20.y,p20.z, p20.r,p20.g,p20.b){
@@ -54,6 +62,80 @@ void Line::draw(QImage& canvas){
     }
 }
 
+std::unique_ptr<Geometry> Line::drawable() {
+    char rc1=p1.getRC(), rc2=p2.getRC();
+    if((rc1&rc2)!=0)
+        return NULL;
+    else if(rc1==rc2) // rc1==0 && rc2==0
+        return std::make_unique<Line>(
+            Point(p1.x, p1.y, p1.z, p1.r, p1.g, p1.b),
+            Point(p2.x, p2.y, p2.z, p2.r, p2.g, p2.b));
+    Vector3<float> v1 = p1.mean();
+    Vector3<float> v2 = p2.mean();
+    Vector3<float> d;
+    float k;
+
+    d = (v2-v1).normalize();
+
+    // v1 = p + d*k;
+
+    // v1.x = p.x + d.x*k;
+    // v1.y = p.y + d.y*k;
+
+    // 1 = p.x + d.x*k;
+    // v1.y = p.y + d.y*k;
+    // (1-p.x)/d.x = k;
+
+    // v1.x = p.x + d.x*k;
+    // 1 = p.y + d.y*k;
+    // (1-p.y)/d.y = k;
+    if(rc1!=0) {
+        if(rc1&1)
+            k=(1-v1.y)/d.y;
+        else if(rc1&2)
+            k=(-1-v1.y)/d.y;
+        else
+            k=0;
+        v1 += d*k;
+        if(v1.x>1||v1.x<-1) {
+            if(rc1&4)
+                k=(1-v1.x)/d.x;
+            else if(rc1&8)
+                k=(-1-v1.x)/d.x;
+            else
+                k=0;
+            v1 += d*k;
+            if(v1.y>1||v1.y<-1)
+                return NULL;
+        }
+    }
+    if(rc2!=0) {
+        if(rc2&1)
+            k=(1-v2.y)/d.y;
+        else if(rc2&2)
+            k=(-1-v2.y)/d.y;
+        else
+            k=0;
+        v2 += d*k;
+        if(v2.x>1||v2.x<-1) {
+            if(rc2&4)
+                k=(1-v2.x)/d.x;
+            else if(rc2&8)
+                k=(-1-v2.x)/d.x;
+            else
+                k=0;
+            v2 += d*k;
+            if(v2.y>1||v2.y<-1)
+                return NULL;
+        }
+    }
+
+    return std::make_unique<Line>(
+        Point(v1.x, v1.y, v1.z, p1.r, p1.g, p1.b),
+        Point(v2.x, v2.y, v2.z, p2.r, p2.g, p2.b)
+    );
+}
+
 std::unique_ptr<Geometry> Line::multiply(Matrix4x4& matrix){
     std::unique_ptr<Geometry> newP1 = p1.multiply(matrix);
     std::unique_ptr<Geometry> newP2 = p2.multiply(matrix);
@@ -67,6 +149,17 @@ Vector3<float> Line::mean(){
 
 Polygon::Polygon(Point q1, Point q2, Point q3) : p1(q1.x,q1.y,q1.z,q1.r,q1.g,q1.b), p2(q2.x,q2.y,q2.z,q2.r,q2.g,q2.b), p3(q3.x,q3.y,q3.z,q3.r,q3.g,q3.b){
 
+}
+
+std::unique_ptr<Geometry> Polygon::drawable() {
+    char rc1=p1.getRC(), rc2=p2.getRC(), rc3=p3.getRC();
+    if((rc1&rc2)||(rc1&rc3)||(rc2&rc3))
+        return NULL;
+    return std::make_unique<Polygon>(
+        Point(p1.x, p1.y, p1.z, p1.r, p1.g, p1.b),
+        Point(p2.x, p2.y, p2.z, p2.r, p2.g, p2.b),
+        Point(p3.x, p3.y, p3.z, p3.r, p3.g, p3.b)
+        );
 }
 
 void Polygon::rotate3d(Vector3<float> rot){
@@ -86,6 +179,7 @@ void Polygon::rotate3d(Vector3<float> rot){
 
 void Polygon::draw(QImage& canvas){
     Line l(p1,p2);
+    //l = *(Line*)(l.drawable()).get();
     float dist1 = 1/sqrt(pow(p1.x-p3.x,2)+pow(p1.y-p3.y,2));
     float dist2 = 1/sqrt(pow(p1.x-p3.x,2)+pow(p1.y-p3.y,2));
     float dist = (dist1 > dist2? dist1 : dist2) * 0.95;
