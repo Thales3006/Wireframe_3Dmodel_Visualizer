@@ -72,9 +72,9 @@ public:
 class Polygon : public Geometry
 {
 public:
-    Point p1;
-    Point p2;
-    Point p3;
+    Line l1;
+    Line l2;
+    Line l3;
 
     Polygon(Point q1, Point q2, Point q3);
 
@@ -83,7 +83,7 @@ public:
     void rotate3d(Vector3<float> rot);
 
     void draw(QImage& canvas);
-    void drawHollow(QImage& canvas);
+    void fill(QImage& canvas);
 
     std::unique_ptr<Geometry> multiply(Matrix4x4& matrix);
 
