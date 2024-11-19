@@ -18,12 +18,14 @@ void Point::draw(QImage& canvas){
 }
 
 std::unique_ptr<Point> Point::drawablePoint() {
-    return this->getRC() == 0 ? std::make_unique<Point>(x, y, z, r, g, b) : NULL;
+    return this->getRC() == 0 ? std::make_unique<Point>(*this) : NULL;
 }
 
 std::vector<std::unique_ptr<Geometry>> Point::drawable() {
     std::vector<std::unique_ptr<Geometry>> v;
-    v.push_back(this->drawablePoint());
+    std::unique_ptr<Point> p = this->drawablePoint();
+    if(p!=NULL)
+        v.push_back(std::move(p));
     return v;
 }
 
@@ -146,7 +148,9 @@ std::unique_ptr<Line> Line::drawableLine() {
 
 std::vector<std::unique_ptr<Geometry>> Line::drawable() {
     std::vector<std::unique_ptr<Geometry>> v;
-    v.push_back(this->drawableLine());
+    std::unique_ptr<Line> l = this->drawableLine();
+    if(l!=NULL)
+        v.push_back(std::move(l));
     return v;
 }
 
@@ -184,8 +188,8 @@ std::vector<std::unique_ptr<Line>> Polygon::drawablePolygon() {
 std::vector<std::unique_ptr<Geometry>> Polygon::drawable() {
     std::vector<std::unique_ptr<Line>> vl = this->drawablePolygon();
     std::vector<std::unique_ptr<Geometry>> v;
-    for(int i=0;i<vl.size();i++)
-        v.push_back(std::move(vl[i]));
+    for(auto& line : vl)
+        v.push_back(std::move(line));
     return v;
 }
 
