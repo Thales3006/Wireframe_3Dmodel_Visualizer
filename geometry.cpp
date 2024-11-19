@@ -157,7 +157,7 @@ Polygon::Polygon(Point q1, Point q2, Point q3) :
 
 std::unique_ptr<Geometry> Polygon::drawable() {
     char rc1=l1.p1.getRC(), rc2=l2.p1.getRC(), rc3=l3.p1.getRC();
-    if((rc1&rc2)||(rc1&rc3)||(rc2&rc3))
+    if(rc1&rc2&rc3)
         return NULL;
     return std::make_unique<Polygon>(
         Point(l1.p1.x, l1.p1.y, l1.p1.z, l1.p1.r, l1.p1.g, l1.p1.b),
@@ -166,13 +166,26 @@ std::unique_ptr<Geometry> Polygon::drawable() {
         );
 }
 
+void Polygon::rotate3d(Vector3<float> rot){
+    Matrix4x4 m = Matrix4x4::identity();
+    m.set(0,0,p1.x);
+    m.set(0,1,p1.y);
+    m.set(0,2,p1.z);
+
+    m.rotate(rot.x, 1,2);
+    m.rotate(rot.y, 0,2);
+    m.rotate(rot.z, 0,1);
+
+    p1.x = m.get(0,0);
+    p1.y = m.get(0,1);
+    p1.x = m.get(0,2);
+}
+
 void Polygon::fill(QImage& canvas){
     Line l(l1.p1,l2.p1);
-    //l = *(Line*)(l.drawable()).get();
     float dist1 = 1/sqrt(pow(l1.p1.x-l3.p1.x,2)+pow(l1.p1.y-l3.p1.y,2));
     float dist2 = 1/sqrt(pow(l2.p1.x-l3.p1.x,2)+pow(l2.p1.y-l3.p1.y,2));
-    float dist = (dist1 > dist2? dist1 : dist2) * 0.95;
-
+    float dist = (dist1 > dist2 ? dist1 : dist2) * 0.95;
     float t = 0;
     while(t <= 1){
         //coords transition
@@ -195,7 +208,9 @@ void Polygon::fill(QImage& canvas){
         l.p1.b = (1-t)*l1.p1.b + t*l3.p1.b;
         l.p2.b = (1-t)*l2.p1.b + t*l3.p1.b;
 
+
         l.draw(canvas);
+
         t += dist;
     }
 }

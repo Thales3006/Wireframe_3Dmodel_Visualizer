@@ -30,7 +30,6 @@ public:
         std::cout << "Rewrite this function!" << std::endl;
         return Vector3<float>(0,0,0);
     }
-
 };
 
 class Point : public Geometry

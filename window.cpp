@@ -78,7 +78,7 @@ void Window::updateMatrix() {
 
     newMatrix.translate(-pos);
     newMatrix.rotate(angle,0,1);
-    newMatrix.scale( Vector3<float>(1/(rightScale*2), 1/(length*2), 1.0) );
+    newMatrix.scale( Vector3<float>(1/rightScale, 1/length, 1.0) );
 
     this->matrix = newMatrix;
 }
