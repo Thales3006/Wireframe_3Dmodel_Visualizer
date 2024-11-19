@@ -17,8 +17,14 @@ void Point::draw(QImage& canvas){
         canvas.setPixel(x,nY, qRgb(r,g,b));
 }
 
-std::unique_ptr<Geometry> Point::drawable() {
+std::unique_ptr<Point> Point::drawablePoint() {
     return this->getRC() == 0 ? std::make_unique<Point>(x, y, z, r, g, b) : NULL;
+}
+
+std::vector<std::unique_ptr<Geometry>> Point::drawable() {
+    std::vector<std::unique_ptr<Geometry>> v;
+    v.push_back(this->drawablePoint());
+    return v;
 }
 
 std::unique_ptr<Geometry> Point::multiply(Matrix4x4& matrix){
@@ -64,7 +70,7 @@ void Line::draw(QImage& canvas){
     }
 }
 
-std::unique_ptr<Geometry> Line::drawable() {
+std::unique_ptr<Line> Line::drawableLine() {
     char rc1=p1.getRC(), rc2=p2.getRC();
     if((rc1&rc2)!=0)
         return NULL;
@@ -138,6 +144,12 @@ std::unique_ptr<Geometry> Line::drawable() {
     );
 }
 
+std::vector<std::unique_ptr<Geometry>> Line::drawable() {
+    std::vector<std::unique_ptr<Geometry>> v;
+    v.push_back(this->drawableLine());
+    return v;
+}
+
 std::unique_ptr<Geometry> Line::multiply(Matrix4x4& matrix){
     std::unique_ptr<Geometry> newP1 = p1.multiply(matrix);
     std::unique_ptr<Geometry> newP2 = p2.multiply(matrix);
@@ -155,30 +167,41 @@ Polygon::Polygon(Point q1, Point q2, Point q3) :
     l3(q3, q1)
 { }
 
-std::unique_ptr<Geometry> Polygon::drawable() {
-    char rc1=l1.p1.getRC(), rc2=l2.p1.getRC(), rc3=l3.p1.getRC();
-    if(rc1&rc2&rc3)
-        return NULL;
-    return std::make_unique<Polygon>(
-        Point(l1.p1.x, l1.p1.y, l1.p1.z, l1.p1.r, l1.p1.g, l1.p1.b),
-        Point(l2.p1.x, l2.p1.y, l2.p1.z, l2.p1.r, l2.p1.g, l2.p1.b),
-        Point(l3.p1.x, l3.p1.y, l3.p1.z, l3.p1.r, l3.p1.g, l3.p1.b)
-        );
+std::vector<std::unique_ptr<Line>> Polygon::drawablePolygon() {
+    std::vector<std::unique_ptr<Line>> v;
+    std::unique_ptr<Line> newL1 = l1.drawableLine();
+    std::unique_ptr<Line> newL2 = l2.drawableLine();
+    std::unique_ptr<Line> newL3 = l3.drawableLine();
+    if(newL1)
+        v.push_back(std::move(newL1));
+    if(newL2)
+        v.push_back(std::move(newL2));
+    if(newL3)
+        v.push_back(std::move(newL3));
+    return v;
+}
+
+std::vector<std::unique_ptr<Geometry>> Polygon::drawable() {
+    std::vector<std::unique_ptr<Line>> vl = this->drawablePolygon();
+    std::vector<std::unique_ptr<Geometry>> v;
+    for(int i=0;i<vl.size();i++)
+        v.push_back(std::move(vl[i]));
+    return v;
 }
 
 void Polygon::rotate3d(Vector3<float> rot){
     Matrix4x4 m = Matrix4x4::identity();
-    m.set(0,0,p1.x);
-    m.set(0,1,p1.y);
-    m.set(0,2,p1.z);
+    m.set(0,0,l1.p1.x);
+    m.set(0,1,l1.p1.y);
+    m.set(0,2,l1.p1.z);
 
     m.rotate(rot.x, 1,2);
     m.rotate(rot.y, 0,2);
     m.rotate(rot.z, 0,1);
 
-    p1.x = m.get(0,0);
-    p1.y = m.get(0,1);
-    p1.x = m.get(0,2);
+    l1.p1.x = m.get(0,0);
+    l1.p1.y = m.get(0,1);
+    l1.p1.x = m.get(0,2);
 }
 
 void Polygon::fill(QImage& canvas){

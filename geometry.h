@@ -15,9 +15,10 @@ public:
         std::cout << "Rewrite this function!" << std::endl;
     }
 
-    virtual std::unique_ptr<Geometry> drawable() {
+    virtual std::vector<std::unique_ptr<Geometry>> drawable() {
+        std::vector<std::unique_ptr<Geometry>> v;
         std::cout << "Rewrite this function!" << std::endl;
-        return NULL;
+        return v;
     }
 
     virtual std::unique_ptr<Geometry> multiply(Matrix4x4& matrix){
@@ -42,7 +43,8 @@ public:
 
     void draw(QImage& canvas);
 
-    std::unique_ptr<Geometry> drawable();
+    std::unique_ptr<Point> drawablePoint();
+    std::vector<std::unique_ptr<Geometry>> drawable();
 
     std::unique_ptr<Geometry> multiply(Matrix4x4& matrix);
 
@@ -61,7 +63,8 @@ public:
 
     void draw(QImage& canvas);
 
-    std::unique_ptr<Geometry> drawable();
+    std::unique_ptr<Line> drawableLine();
+    std::vector<std::unique_ptr<Geometry>> drawable();
 
     std::unique_ptr<Geometry> multiply(Matrix4x4& matrix);
 
@@ -77,7 +80,8 @@ public:
 
     Polygon(Point q1, Point q2, Point q3);
 
-    std::unique_ptr<Geometry> drawable();
+    std::vector<std::unique_ptr<Line>> drawablePolygon();
+    std::vector<std::unique_ptr<Geometry>> drawable();
 
     void rotate3d(Vector3<float> rot);
 
