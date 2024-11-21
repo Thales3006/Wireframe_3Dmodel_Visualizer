@@ -159,6 +159,7 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event) {
 
 void MainWindow::keyHandler(){
     Matrix4x4 m = Matrix4x4::identity();
+    Matrix4x4 n = Matrix4x4::identity();
 
     Vector3<float> vert = camera.getUp().normalize()*3;
     Vector3<float> hori = camera.getRight().normalize()*3;
@@ -171,14 +172,14 @@ void MainWindow::keyHandler(){
 
     //moviment
     if (keysPressed.contains(Qt::Key_A))
-        m.translate(-hori);
+        n.translate(-hori);
     if (keysPressed.contains(Qt::Key_W))
-        m.translate(vert);
+        n.translate(vert);
     if (keysPressed.contains(Qt::Key_S))
-        m.translate(-vert);
+        n.translate(-vert);
     if (keysPressed.contains(Qt::Key_D))
-        m.translate(hori);
-    camera.setPos(m*camera.getPos());
+        n.translate(hori);
+    camera.setPos(n*camera.getPos());
 
     //zoom
     if (keysPressed.contains(Qt::Key_Z)){
