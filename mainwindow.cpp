@@ -174,6 +174,7 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event) {
 
 void MainWindow::keyHandler(){
     Matrix4x4 m = Matrix4x4::identity();
+    Matrix4x4 n = Matrix4x4::identity();
 
     const float movementChange = 0.03;
 
@@ -188,14 +189,14 @@ void MainWindow::keyHandler(){
 
     //moviment
     if (keysPressed.contains(Qt::Key_A))
-        m.translate(-hori);
+        n.translate(-hori);
     if (keysPressed.contains(Qt::Key_W))
-        m.translate(vert);
+        n.translate(vert);
     if (keysPressed.contains(Qt::Key_S))
-        m.translate(-vert);
+        n.translate(-vert);
     if (keysPressed.contains(Qt::Key_D))
-        m.translate(hori);
-    camera.setPos(m*camera.getPos());
+        n.translate(hori);
+    camera.setPos(n*camera.getPos());
 
     //zoom
     const float zoomChange = 1.02;
