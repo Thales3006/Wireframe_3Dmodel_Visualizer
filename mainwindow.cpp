@@ -3,6 +3,8 @@
 #include "geometry.h"
 #include "matrix4x4.h"
 
+#include <iostream>
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     camera(Vector3<float>(0.0, 0.0, 0.0), Vector3<float>(0.0, 250.0, 0.0), Vector3<float>(0.0, 0.0, 1.0), 250.0),
@@ -151,6 +153,19 @@ void MainWindow::on_angleDial_valueChanged(int value)
 
 void MainWindow::keyPressEvent(QKeyEvent *event) {
     keysPressed.insert(event->key());
+
+    switch(event->key()) {
+    case Qt::Key_P:
+        Vector3<float> up = camera.getUp();
+        Vector3<float> right = camera.getRight();
+
+        std::cout << "up = (" << up.x << ", " << up.y << ", " << up.z << ")" << std::endl;
+        std::cout << "|up| = " << up.length() << std::endl;
+        std::cout << "right = (" << right.x << ", " << right.y << ", " << right.z << ")" << std::endl;
+        std::cout << "|right| = " << right.length() << std::endl;
+        break;
+    }
+
 }
 
 void MainWindow::keyReleaseEvent(QKeyEvent *event) {
@@ -161,8 +176,10 @@ void MainWindow::keyHandler(){
     Matrix4x4 m = Matrix4x4::identity();
     Matrix4x4 n = Matrix4x4::identity();
 
-    Vector3<float> vert = camera.getUp().normalize()*3;
-    Vector3<float> hori = camera.getRight().normalize()*3;
+    const float movementChange = 0.03;
+
+    Vector3<float> vert = camera.getUp()*movementChange;
+    Vector3<float> hori = camera.getRight()*movementChange;
     //rotation
     if (keysPressed.contains(Qt::Key_Q))
         m.rotate(0.01,0,1);
@@ -182,13 +199,17 @@ void MainWindow::keyHandler(){
     camera.setPos(n*camera.getPos());
 
     //zoom
+    const float zoomChange = 1.02;
+
     if (keysPressed.contains(Qt::Key_Z)){
-        camera.setUp(camera.getUp()+camera.getUp().normalize()*1.2);
-        camera.setRightScale(camera.getRightScale()+1.2);
+        camera.setUp(camera.getUp()*zoomChange);
+        camera.setRightScale(camera.getRightScale()*zoomChange);
     }
     if (keysPressed.contains(Qt::Key_X)){
-        camera.setUp(camera.getUp()-camera.getUp().normalize()*1.2);
-        camera.setRightScale(camera.getRightScale()-1.2);
+        if(camera.getUp().length()>=0.02*zoomChange&&camera.getRightScale()>=0.02*zoomChange) {
+            camera.setUp(camera.getUp()/zoomChange);
+            camera.setRightScale(camera.getRightScale()/zoomChange);
+        }
     }
 
     //resizeVIEWPORT
