@@ -11,6 +11,16 @@ Point::Point(float x0, float y0, float z0, unsigned char r0, unsigned char g0, u
     b = b0;
 }
 
+Point::Point(Vector3<float> p){
+    x = p.x;
+    y = p.y;
+    z = p.z;
+
+    r = 0;
+    g = 0;
+    b = 0;
+}
+
 void Point::draw(QImage& canvas){
     int nY = canvas.height()-y;
     if(x >= 0 && x < canvas.width() && nY >= 0 && nY < canvas.height())

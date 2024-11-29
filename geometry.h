@@ -40,6 +40,7 @@ public:
     unsigned char r, g, b;
 
     Point(float x0, float y0, float z0, unsigned char r0, unsigned char g0, unsigned char b0);
+    Point(Vector3<float> p);
 
     void draw(QImage& canvas);
 
