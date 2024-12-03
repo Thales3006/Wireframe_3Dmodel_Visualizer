@@ -14,6 +14,11 @@ void DisplayFile::insert(std::string name, Polygon obj){
     displayFileList.push_back(std::make_unique<Polygon>(obj));
     names.push_back(name);
 }
+// AAAAAAAAAAAAAAAAAAAAAAA help
+void DisplayFile::insert(std::string name, Object obj){
+    displayFileList.push_back(std::make_unique<Polygon>(obj));
+    names.push_back(name);
+}
 
 void DisplayFile::remove(int index){
     if(displayFileList.size() <= 0 ||index < 0) return;
