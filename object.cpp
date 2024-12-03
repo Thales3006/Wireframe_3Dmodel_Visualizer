@@ -53,15 +53,20 @@ bool Object::loadObj(const std::string FileName) {
     file.close();
     return true;
 }
-/*
-std::vector<std::unique_ptr<Geometry>> drawable() {
-    return;
+
+std::vector<std::unique_ptr<Geometry>> Object::drawable() {
+    std::vector<std::unique_ptr<Geometry>> ptrs;
+    ptrs.push_back(std::unique_ptr<Geometry>(this));
+    return ptrs;
 }
 
-std::unique_ptr<Geometry> multiply(Matrix4x4& matrix) {
-
+std::unique_ptr<Geometry> Object::multiply(Matrix4x4& matrix) {
+    std::vector<Polygon> polygons = this->polygons;
+    for(Polygon poly : polygons)
+        poly.multiply(matrix);
+    return std::unique_ptr<Geometry>(new Object(polygons));
 }
-*/
-Vector3<float> mean() {
+
+Vector3<float> Object::mean() {
     return Vector3<float>(0.0, 0.0, 0.0);
 }
