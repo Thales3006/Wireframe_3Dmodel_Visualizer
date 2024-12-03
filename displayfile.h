@@ -2,6 +2,7 @@
 #define DISPLAYFILE_H
 
 #include "geometry.h"
+#include "object.h"
 
 class DisplayFile
 {

@@ -25,8 +25,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     scene = new QGraphicsScene(this);
     view = new QGraphicsView(scene, ui->visualizador);
-
-
+    //TESTING ============
+    Object a = Object();
+    a.loadObj("./teapot.obj");
+    //===================
     //configurando o displayFile
     inicialSetupDisplayFile();
 
