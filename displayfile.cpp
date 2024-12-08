@@ -77,7 +77,7 @@ void DisplayFile::drawAll(QImage& canvas, Matrix4x4 cameraMatrix, Vector3<float>
 
     viewportSize = viewportSize/2.0;
     viewportMatrix = Matrix4x4::identity();
-    viewportMatrix.scale(viewportSize/2); // <--- dividido na metade para evidenciar o clipping
+    viewportMatrix.scale(viewportSize);
     viewportMatrix.translate(viewportSize);
 
     for(int i = 0; i < (int)displayFileList.size(); i++){
@@ -92,10 +92,4 @@ void DisplayFile::drawAll(QImage& canvas, Matrix4x4 cameraMatrix, Vector3<float>
 
     for(const auto& object : buffer)
         object->draw(canvas);
-
-    //mini Viewport limites
-    Line(Point(viewportSize.x-viewportSize.x/2,viewportSize.y-viewportSize.y/2, 0,0,0,0),Point(viewportSize.x+viewportSize.x/2,viewportSize.y-viewportSize.y/2, 0,0,0,0)).draw(canvas);
-    Line(Point(viewportSize.x-viewportSize.x/2,viewportSize.y+viewportSize.y/2, 0,0,0,0),Point(viewportSize.x+viewportSize.x/2,viewportSize.y+viewportSize.y/2, 0,0,0,0)).draw(canvas);
-    Line(Point(viewportSize.x-viewportSize.x/2,viewportSize.y-viewportSize.y/2, 0,0,0,0),Point(viewportSize.x-viewportSize.x/2,viewportSize.y+viewportSize.y/2, 0,0,0,0)).draw(canvas);
-    Line(Point(viewportSize.x+viewportSize.x/2,viewportSize.y-viewportSize.y/2, 0,0,0,0),Point(viewportSize.x+viewportSize.x/2,viewportSize.y+viewportSize.y/2, 0,0,0,0)).draw(canvas);
 }
