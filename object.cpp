@@ -1,5 +1,8 @@
 #include "object.h"
 
+#include <fstream>
+#include <sstream>
+
 Object::Object() {}
 
 Object::Object(const std::string FileName) {
@@ -64,7 +67,7 @@ std::unique_ptr<Geometry> Object::multiply(Matrix4x4& matrix) {
     std::vector<Polygon> polygons = this->polygons;
     for(Polygon poly : polygons)
         poly.multiply(matrix);
-    return std::unique_ptr<Geometry>(new Object(polygons));
+    return std::make_unique<Object>(polygons);
 }
 
 Vector3<float> Object::mean() {

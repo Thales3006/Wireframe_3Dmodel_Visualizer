@@ -1,11 +1,9 @@
 #ifndef OBJECT_H
 #define OBJECT_H
 
-#include <fstream>
-#include <sstream>
 #include "geometry.h"
 
-class Object : Geometry
+class Object : public Geometry
 {
 public:
     std::vector<Polygon> polygons;
