@@ -93,7 +93,13 @@ public:
 
     Vector3<T> normalize(){
         T mag = this->length();
-        return Vector3<float>(x/mag,y/mag,z/mag);
+        if(mag==0)
+            return Vector3<T>(0.0,0.0,0.0);
+        return Vector3<T>(x/mag,y/mag,z/mag);
+    }
+
+    T angle(Vector3<T> vec){
+        return (x > 0? 1.0:-1.0) * acos( (*this) * vec / this->length());
     }
 
 };
