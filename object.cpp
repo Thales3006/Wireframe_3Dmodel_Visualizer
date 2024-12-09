@@ -14,7 +14,7 @@ Object::Object(std::vector<Polygon> polygons) {
 }
 
 void Object::draw(QImage& canvas) {
-    for(Polygon poly : polygons)
+    for(Polygon &poly : polygons)
         poly.draw(canvas);
 }
 
@@ -25,7 +25,6 @@ bool Object::loadObj(const std::string FileName) {
     std::vector<Vector3<unsigned int>> faces;
 
     file.open(FileName);
-
     if (!file.is_open() || !polygons.empty())
         return false;
 
@@ -59,15 +58,17 @@ bool Object::loadObj(const std::string FileName) {
 
 std::vector<std::unique_ptr<Geometry>> Object::drawable() {
     std::vector<std::unique_ptr<Geometry>> ptrs;
-    ptrs.push_back(std::unique_ptr<Geometry>(this));
+    for(auto& poly : polygons)
+        for(auto& line_ptr : poly.drawable())
+            ptrs.push_back(std::move(line_ptr));
     return ptrs;
 }
 
 std::unique_ptr<Geometry> Object::multiply(Matrix4x4& matrix) {
     std::vector<Polygon> polygons = this->polygons;
-    for(Polygon poly : polygons)
+    for(auto& poly : polygons)
         poly.multiply(matrix);
-    return std::make_unique<Object>(polygons);
+    return std::make_unique<Geometry>(Object(polygons));
 }
 
 Vector3<float> Object::mean() {
