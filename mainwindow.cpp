@@ -12,8 +12,6 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    setFocusPolicy(Qt::StrongFocus);
-
     //configurações iniciais
     QSize canvasSize = ui->visualizador->size();
     canvas = QImage(canvasSize.width(),canvasSize.height(), QImage::Format_RGB888);
@@ -22,6 +20,8 @@ MainWindow::MainWindow(QWidget *parent) :
     timer = new QTimer(this);
     connect(timer, &QTimer::timeout, this, QOverload<>::of(&MainWindow::updateFrame));
     timer->start(16); // 16ms entre cada atualização (~60 FPS)
+
+    qApp->installEventFilter(this);
 
     scene = new QGraphicsScene(this);
     view = new QGraphicsView(scene, ui->visualizador);
@@ -45,10 +45,6 @@ MainWindow::~MainWindow()
 void MainWindow::updateFrame() {
     paint();
     keyHandler();
-
-    if (!hasFocus()) {
-        setFocus();  // Teste configurar o foco novamente se estiver perdido
-    }
 }
 
 // desenha os items na tela
@@ -91,7 +87,7 @@ void MainWindow::inicialSetupDisplayFile(){
     Object a("C:/Users/thale/Downloads/teapot.obj");
     displayFile.insert("teapot", a);
     Matrix4x4 m = Matrix4x4::identity();
-    m.scale(Vector3<float>(10.0,10.0,10.0));
+    m.scale(Vector3<float>(60.0,60.0,60.0));
     displayFile.setMatrix("teapot", m);
     //===================
 }
@@ -242,4 +238,14 @@ void MainWindow::keyHandler(){
 
     QSize canvasSize = ui->visualizador->size();
     canvas = QImage(canvasSize.width(),canvasSize.height(), QImage::Format_RGB888);
+}
+
+bool MainWindow::eventFilter(QObject *obj, QEvent *event) {
+    if (event->type() == QEvent::KeyRelease) {
+        QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+        keyReleaseEvent(keyEvent);
+        return true;
+    }
+
+    return QObject::eventFilter(obj, event);
 }
