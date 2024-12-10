@@ -18,6 +18,7 @@ public:
     Vector3<float> mean() override;
 
     bool loadObj(const std::string FileName);
+    void print();
 };
 
 #endif // OBJECT_H
