@@ -85,9 +85,8 @@ void DisplayFile::drawAll(QImage& canvas, Matrix4x4 cameraMatrix, Vector3<float>
 
         drawableVec = displayFileList[i]->multiply(tempMatrix)->drawable();
 
-        if(drawableVec.size()>0)
-            for(const auto& drawableObj : drawableVec)
-                buffer.push_back( drawableObj->multiply(viewportMatrix) );
+        for(const auto& drawableObj : drawableVec)
+            buffer.push_back( drawableObj->multiply(viewportMatrix) );
     }
 
     for(const auto& object : buffer)

@@ -25,10 +25,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     scene = new QGraphicsScene(this);
     view = new QGraphicsView(scene, ui->visualizador);
-    //TESTING ============
-    Object a("C:/Users/thale/Downloads/teapot.obj");
-    displayFile.insert("teapot", a);
-    //===================
+
     //configurando o displayFile
     inicialSetupDisplayFile();
 
@@ -89,6 +86,14 @@ void MainWindow::inicialSetupDisplayFile(){
     displayFile.insert("ponto3", point13);
     displayFile.insert("eixo X", Line(Point(-300,0,0, 0,0,0),Point(300,0,0 ,0,0,0)));
     displayFile.insert("eixo y", Line(Point(0,-300,0 ,0,0,0),Point(0,300,0 ,0,0,0)));
+
+    //TESTING ============
+    Object a("C:/Users/thale/Downloads/teapot.obj");
+    displayFile.insert("teapot", a);
+    Matrix4x4 m = Matrix4x4::identity();
+    m.scale(Vector3<float>(10.0,10.0,10.0));
+    displayFile.setMatrix("teapot", m);
+    //===================
 }
 
 
