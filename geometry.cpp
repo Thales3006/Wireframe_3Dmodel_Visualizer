@@ -93,62 +93,52 @@ std::unique_ptr<Line> Line::drawableLine() {
     Vector3<float> v1 = p1.mean();
     Vector3<float> v2 = p2.mean();
     Vector3<float> d;
-    float k;
+
+    auto interceptBorder = [](Vector3<float> dir, Vector3<float> v, char rc) {
+        float k;
+        if(rc==0)
+            return std::optional<Vector3<float>>{v};
+        else if(((rc&3) && dir.y==0) || ((rc&12) && dir.x==0))
+            return std::optional<Vector3<float>>{};
+
+        dir=dir.normalize();
+
+        if(rc&1)
+            k=(1-v.y)/dir.y;
+        else if(rc&2)
+            k=(-1-v.y)/dir.y;
+        else
+            k=0;
+
+        v+=dir*k;
+
+        if(v.x>1)
+            k=(1-v.x)/dir.x;
+        else if(v.x<-1)
+            k=(-1-v.x)/dir.x;
+        else
+            k=0;
+
+        v+=dir*k;
+
+        if(v.y>1||v.y<-1)
+            return std::optional<Vector3<float>>{};
+        else
+            return std::optional<Vector3<float>>{v};
+    };
 
     d = (v2-v1).normalize();
 
-    // v1 = p + d*k;
+    std::optional<Vector3<float>> maybeV1=interceptBorder(d, v1, rc1);
+    if(!maybeV1)
+        return NULL;
 
-    // v1.x = p.x + d.x*k;
-    // v1.y = p.y + d.y*k;
+    std::optional<Vector3<float>> maybeV2=interceptBorder(d, v2, rc2);
+    if(!maybeV2)
+        return NULL;
 
-    // 1 = p.x + d.x*k;
-    // v1.y = p.y + d.y*k;
-    // (1-p.x)/d.x = k;
-
-    // v1.x = p.x + d.x*k;
-    // 1 = p.y + d.y*k;
-    // (1-p.y)/d.y = k;
-    if(rc1!=0) {
-        if(rc1&1)
-            k=(1-v1.y)/d.y;
-        else if(rc1&2)
-            k=(-1-v1.y)/d.y;
-        else
-            k=0;
-        v1 += d*k;
-        if(v1.x>1||v1.x<-1) {
-            if(rc1&4)
-                k=(1-v1.x)/d.x;
-            else if(rc1&8)
-                k=(-1-v1.x)/d.x;
-            else
-                k=0;
-            v1 += d*k;
-            if(v1.y>1||v1.y<-1)
-                return NULL;
-        }
-    }
-    if(rc2!=0) {
-        if(rc2&1)
-            k=(1-v2.y)/d.y;
-        else if(rc2&2)
-            k=(-1-v2.y)/d.y;
-        else
-            k=0;
-        v2 += d*k;
-        if(v2.x>1||v2.x<-1) {
-            if(rc2&4)
-                k=(1-v2.x)/d.x;
-            else if(rc2&8)
-                k=(-1-v2.x)/d.x;
-            else
-                k=0;
-            v2 += d*k;
-            if(v2.y>1||v2.y<-1)
-                return NULL;
-        }
-    }
+    v1 = std::move(*maybeV1);
+    v2 = std::move(*maybeV2);
 
     return std::make_unique<Line>(
         Point(v1.x, v1.y, v1.z, p1.r, p1.g, p1.b),
