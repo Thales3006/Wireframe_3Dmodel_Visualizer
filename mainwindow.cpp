@@ -84,7 +84,10 @@ void MainWindow::inicialSetupDisplayFile(){
     displayFile.insert("eixo y", Line(Point(0,-300,0 ,0,0,0),Point(0,300,0 ,0,0,0)));
 
     //TESTING ============
-    Object a("C:/Users/thale/Downloads/teapot.obj");
+    int err;
+    Object a;
+    if((err=a.loadObj("teapot.obj"))!=0)
+        std::cout << "n carregou, erro: " << err << std::endl;
     displayFile.insert("teapot", a);
     Matrix4x4 m = Matrix4x4::identity();
     m.scale(Vector3<float>(60.0,60.0,60.0));

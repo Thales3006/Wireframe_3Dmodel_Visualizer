@@ -77,3 +77,6 @@ CMakeLists.txt.user*
 
 moc_predefs.h
 Wireframe_3Dmodel_Visualizer
+
+# Pasta com os objs para serem visualizados
+!objs/*

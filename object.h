@@ -17,7 +17,7 @@ public:
     std::unique_ptr<Geometry> multiply(Matrix4x4& matrix) override;
     Vector3<float> mean() override;
 
-    bool loadObj(const std::string FileName);
+    int loadObj(const std::string FileName);
     void print();
 };
 

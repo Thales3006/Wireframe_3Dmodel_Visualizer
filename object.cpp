@@ -18,15 +18,18 @@ void Object::draw(QImage& canvas) {
         poly.draw(canvas);
 }
 
-bool Object::loadObj(const std::string FileName) {
+int Object::loadObj(const std::string FileName) {
     std::string line;
     std::ifstream file;
     std::vector<Vector3<float>> vertices;
     std::vector<Vector3<unsigned int>> faces;
 
-    file.open(FileName);
-    if (!file.is_open() || !polygons.empty())
-        return false;
+    if(!polygons.empty())
+        return 1;
+
+    file.open("../../objs/"+FileName);
+    if (!file.is_open())
+        return 2;
 
     while (std::getline(file, line)) {
         std::istringstream iss(line);
@@ -53,7 +56,7 @@ bool Object::loadObj(const std::string FileName) {
         ));
 
     file.close();
-    return true;
+    return 0;
 }
 
 std::vector<std::unique_ptr<Geometry>> Object::drawable() {
