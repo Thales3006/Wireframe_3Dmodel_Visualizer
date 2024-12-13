@@ -84,14 +84,22 @@ void MainWindow::inicialSetupDisplayFile(){
     displayFile.insert("eixo y", Line(Point(0,-300,0 ,0,0,0),Point(0,300,0 ,0,0,0)));
 
     //TESTING ============
-    int err;
-    Object a;
-    if((err=a.loadObj("teapot.obj"))!=0)
-        std::cout << "n carregou, erro: " << err << std::endl;
-    displayFile.insert("teapot", a);
-    Matrix4x4 m = Matrix4x4::identity();
-    m.scale(Vector3<float>(60.0,60.0,60.0));
-    displayFile.setMatrix("teapot", m);
+    Object charizard;
+    Object umbreon;
+    if(charizard.loadObj("charizard.obj")==0) {
+        displayFile.insert("charizard", charizard);
+        Matrix4x4 m = Matrix4x4::identity();
+        m.scale(Vector3<float>(10.0,10.0,10.0));
+        m.translate(Vector3<float>(100,00,0));
+        displayFile.setMatrix("charizard", m);
+    }
+    if(umbreon.loadObj("umbreon.obj")==0) {
+        displayFile.insert("umbreon", umbreon);
+        Matrix4x4 m = Matrix4x4::identity();
+        m.scale(Vector3<float>(60.0,60.0,60.0));
+        m.translate(Vector3<float>(-100, 50, 0));
+        displayFile.setMatrix("umbreon", m);
+    }
     //===================
 }
 

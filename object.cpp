@@ -1,5 +1,6 @@
 #include "object.h"
 
+#include <iostream>
 #include <fstream>
 #include <sstream>
 
@@ -24,12 +25,16 @@ int Object::loadObj(const std::string FileName) {
     std::vector<Vector3<float>> vertices;
     std::vector<Vector3<unsigned int>> faces;
 
-    if(!polygons.empty())
+    if(!polygons.empty()) {
+        std::cout << "O object ja foi definido anteriormente!" << std::endl;
         return 1;
+    }
 
     file.open("../../objs/"+FileName);
-    if (!file.is_open())
+    if (!file.is_open()) {
+        std::cout << "Nao foi possivel abrir o arquivo \"" << FileName << '"' << std::endl;
         return 2;
+    }
 
     while (std::getline(file, line)) {
         std::istringstream iss(line);
