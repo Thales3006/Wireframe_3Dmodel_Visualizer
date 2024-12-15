@@ -84,6 +84,21 @@ Vector3<float> Object::mean() {
 }
 
 void Object::print() {
-    for(auto& poly : polygons)
-        std::cout << "p1: "<< poly.l1.p1.x << " " << poly.l1.p1.y << " " << poly.l1.p1.z << "p2: "<< poly.l2.p1.x << " " << poly.l2.p1.y << " " << poly.l2.p1.z << "p3: "<< poly.l3.p1.x << " " << poly.l3.p1.y << " " << poly.l3.p1.z << std::endl;
+    // for(auto& poly : polygons)
+        // std::cout << "p1: "<< poly.l1.p1.x << " " << poly.l1.p1.y << " " << poly.l1.p1.z << "p2: "<< poly.l2.p1.x << " " << poly.l2.p1.y << " " << poly.l2.p1.z << "p3: "<< poly.l3.p1.x << " " << poly.l3.p1.y << " " << poly.l3.p1.z << std::endl;
+    std::cout << this;
+}
+
+std::ostream& operator<<(std::ostream& s, const Object& o) {
+    bool isNotFirst=false;
+    s << "[ ";
+    for(auto& poly : o.polygons) {
+        if(isNotFirst)
+            s << ", ";
+        else
+            isNotFirst=true;
+        s << poly;
+    }
+    s << " ]";
+    return s;
 }

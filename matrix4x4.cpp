@@ -87,23 +87,6 @@ Matrix4x4 Matrix4x4::transpose() {
     return m;
 }
 
-void Matrix4x4::print() {
-    char i, j;
-    std::cout << "{";
-    for(i=0;i<4;i++) {
-        if(i)
-            std::cout << ",";
-        std::cout << "\n  { ";
-        for(j=0;j<4;j++) {
-            if(j)
-                std::cout << ", ";
-            std::cout << get(i,j);
-        }
-        std::cout << " }";
-    }
-    std::cout << "\n}\n";
-}
-
 Matrix4x4 Matrix4x4::identity() {
     size_t i;
     Matrix4x4 I;
@@ -152,4 +135,23 @@ Vector3<float> Matrix4x4::operator*(Vector3<float> vec){
         vec.x*arr[1][0] + vec.y*arr[1][1] + vec.z*arr[1][2] + arr[1][3],
         vec.x*arr[2][0] + vec.y*arr[2][1] + vec.z*arr[2][2] + arr[2][3]
         );
+}
+
+std::ostream& operator<<(std::ostream& s, Matrix4x4& m) {
+    int i, j;
+    s << "{";
+    for(i=0;i<4;i++) {
+        if(i)
+            s << ",";
+        s << "\n  { ";
+        for(j=0;j<4;j++) {
+            if(j)
+                s << ", ";
+            s << m.get(i,j);
+        }
+        s << " }";
+    }
+    s << "\n}";
+
+    return s;
 }
