@@ -1,6 +1,8 @@
 #ifndef VECTORN_H
 #define VECTORN_H
 
+#include <iostream>
+
 template <typename T>
 class Vector2 {
 public:
@@ -138,4 +140,21 @@ public:
     }
 };
 
+template <typename T>
+std::ostream& operator<<(std::ostream& s, const Vector2<T>& v) {
+    s << "<" << v.x << ", " << v.y << ">";
+    return s;
+}
+
+template <typename T>
+std::ostream& operator<<(std::ostream& s, const Vector3<T>& v) {
+    s << "<" << v.x << ", " << v.y << ", " << v.z << ">";
+    return s;
+}
+
+template <typename T>
+std::ostream& operator<<(std::ostream& s, const Vector4<T>& v) {
+    s << "<" << v.x << ", " << v.y << ", " << v.z << ", " << v.w << ">";
+    return s;
+}
 #endif // VECTORN_H
