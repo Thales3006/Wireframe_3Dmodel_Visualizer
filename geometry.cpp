@@ -53,6 +53,10 @@ Vector3<float> Point::mean(){
     return Vector3<float>(x,y,z);
 }
 
+bool Point::operator==(Point& p) {
+    return x==p.x && y==p.y && z==p.z;
+}
+
 char Point::getRC() {
     return (char)((x<-1 ? 8 : (x>1 ? 4 : 0)) | (y<-1 ? 2 : (y>1 ? 1 : 0)));
 }
@@ -159,8 +163,12 @@ std::unique_ptr<Line> Line::drawableLine() {
 std::vector<std::unique_ptr<Geometry>> Line::drawable() {
     std::vector<std::unique_ptr<Geometry>> v;
     std::unique_ptr<Line> l = this->drawableLine();
-    if(l!=NULL)
-        v.push_back(std::move(l));
+    if(l!=NULL) {
+        if(l->p1==l->p2)
+            v.push_back(std::make_unique<Point>(l->p1));
+        else
+            v.push_back(std::move(l));
+    }
     return v;
 }
 
@@ -175,6 +183,10 @@ Vector3<float> Line::mean(){
     return Vector3<float>( (p1.x+p2.x)/2, (p1.y+p2.y)/2, (p1.z+p2.z)/2);
 }
 
+bool Line::operator==(Line& l) {
+    return p1==l.p1 && p2==l.p2;
+}
+
 Polygon::Polygon(Point q1, Point q2, Point q3) :
     l1(q1, q2),
     l2(q2, q3),
@@ -186,11 +198,11 @@ std::vector<std::unique_ptr<Line>> Polygon::drawablePolygon() {
     std::unique_ptr<Line> newL1 = l1.drawableLine();
     std::unique_ptr<Line> newL2 = l2.drawableLine();
     std::unique_ptr<Line> newL3 = l3.drawableLine();
-    if(newL1)
+    if(newL1!=NULL)
         v.push_back(std::move(newL1));
-    if(newL2)
+    if(newL2!=NULL && newL2!=newL1)
         v.push_back(std::move(newL2));
-    if(newL3)
+    if(newL3!=NULL && newL3!=newL2 && newL3!=newL1)
         v.push_back(std::move(newL3));
     return v;
 }

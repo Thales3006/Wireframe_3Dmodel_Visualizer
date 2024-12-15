@@ -31,6 +31,7 @@ public:
         std::cout << "Rewrite mean function!" << std::endl;
         return Vector3<float>(0,0,0);
     }
+
 };
 
 class Point : public Geometry
@@ -51,6 +52,8 @@ public:
 
     Vector3<float> mean() override;
 
+    bool operator==(Point& p);
+
     char getRC();
 };
 
@@ -70,6 +73,8 @@ public:
     std::unique_ptr<Geometry> multiply(Matrix4x4& matrix) override;
 
     Vector3<float> mean() override;
+
+    bool operator==(Line& l);
 };
 
 class Polygon : public Geometry

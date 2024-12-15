@@ -193,9 +193,6 @@ void MainWindow::keyHandler(){
 
     const float movementChange = 0.03;
 
-    Vector3<float> up = camera.getUp()*movementChange;
-    Vector3<float> side = camera.getRight()*movementChange;
-    //Vector3<float> front = camera.getDir()*movementChange;
     //rotation
     if (keysPressed.contains(Qt::Key_K))
         m.rotate(0.01,0,1);
@@ -208,6 +205,9 @@ void MainWindow::keyHandler(){
     camera.setUp(m*camera.getUp());
     camera.setDir(q*camera.getDir());
 
+    Vector3<float> up = camera.getUp()*movementChange;
+    Vector3<float> side = camera.getRight()*movementChange;
+    //Vector3<float> front = camera.getDir()*movementChange;
     //movement
     if (keysPressed.contains(Qt::Key_A))
         n.translate(-side);
