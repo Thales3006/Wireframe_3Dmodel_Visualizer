@@ -15,6 +15,11 @@ void DisplayFile::insert(std::string name, Polygon obj){
     names.push_back(name);
 }
 
+void DisplayFile::insert(std::string name, Object obj){
+    displayFileList.push_back(std::make_unique<Object>(obj));
+    names.push_back(name);
+}
+
 void DisplayFile::remove(int index){
     if(displayFileList.size() <= 0 ||index < 0) return;
 
@@ -72,7 +77,7 @@ void DisplayFile::drawAll(QImage& canvas, Matrix4x4 cameraMatrix, Vector3<float>
 
     viewportSize = viewportSize/2.0;
     viewportMatrix = Matrix4x4::identity();
-    viewportMatrix.scale(viewportSize/2); // <--- dividido na metade para evidenciar o clipping
+    viewportMatrix.scale(viewportSize);
     viewportMatrix.translate(viewportSize);
 
     for(int i = 0; i < (int)displayFileList.size(); i++){
@@ -80,17 +85,10 @@ void DisplayFile::drawAll(QImage& canvas, Matrix4x4 cameraMatrix, Vector3<float>
 
         drawableVec = displayFileList[i]->multiply(tempMatrix)->drawable();
 
-        if(drawableVec.size()>0)
-            for(const auto& drawableObj : drawableVec)
-                buffer.push_back( drawableObj->multiply(viewportMatrix) );
+        for(const auto& drawableObj : drawableVec)
+            buffer.push_back( drawableObj->multiply(viewportMatrix) );
     }
 
     for(const auto& object : buffer)
         object->draw(canvas);
-
-    //mini Viewport limites
-    Line(Point(viewportSize.x-viewportSize.x/2,viewportSize.y-viewportSize.y/2, 0,0,0,0),Point(viewportSize.x+viewportSize.x/2,viewportSize.y-viewportSize.y/2, 0,0,0,0)).draw(canvas);
-    Line(Point(viewportSize.x-viewportSize.x/2,viewportSize.y+viewportSize.y/2, 0,0,0,0),Point(viewportSize.x+viewportSize.x/2,viewportSize.y+viewportSize.y/2, 0,0,0,0)).draw(canvas);
-    Line(Point(viewportSize.x-viewportSize.x/2,viewportSize.y-viewportSize.y/2, 0,0,0,0),Point(viewportSize.x-viewportSize.x/2,viewportSize.y+viewportSize.y/2, 0,0,0,0)).draw(canvas);
-    Line(Point(viewportSize.x+viewportSize.x/2,viewportSize.y-viewportSize.y/2, 0,0,0,0),Point(viewportSize.x+viewportSize.x/2,viewportSize.y+viewportSize.y/2, 0,0,0,0)).draw(canvas);
 }

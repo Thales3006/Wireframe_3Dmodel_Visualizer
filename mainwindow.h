@@ -46,6 +46,8 @@ public:
     void keyPressEvent(QKeyEvent *event);
     void keyReleaseEvent(QKeyEvent *event);
 
+    bool eventFilter(QObject *obj, QEvent *event);
+
 private slots:
 
     void on_applyTransform_clicked();

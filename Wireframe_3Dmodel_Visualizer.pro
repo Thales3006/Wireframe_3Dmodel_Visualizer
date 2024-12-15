@@ -14,6 +14,7 @@ SOURCES += \
     mainwindow.cpp \
     geometry.cpp \
     matrix4x4.cpp \
+    object.cpp \
     window.cpp
 
 HEADERS += \
@@ -21,6 +22,7 @@ HEADERS += \
     geometry.h \
     mainwindow.h \
     matrix4x4.h \
+    object.h \
     vectorn.h \
     window.h
 

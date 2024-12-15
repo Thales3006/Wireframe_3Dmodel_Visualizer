@@ -70,15 +70,13 @@ Matrix4x4 Window::getMatrix() {
 }
 
 void Window::updateMatrix() {
-    float length = up.length();
-    Vector3<float> y = Vector3<float>(0.0,1.0,0.0);
 
-    float angle = (up.x > 0? 1.0:-1.0) * acos( up * y / length);
-    Matrix4x4 newMatrix = Matrix4x4::identity();
+    float roll = up.angle(Vector3<float>(0.0,1.0,0.0));
+    float yaw = dir.angle(Vector3<float>(0.0,0.0,1.0));
+    this->matrix = Matrix4x4::identity();
 
-    newMatrix.translate(-pos);
-    newMatrix.rotate(angle,0,1);
-    newMatrix.scale( Vector3<float>(1/rightScale, 1/length, 1.0) );
-
-    this->matrix = newMatrix;
+    this->matrix.translate(-pos);
+    this->matrix.rotate(roll,0,1);
+    this->matrix.rotate(yaw,0,2);
+    this->matrix.scale(Vector3<float>(1/rightScale, 1/up.length(), 1.0));
 }

@@ -2,6 +2,7 @@
 #define DISPLAYFILE_H
 
 #include "geometry.h"
+#include "object.h"
 
 class DisplayFile
 {
@@ -12,6 +13,7 @@ public:
     void insert(std::string name, Point obj);
     void insert(std::string name, Line obj);
     void insert(std::string name, Polygon obj);
+    void insert(std::string name, Object obj);
 
     void remove(int index);
     void pop();
