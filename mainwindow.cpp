@@ -26,6 +26,17 @@ MainWindow::MainWindow(QWidget *parent) :
     scene = new QGraphicsScene(this);
     view = new QGraphicsView(scene, ui->visualizador);
 
+    //configurações da camera
+    float a[4][4] = {
+        {1.0, 0.0, 0.0, 0.0},
+        {0.0, 1.0, 0.0, 0.0},
+        {0.0, 0.0, 1.0, 0.0},
+        {0.0, 0.0, 0.0, 1.0},
+    };
+    Matrix4x4 mat(a);
+
+    camera.setProjection(mat);
+
     //configurando o displayFile
     inicialSetupDisplayFile();
 
@@ -50,9 +61,10 @@ void MainWindow::updateFrame() {
 // desenha os items na tela
 void MainWindow::paint(){
     scene->removeItem(pixmapItem);
+    delete pixmapItem;
 
     canvas.fill(Qt::white);
-    displayFile.drawAll(canvas, camera.getMatrix(), Vector3<float>(ui->visualizador->width(),ui->visualizador->height(),1.0) );
+    displayFile.drawAll(canvas, camera.getView(), Vector3<float>(ui->visualizador->width(),ui->visualizador->height(),1.0) );
     pixmapItem = new QGraphicsPixmapItem(QPixmap::fromImage(canvas));
 
     scene->addItem(pixmapItem);
