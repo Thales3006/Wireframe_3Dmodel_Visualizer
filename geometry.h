@@ -5,6 +5,7 @@
 #include <iostream>
 #include "matrix4x4.h"
 #include "vectorn.h"
+#include <optional>
 
 class Geometry{
 public:
