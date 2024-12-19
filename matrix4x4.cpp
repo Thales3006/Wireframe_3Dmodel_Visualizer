@@ -95,16 +95,45 @@ Matrix4x4 Matrix4x4::identity() {
     return I;
 }
 
-void Matrix4x4::rotate(float angle, int planeI, int planeJ) {
-    Matrix4x4 id = Matrix4x4::identity();
-    id.set(planeI, planeI, cos(angle));
-    id.set(planeI, planeJ, -sin(angle));
-    id.set(planeJ, planeI, sin(angle));
-    id.set(planeJ, planeJ, cos(angle));
+void Matrix4x4::rotateX(float angle){
+    float co = cos(angle);
+    float si = sin(angle);
+    float a[4][4] = {
+        {1.0, 0.0, 0.0, 0.0},
+        {0.0, co , -si, 0.0},
+        {0.0, si , co , 0.0},
+        {0.0, 0.0, 0.0, 1.0},
+    };
+    Matrix4x4 mat(a);
+    *this = mat * (*this);
+}
 
-    Matrix4x4 result = id * (*this);
+void Matrix4x4::rotateY(float angle){
+    float co = cos(angle);
+    float si = sin(angle);
+    float a[4][4] = {
+        {co , 0.0, si , 0.0},
+        {0.0, 1.0, 0.0, 0.0},
+        {-si, 0.0, co , 0.0},
+        {0.0, 0.0, 0.0, 1.0},
+    };
+    Matrix4x4 mat(a);
 
-    *this = result;
+    *this = mat * (*this);
+}
+
+void Matrix4x4::rotateZ(float angle){
+    float co = cos(angle);
+    float si = sin(angle);
+    float a[4][4] = {
+        {co , -si, 0.0, 0.0},
+        {si , co , 0.0, 0.0},
+        {0.0, 0.0, 1.0, 0.0},
+        {0.0, 0.0, 0.0, 1.0},
+    };
+    Matrix4x4 mat(a);
+
+    *this = mat * (*this);
 }
 
 void Matrix4x4::translate(Vector3<float> trans) {

@@ -59,11 +59,11 @@ public:
 
     Vector3<float> mean() override;
 
-    bool operator==(Point& p);
+    bool operator==(const Point& p);
 
     char getRC();
 
-    virtual void print();
+    virtual void print() override;
     friend std::ostream& operator<<(std::ostream& s, const Point& p);
 };
 
@@ -84,9 +84,10 @@ public:
 
     Vector3<float> mean() override;
 
-    bool operator==(Line& l);
+    bool operator==(const Line& l);
+    bool operator>=(const Line& l);
 
-    virtual void print();
+    virtual void print() override;
     friend std::ostream& operator<<(std::ostream& s, const Line& l);
 };
 
@@ -111,8 +112,10 @@ public:
 
     Vector3<float> mean() override;
 
-    virtual void print();
+    virtual void print() override;
     friend std::ostream& operator<<(std::ostream& s, const Polygon& p);
+    bool operator==(const Polygon& p);
+    bool operator!=(const Polygon& p);
 };
 
 #endif // GEOMETRY_H

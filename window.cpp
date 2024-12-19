@@ -71,14 +71,18 @@ Matrix4x4 Window::getView() {
 }
 
 void Window::updateView() {
-
-    float roll = up.angle(Vector3<float>(0.0,1.0,0.0));
-    float yaw = dir.angle(Vector3<float>(0.0,0.0,1.0));
+    //REFAZER ANGULOS
+    float pitch = 0.0;
+    float roll = 0.0;
+    float yaw = 0.0;
     this->view = Matrix4x4::identity();
 
     this->view.translate(-pos);
-    this->view.rotate(roll,0,1);
-    this->view.rotate(yaw,0,2);
+
+    this->view.rotateY(yaw);
+    this->view.rotateZ(pitch);
+    this->view.rotateZ(roll);
+
     this->view.scale(Vector3<float>(1/rightScale, 1/up.length(), 1.0));
 
     this->view = this->projection * this->view;

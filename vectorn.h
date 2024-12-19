@@ -104,6 +104,17 @@ public:
         return (x > 0? 1.0:-1.0) * acos( (*this) * vec / this->length());
     }
 
+    Vector3<T> ignore(int axis){
+        switch(axis){
+        case 0:
+            return Vector3<T>(0,y,z);
+        case 1:
+            return Vector3<T>(x,0,z);
+        case 2:
+            return Vector3<T>(x,y,0);
+        }
+    }
+
 };
 
 template <typename T>

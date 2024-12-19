@@ -30,7 +30,7 @@ Point::Point(Vector3<float> p){
 
 void Point::draw(QImage& canvas){
     int nY = canvas.height()-y;
-    if(x >= 0 && x < canvas.width() && nY >= 0 && nY < canvas.height())
+    if(x >= 0 && x < canvas.width() && nY >= 0 && nY < canvas.height() && z >= 0)
         canvas.setPixel(x,nY, qRgb(r,g,b));
 }
 
@@ -60,7 +60,7 @@ Vector3<float> Point::mean(){
     return Vector3<float>(x,y,z);
 }
 
-bool Point::operator==(Point& p) {
+bool Point::operator==(const Point& p) {
     return x==p.x && y==p.y && z==p.z;
 }
 
@@ -190,7 +190,11 @@ Vector3<float> Line::mean(){
     return Vector3<float>( (p1.x+p2.x)/2, (p1.y+p2.y)/2, (p1.z+p2.z)/2);
 }
 
-bool Line::operator==(Line& l) {
+bool Line::operator==(const Line& l) {
+    return p1==l.p1 && p2==l.p2;
+}
+
+bool Line::operator>=(const Line& l) {
     return p1==l.p1 && p2==l.p2;
 }
 
@@ -229,21 +233,6 @@ std::vector<std::unique_ptr<Geometry>> Polygon::drawable() {
     for(auto& line : vl)
         v.push_back(std::move(line));
     return v;
-}
-
-void Polygon::rotate3d(Vector3<float> rot){
-    Matrix4x4 m = Matrix4x4::identity();
-    m.set(0,0,l1.p1.x);
-    m.set(0,1,l1.p1.y);
-    m.set(0,2,l1.p1.z);
-
-    m.rotate(rot.x, 1,2);
-    m.rotate(rot.y, 0,2);
-    m.rotate(rot.z, 0,1);
-
-    l1.p1.x = m.get(0,0);
-    l1.p1.y = m.get(0,1);
-    l1.p1.x = m.get(0,2);
 }
 
 void Polygon::fill(QImage& canvas){
@@ -294,15 +283,23 @@ std::unique_ptr<Geometry> Polygon::multiply(Matrix4x4& matrix){
     return std::make_unique<Polygon>(line1.p1, line2.p1, line3.p1 );
 }
 
- Vector3<float> Polygon::mean(){
+Vector3<float> Polygon::mean(){
     return Vector3<float>( (l1.p1.x+l2.p1.x+l3.p1.x)/3, (l1.p1.y+l2.p1.y+l3.p1.y)/3, (l1.p1.z+l2.p1.z+l3.p1.z)/3);
 }
 
- void Polygon::print() {
-     std::cout << this;
- }
+void Polygon::print() {
+ std::cout << this;
+}
 
- std::ostream& operator<<(std::ostream& s, const Polygon& p) {
-     s << "{ l1: " << p.l1 << ", l2: " << p.l2 << ", l3: " << p.l3 << " }";
-     return s;
- }
+std::ostream& operator<<(std::ostream& s, const Polygon& p) {
+ s << "{ l1: " << p.l1 << ", l2: " << p.l2 << ", l3: " << p.l3 << " }";
+ return s;
+}
+
+bool Polygon::operator==(const Polygon& p){
+    return (l1 == p.l1 && l2 == p.l2 && l3 == p.l3) || (l1 == p.l2 && l2 == p.l3 && l3 == p.l1) || (l1 == p.l3 && l2 == p.l1 && l3 == p.l2);
+}
+
+bool Polygon::operator!=(const Polygon& p){
+    return !((*this)==p);
+}
