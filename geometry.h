@@ -5,11 +5,12 @@
 #include <iostream>
 #include "matrix4x4.h"
 #include "vectorn.h"
-#include <optional>
 
 class Geometry{
 public:
     Matrix4x4 matrix = Matrix4x4::identity();
+
+    virtual ~Geometry() {}
 
     virtual void draw(QImage& canvas) {
         Q_UNUSED(canvas);
@@ -31,7 +32,7 @@ public:
     virtual Vector3<float> mean(){
         std::cout << "Rewrite mean function!" << std::endl;
         return Vector3<float>(0,0,0);
-    }
+    }  
 
 };
 

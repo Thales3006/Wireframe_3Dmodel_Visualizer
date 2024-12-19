@@ -12,6 +12,7 @@ public:
     Object(const std::string FileName);
     Object(std::vector<Polygon> polygons);
 
+
     void draw(QImage& canvas) override;
     std::vector<std::unique_ptr<Geometry>> drawable() override;
     std::unique_ptr<Geometry> multiply(Matrix4x4& matrix) override;

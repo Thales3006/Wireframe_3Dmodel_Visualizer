@@ -1,5 +1,6 @@
 #include "geometry.h"
 #include <math.h>
+#include <optional>
 
 Point::Point(float x0, float y0, float z0, unsigned char r0, unsigned char g0, unsigned char b0){
     x = x0;
