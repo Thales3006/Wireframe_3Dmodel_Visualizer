@@ -73,7 +73,7 @@ Matrix4x4 Window::getView() {
 void Window::updateView() {
     //REFAZER ANGULOS
     float pitch = 0.0;
-    float roll = 0.0;
+    float roll = up.angle(Vector3<float>(0.0, 1.0, 0.0));
     float yaw = 0.0;
     this->view = Matrix4x4::identity();
 
