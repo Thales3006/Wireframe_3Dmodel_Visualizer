@@ -26,6 +26,17 @@ MainWindow::MainWindow(QWidget *parent) :
     scene = new QGraphicsScene(this);
     view = new QGraphicsView(scene, ui->visualizador);
 
+    //configurações da camera
+    float a[4][4] = {
+        {1.0, 0.0, 0.0, 0.0},
+        {0.0, 1.0, 0.0, 0.0},
+        {0.0, 0.0, 1.0, 0.0},
+        {0.0, 0.0, 0.0, 1.0},
+    };
+    Matrix4x4 mat(a);
+
+    camera.setProjection(mat);
+
     //configurando o displayFile
     inicialSetupDisplayFile();
 
@@ -50,9 +61,10 @@ void MainWindow::updateFrame() {
 // desenha os items na tela
 void MainWindow::paint(){
     scene->removeItem(pixmapItem);
+    delete pixmapItem;
 
     canvas.fill(Qt::white);
-    displayFile.drawAll(canvas, camera.getMatrix(), Vector3<float>(ui->visualizador->width(),ui->visualizador->height(),1.0) );
+    displayFile.drawAll(canvas, camera.getView(), Vector3<float>(ui->visualizador->width(),ui->visualizador->height(),1.0) );
     pixmapItem = new QGraphicsPixmapItem(QPixmap::fromImage(canvas));
 
     scene->addItem(pixmapItem);
@@ -87,18 +99,16 @@ void MainWindow::inicialSetupDisplayFile(){
     Object charizard;
     Object umbreon;
     if(charizard.loadObj("charizard.obj")==0) {
-        displayFile.insert("charizard", charizard);
         Matrix4x4 m = Matrix4x4::identity();
         m.scale(Vector3<float>(10.0,10.0,10.0));
         m.translate(Vector3<float>(100,00,0));
-        displayFile.setMatrix("charizard", m);
+        displayFile.insert("charizard", charizard.multiply(m));
     }
     if(umbreon.loadObj("umbreon.obj")==0) {
-        displayFile.insert("umbreon", umbreon);
         Matrix4x4 m = Matrix4x4::identity();
         m.scale(Vector3<float>(60.0,60.0,60.0));
         m.translate(Vector3<float>(-100, 50, 0));
-        displayFile.setMatrix("umbreon", m);
+        displayFile.insert("umbreon", umbreon.multiply(m));
     }
     //===================
 }

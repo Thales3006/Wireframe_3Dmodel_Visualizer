@@ -1,6 +1,7 @@
 #include "geometry.h"
 #include <math.h>
 #include <iostream>
+#include <optional>
 
 std::ostream& operator<<(std::ostream& s, Geometry& g) {
     g.print();

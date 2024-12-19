@@ -6,15 +6,16 @@ Window::Window(Vector3<float> pos, Vector3<float> up, Vector3<float> dir, float 
     this->dir = dir.length()? dir : Vector3<float>(0.0,0.0,1.0);
 
     this->rightScale = rightScale? rightScale : 1.0;
-
     this->right = (up^dir).normalize() * rightScale;
 
-    this->updateMatrix();
+    this->projection = Matrix4x4::identity();
+
+    this->updateView();
 }
 
 void Window::setPos(Vector3<float> pos) {
     this->pos = pos;
-    this->updateMatrix();
+    this->updateView();
 }
 
 #include <QMainWindow>
@@ -24,7 +25,7 @@ void Window::setUp(Vector3<float> up) {
 
     this->up = up;
     this->right = (up^dir).normalize() * rightScale;
-    this->updateMatrix();
+    this->updateView();
 }
 
 void Window::setDir(Vector3<float> dir){
@@ -33,7 +34,7 @@ void Window::setDir(Vector3<float> dir){
 
     this->dir = dir;
     this->right = (up^dir).normalize() * rightScale;
-    this->updateMatrix();
+    this->updateView();
 }
 
 void Window::setRightScale(float scalar){
@@ -42,7 +43,7 @@ void Window::setRightScale(float scalar){
 
     this->rightScale = scalar;
     this->right = (up^dir).normalize() * rightScale;
-    this->updateMatrix();
+    this->updateView();
 }
 
 Vector3<float> Window::getPos() {
@@ -65,18 +66,24 @@ float Window::getRightScale(){
     return rightScale;
 }
 
-Matrix4x4 Window::getMatrix() {
-    return matrix;
+Matrix4x4 Window::getView() {
+    return view;
 }
 
-void Window::updateMatrix() {
+void Window::updateView() {
 
     float roll = up.angle(Vector3<float>(0.0,1.0,0.0));
     float yaw = dir.angle(Vector3<float>(0.0,0.0,1.0));
-    this->matrix = Matrix4x4::identity();
+    this->view = Matrix4x4::identity();
 
-    this->matrix.translate(-pos);
-    this->matrix.rotate(roll,0,1);
-    this->matrix.rotate(yaw,0,2);
-    this->matrix.scale(Vector3<float>(1/rightScale, 1/up.length(), 1.0));
+    this->view.translate(-pos);
+    this->view.rotate(roll,0,1);
+    this->view.rotate(yaw,0,2);
+    this->view.scale(Vector3<float>(1/rightScale, 1/up.length(), 1.0));
+
+    this->view = this->projection * this->view;
+}
+
+void Window::setProjection(Matrix4x4 matrix){
+    this->projection = matrix;
 }
