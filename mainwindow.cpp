@@ -99,18 +99,16 @@ void MainWindow::inicialSetupDisplayFile(){
     Object charizard;
     Object umbreon;
     if(charizard.loadObj("charizard.obj")==0) {
-        displayFile.insert("charizard", charizard);
         Matrix4x4 m = Matrix4x4::identity();
         m.scale(Vector3<float>(10.0,10.0,10.0));
         m.translate(Vector3<float>(100,00,0));
-        displayFile.setMatrix("charizard", m);
+        displayFile.insert("charizard", charizard.multiply(m));
     }
     if(umbreon.loadObj("umbreon.obj")==0) {
-        displayFile.insert("umbreon", umbreon);
         Matrix4x4 m = Matrix4x4::identity();
         m.scale(Vector3<float>(60.0,60.0,60.0));
         m.translate(Vector3<float>(-100, 50, 0));
-        displayFile.setMatrix("umbreon", m);
+        displayFile.insert("umbreon", umbreon.multiply(m));
     }
     //===================
 }

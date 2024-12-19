@@ -80,7 +80,11 @@ std::unique_ptr<Geometry> Object::multiply(Matrix4x4& matrix) {
 }
 
 Vector3<float> Object::mean() {
-    return Vector3<float>(0.0, 0.0, 0.0);
+    Vector3<float> v(0.0, 0.0, 0.0);
+    for(auto& poly : polygons)
+        v = v + poly.mean();
+    v = v/polygons.size();
+    return v;
 }
 
 void Object::print() {

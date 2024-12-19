@@ -14,6 +14,7 @@ public:
     void insert(std::string name, Line obj);
     void insert(std::string name, Polygon obj);
     void insert(std::string name, Object obj);
+    void insert(std::string name, std::unique_ptr<Geometry> obj);
 
     void remove(int index);
     void pop();

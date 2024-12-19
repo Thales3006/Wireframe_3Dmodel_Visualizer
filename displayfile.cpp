@@ -20,6 +20,11 @@ void DisplayFile::insert(std::string name, Object obj){
     names.push_back(name);
 }
 
+void DisplayFile::insert(std::string name, std::unique_ptr<Geometry> obj){
+    displayFileList.push_back(std::move(obj));
+    names.push_back(name);
+}
+
 void DisplayFile::remove(int index){
     if(displayFileList.size() <= 0 ||index < 0) return;
 
