@@ -28,7 +28,7 @@ public:
     void translate(Vector3<float> pos);
     void scale(Vector3<float>scalar);
 
-    void print();
+    friend std::ostream& operator<<(std::ostream& s, Matrix4x4& m);
 
     static Matrix4x4 identity();
 };

@@ -19,7 +19,9 @@ public:
     Vector3<float> mean() override;
 
     int loadObj(const std::string FileName);
+
     void print();
+    friend std::ostream& operator<<(std::ostream& s, const Object& o);
 };
 
 #endif // OBJECT_H

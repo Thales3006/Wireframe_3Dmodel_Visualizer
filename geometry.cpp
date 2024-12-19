@@ -1,6 +1,12 @@
 #include "geometry.h"
 #include <math.h>
+#include <iostream>
 #include <optional>
+
+std::ostream& operator<<(std::ostream& s, Geometry& g) {
+    g.print();
+    return s;
+}
 
 Point::Point(float x0, float y0, float z0, unsigned char r0, unsigned char g0, unsigned char b0){
     x = x0;
@@ -60,6 +66,16 @@ bool Point::operator==(Point& p) {
 
 char Point::getRC() {
     return (char)((x<-1 ? 8 : (x>1 ? 4 : 0)) | (y<-1 ? 2 : (y>1 ? 1 : 0)));
+}
+
+void Point::print() {
+    std::cout << this;
+}
+
+std::ostream& operator<<(std::ostream& s, const Point& p) {
+    s << "( " << p.x << ", " << p.y << ", " << p.z;
+    s << " : " << (int)p.r << ", " << (int)p.g << ", " << (int)p.b << " )";
+    return s;
 }
 
 Line::Line(Point p10, Point p20) :
@@ -178,6 +194,15 @@ bool Line::operator==(Line& l) {
     return p1==l.p1 && p2==l.p2;
 }
 
+void Line::print() {
+    std::cout << this;
+}
+
+std::ostream& operator<<(std::ostream& s, const Line& l) {
+    s << "{ p1: " << l.p1 << ", p2: " << l.p2 << " }";
+    return s;
+}
+
 Polygon::Polygon(Point q1, Point q2, Point q3) :
     l1(q1, q2),
     l2(q2, q3),
@@ -272,3 +297,12 @@ std::unique_ptr<Geometry> Polygon::multiply(Matrix4x4& matrix){
  Vector3<float> Polygon::mean(){
     return Vector3<float>( (l1.p1.x+l2.p1.x+l3.p1.x)/3, (l1.p1.y+l2.p1.y+l3.p1.y)/3, (l1.p1.z+l2.p1.z+l3.p1.z)/3);
 }
+
+ void Polygon::print() {
+     std::cout << this;
+ }
+
+ std::ostream& operator<<(std::ostream& s, const Polygon& p) {
+     s << "{ l1: " << p.l1 << ", l2: " << p.l2 << ", l3: " << p.l3 << " }";
+     return s;
+ }

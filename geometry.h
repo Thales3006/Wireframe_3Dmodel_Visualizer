@@ -34,6 +34,11 @@ public:
         return Vector3<float>(0,0,0);
     }  
 
+    virtual void print() {
+        std::cout << "Rewrite print function!" << std::endl;
+    }
+
+    friend std::ostream& operator<<(std::ostream& s, Geometry& g);
 };
 
 class Point : public Geometry
@@ -57,6 +62,9 @@ public:
     bool operator==(Point& p);
 
     char getRC();
+
+    virtual void print();
+    friend std::ostream& operator<<(std::ostream& s, const Point& p);
 };
 
 class Line : public Geometry
@@ -77,6 +85,9 @@ public:
     Vector3<float> mean() override;
 
     bool operator==(Line& l);
+
+    virtual void print();
+    friend std::ostream& operator<<(std::ostream& s, const Line& l);
 };
 
 class Polygon : public Geometry
@@ -100,6 +111,8 @@ public:
 
     Vector3<float> mean() override;
 
+    virtual void print();
+    friend std::ostream& operator<<(std::ostream& s, const Polygon& p);
 };
 
 #endif // GEOMETRY_H
