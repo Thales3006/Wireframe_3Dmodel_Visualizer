@@ -159,11 +159,13 @@ void Matrix4x4::scale(Vector3<float> scalar){
 }
 
 Vector3<float> Matrix4x4::operator*(Vector3<float> vec){
-    return Vector3<float>(
+    float w = vec.x*arr[3][0] + vec.y*arr[3][1] + vec.z*arr[3][2] + arr[3][3];
+    Vector3<float> newVec(
         vec.x*arr[0][0] + vec.y*arr[0][1] + vec.z*arr[0][2] + arr[0][3],
         vec.x*arr[1][0] + vec.y*arr[1][1] + vec.z*arr[1][2] + arr[1][3],
         vec.x*arr[2][0] + vec.y*arr[2][1] + vec.z*arr[2][2] + arr[2][3]
         );
+    return w == 1.0? newVec : newVec/w ;
 }
 
 std::ostream& operator<<(std::ostream& s, Matrix4x4& m) {
