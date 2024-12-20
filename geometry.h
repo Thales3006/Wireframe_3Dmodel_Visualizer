@@ -39,16 +39,22 @@ public:
     }
 
     friend std::ostream& operator<<(std::ostream& s, Geometry& g);
+
+    virtual std::unique_ptr<Geometry> divideZ(){
+        std::cout << "Rewrite divide function!" << std::endl;
+        return NULL;
+    }
 };
 
 class Point : public Geometry
 {
 public:
-    float x, y, z;
+    Vector3<float> pos;
     unsigned char r, g, b;
 
     Point(float x0, float y0, float z0, unsigned char r0, unsigned char g0, unsigned char b0);
     Point(Vector3<float> p);
+    Point(Vector3<float> p, unsigned char r0, unsigned char g0, unsigned char b0);
 
     void draw(QImage& canvas) override;
 
@@ -65,6 +71,7 @@ public:
 
     virtual void print() override;
     friend std::ostream& operator<<(std::ostream& s, const Point& p);
+    virtual std::unique_ptr<Geometry> divideZ() override;
 };
 
 class Line : public Geometry
@@ -89,6 +96,7 @@ public:
 
     virtual void print() override;
     friend std::ostream& operator<<(std::ostream& s, const Line& l);
+    std::unique_ptr<Geometry> divideZ() override;
 };
 
 class Polygon : public Geometry
@@ -99,6 +107,7 @@ public:
     Line l3;
 
     Polygon(Point q1, Point q2, Point q3);
+    Polygon(Line q1, Line q2, Line q3);
 
     std::vector<std::unique_ptr<Line>> drawablePolygon();
     std::vector<std::unique_ptr<Geometry>> drawable() override;
@@ -116,6 +125,7 @@ public:
     friend std::ostream& operator<<(std::ostream& s, const Polygon& p);
     bool operator==(const Polygon& p);
     bool operator!=(const Polygon& p);
+    std::unique_ptr<Geometry> divideZ() override;
 };
 
 #endif // GEOMETRY_H
