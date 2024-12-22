@@ -9,9 +9,9 @@ std::ostream& operator<<(std::ostream& s, Geometry& g) {
 }
 
 Point::Point(float x0, float y0, float z0, unsigned char r0, unsigned char g0, unsigned char b0){
-    x = x0;
-    y = y0;
-    z = z0;
+    pos.x = x0;
+    pos.y = y0;
+    pos.z = z0;
 
     r = r0;
     g = g0;
@@ -19,19 +19,25 @@ Point::Point(float x0, float y0, float z0, unsigned char r0, unsigned char g0, u
 }
 
 Point::Point(Vector3<float> p){
-    x = p.x;
-    y = p.y;
-    z = p.z;
+    pos = p;
 
     r = 0;
     g = 0;
     b = 0;
 }
 
+Point::Point(Vector3<float> p, unsigned char r0, unsigned char g0, unsigned char b0){
+    pos = p;
+
+    r = r0;
+    g = g0;
+    b = b0;
+}
+
 void Point::draw(QImage& canvas){
-    int nY = canvas.height()-y;
-    if(x >= 0 && x < canvas.width() && nY >= 0 && nY < canvas.height())// && z >= 0)
-        canvas.setPixel(x,nY, qRgb(r,g,b));
+    int nY = canvas.height()-pos.y;
+    if(pos.x >= 0 && pos.x < canvas.width() && nY >= 0 && nY < canvas.height() && pos.z >= 0)
+        canvas.setPixel(pos.x, nY, qRgb(r,g,b));
 }
 
 std::unique_ptr<Point> Point::drawablePoint() {
@@ -47,25 +53,19 @@ std::vector<std::unique_ptr<Geometry>> Point::drawable() {
 }
 
 std::unique_ptr<Geometry> Point::multiply(Matrix4x4& matrix){
-    return std::make_unique<Point>(
-        x*matrix.get(0,0) + y*matrix.get(0,1) + z*matrix.get(0,2) + matrix.get(0,3),
-        x*matrix.get(1,0) + y*matrix.get(1,1) + z*matrix.get(1,2) + matrix.get(1,3),
-        x*matrix.get(2,0) + y*matrix.get(2,1) + z*matrix.get(2,2) + matrix.get(2,3),
-        r,
-        g,
-        b);
+    return std::make_unique<Point>(matrix*pos,r,g,b);
 }
 
 Vector3<float> Point::mean(){
-    return Vector3<float>(x,y,z);
+    return pos;
 }
 
 bool Point::operator==(const Point& p) {
-    return x==p.x && y==p.y && z==p.z;
+    return pos == p.pos;
 }
 
 char Point::getRC() {
-    return (char)((x<-1 ? 8 : (x>1 ? 4 : 0)) | (y<-1 ? 2 : (y>1 ? 1 : 0)));
+    return (char)((pos.x<-1 ? 8 : (pos.x>1 ? 4 : 0)) | (pos.y<-1 ? 2 : (pos.y>1 ? 1 : 0)));
 }
 
 void Point::print() {
@@ -73,9 +73,14 @@ void Point::print() {
 }
 
 std::ostream& operator<<(std::ostream& s, const Point& p) {
-    s << "( " << p.x << ", " << p.y << ", " << p.z;
+    s << "( " << p.pos.x << ", " << p.pos.y << ", " << p.pos.z;
     s << " : " << (int)p.r << ", " << (int)p.g << ", " << (int)p.b << " )";
     return s;
+}
+
+std::unique_ptr<Geometry> Point::divideZ(){
+    Point p(pos/pos.z, r,g,b);
+    return std::make_unique<Point>(p);
 }
 
 Line::Line(Point p10, Point p20) :
@@ -84,15 +89,15 @@ Line::Line(Point p10, Point p20) :
 { }
 
 void Line::draw(QImage& canvas){
-    Point p(p1.x-p2.x, p1.y-p2.y, 0, 0,0,0);
-    float dist = 1/sqrt(pow(p.x,2)+pow(p.y,2));
+    Point p(p1.pos.x-p2.pos.x, p1.pos.y-p2.pos.y, 0, 0,0,0);
+    float dist = 1/p.pos.length();
 
     float t = 0;
     while(t <= 1){
         //coords transition
-        p.x = (1-t)*p1.x + t*p2.x;
-        p.y = (1-t)*p1.y + t*p2.y;
-        p.z = (1-t)*p1.z + t*p2.z;
+        p.pos.x = (1-t)*p1.pos.x + t*p2.pos.x;
+        p.pos.y = (1-t)*p1.pos.y + t*p2.pos.y;
+        p.pos.z = (1-t)*p1.pos.z + t*p2.pos.z;
         //rgb transition
         p.r = (1-t)*p1.r + t*p2.r;
         p.g = (1-t)*p1.g + t*p2.g;
@@ -109,8 +114,8 @@ std::unique_ptr<Line> Line::drawableLine() {
         return NULL;
     else if(rc1==rc2) // rc1==0 && rc2==0
         return std::make_unique<Line>(
-            Point(p1.x, p1.y, p1.z, p1.r, p1.g, p1.b),
-            Point(p2.x, p2.y, p2.z, p2.r, p2.g, p2.b));
+            Point(p1.pos, p1.r, p1.g, p1.b),
+            Point(p2.pos, p2.r, p2.g, p2.b));
     Vector3<float> v1 = p1.mean();
     Vector3<float> v2 = p2.mean();
     Vector3<float> d;
@@ -180,14 +185,14 @@ std::vector<std::unique_ptr<Geometry>> Line::drawable() {
 }
 
 std::unique_ptr<Geometry> Line::multiply(Matrix4x4& matrix){
-    std::unique_ptr<Geometry> newP1 = p1.multiply(matrix);
-    std::unique_ptr<Geometry> newP2 = p2.multiply(matrix);
+    Point newP1 = *dynamic_cast<Point*>(p1.multiply(matrix).get());
+    Point newP2 = *dynamic_cast<Point*>(p2.multiply(matrix).get());;
 
-    return std::make_unique<Line>(*(Point*)newP1.get(), *(Point*)newP2.get() );
+    return std::make_unique<Line>(newP1, newP2);
 }
 
 Vector3<float> Line::mean(){
-    return Vector3<float>( (p1.x+p2.x)/2, (p1.y+p2.y)/2, (p1.z+p2.z)/2);
+    return (p1.pos+p2.pos)/2;
 }
 
 bool Line::operator==(const Line& l) {
@@ -207,10 +212,23 @@ std::ostream& operator<<(std::ostream& s, const Line& l) {
     return s;
 }
 
+std::unique_ptr<Geometry> Line::divideZ(){
+    Point p = *dynamic_cast<Point*>(p1.divideZ().get());
+    Point pp = *dynamic_cast<Point*>(p2.divideZ().get());
+    Line l(p, pp);
+    return std::make_unique<Line>(l);
+}
+
 Polygon::Polygon(Point q1, Point q2, Point q3) :
     l1(q1, q2),
     l2(q2, q3),
     l3(q3, q1)
+{ }
+
+Polygon::Polygon(Line q1, Line q2, Line q3) :
+    l1(q1),
+    l2(q2),
+    l3(q3)
 { }
 
 std::vector<std::unique_ptr<Line>> Polygon::drawablePolygon() {
@@ -237,20 +255,20 @@ std::vector<std::unique_ptr<Geometry>> Polygon::drawable() {
 
 void Polygon::fill(QImage& canvas){
     Line l(l1.p1,l2.p1);
-    float dist1 = 1/sqrt(pow(l1.p1.x-l3.p1.x,2)+pow(l1.p1.y-l3.p1.y,2));
-    float dist2 = 1/sqrt(pow(l2.p1.x-l3.p1.x,2)+pow(l2.p1.y-l3.p1.y,2));
+    float dist1 = 1/(l1.p1.pos-l3.p1.pos).length();
+    float dist2 = 1/(l2.p1.pos-l3.p1.pos).length();
     float dist = (dist1 > dist2 ? dist1 : dist2) * 0.95;
     float t = 0;
     while(t <= 1){
         //coords transition
-        l.p1.x = (1-t)*l1.p1.x + t*l3.p1.x;
-        l.p2.x = (1-t)*l2.p1.x + t*l3.p1.x;
+        l.p1.pos.x = (1-t)*l1.p1.pos.x + t*l3.p1.pos.x;
+        l.p2.pos.x = (1-t)*l2.p1.pos.x + t*l3.p1.pos.x;
 
-        l.p1.y = (1-t)*l1.p1.y + t*l3.p1.y;
-        l.p2.y = (1-t)*l2.p1.y + t*l3.p1.y;
+        l.p1.pos.y = (1-t)*l1.p1.pos.y + t*l3.p1.pos.y;
+        l.p2.pos.y = (1-t)*l2.p1.pos.y + t*l3.p1.pos.y;
 
-        l.p1.z = (1-t)*l1.p1.z + t*l3.p1.z;
-        l.p2.z = (1-t)*l2.p1.z + t*l3.p1.z;
+        l.p1.pos.z = (1-t)*l1.p1.pos.z + t*l3.p1.pos.z;
+        l.p2.pos.z = (1-t)*l2.p1.pos.z + t*l3.p1.pos.z;
 
         //rgb transition
         l.p1.r = (1-t)*l1.p1.r + t*l3.p1.r;
@@ -284,7 +302,7 @@ std::unique_ptr<Geometry> Polygon::multiply(Matrix4x4& matrix){
 }
 
 Vector3<float> Polygon::mean(){
-    return Vector3<float>( (l1.p1.x+l2.p1.x+l3.p1.x)/3, (l1.p1.y+l2.p1.y+l3.p1.y)/3, (l1.p1.z+l2.p1.z+l3.p1.z)/3);
+    return Vector3<float>(l1.p1.pos+l2.p1.pos+l3.p1.pos)/3;
 }
 
 void Polygon::print() {
@@ -302,4 +320,11 @@ bool Polygon::operator==(const Polygon& p){
 
 bool Polygon::operator!=(const Polygon& p){
     return !((*this)==p);
+}
+
+std::unique_ptr<Geometry> Polygon::divideZ() {
+    Line l(*dynamic_cast<Line*>(l1.divideZ().get()));
+    Line ll(*dynamic_cast<Line*>(l2.divideZ().get()));
+    Line lll(*dynamic_cast<Line*>(l3.divideZ().get()));
+    return std::make_unique<Polygon>(l,ll,lll);
 }

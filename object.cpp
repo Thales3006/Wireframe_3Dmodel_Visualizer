@@ -117,3 +117,12 @@ std::ostream& operator<<(std::ostream& s, const Object& o) {
     s << " ]";
     return s;
 }
+
+std::unique_ptr<Geometry> Object::divideZ() {
+    std::vector<Polygon> polys;
+    for(auto poly : polygons){
+        poly = *dynamic_cast<Polygon*>(poly.divideZ().get());
+        polys.push_back(poly);
+    }
+    return std::make_unique<Object>(polys);
+}

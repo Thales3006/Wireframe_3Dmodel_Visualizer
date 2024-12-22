@@ -115,6 +115,11 @@ public:
         }
     }
 
+    bool operator==(const Vector3<T>& other) {
+        if (x == other.x && y == other.y && z == other.z)
+            return true;
+        return false;
+    }
 };
 
 template <typename T>
@@ -148,6 +153,56 @@ public:
         z -= other.z;
         w -= other.w;
         return *this;
+    }
+
+    Vector4<T> operator*(const T scalar) const {
+        return Vector4<T>(x*scalar, y*scalar, z*scalar, 1.0);
+    }
+
+    Vector4<T> operator/(const T scalar) const {
+        return Vector4<T>(x/scalar, y/scalar, z/scalar, 1.0);
+    }
+
+    T operator*(const Vector4<T>& other) const {
+        return x*other.x + y*other.y + z*other.z;
+    }
+
+    Vector4<T> operator^(const Vector4<T>& other) const {
+        return Vector4<T>(y*other.z - z*other.y,
+                          -x*other.z + z*other.x,
+                          x*other.y - y*other.x,
+                          1.0
+                          );
+    }
+
+    Vector4<T> normalize(){
+        T mag = this->length();
+        if(mag==0)
+            return Vector4<T>(0.0,0.0,0.0);
+        return Vector4<T>(x/mag,y/mag,z/mag, 1.0);
+    }
+
+    T angle(Vector4<T> vec){
+        return (x > 0? 1.0:-1.0) * acos( (*this) * vec / this->length());
+    }
+
+    Vector4<T> ignore(int axis){
+        switch(axis){
+        case 0:
+            return Vector4<T>(0,y,z,1.0);
+        case 1:
+            return Vector4<T>(x,0,z,1.0);
+        case 2:
+            return Vector4<T>(x,y,0,1.0);
+        case 3:
+            return Vector4<T>(x,y,z,0);
+        }
+    }
+
+    bool operator==(const Vector4<T>& other) {
+        if (x == other.x && y == other.y && z == other.z && w == other.w)
+            return true;
+        return false;
     }
 };
 
