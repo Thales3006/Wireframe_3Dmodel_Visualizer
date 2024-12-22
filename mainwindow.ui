@@ -279,7 +279,7 @@
     </property>
     <property name="text">
      <string>WASD - move a window
-E Q - giram a window
+I J K L  - giram a window
 Z X - aumentam e diminuem o zoom
 ←↑→↓ - Mudam o tamanho da viewport </string>
     </property>

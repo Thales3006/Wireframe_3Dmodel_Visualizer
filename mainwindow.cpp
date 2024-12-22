@@ -26,6 +26,17 @@ MainWindow::MainWindow(QWidget *parent) :
     scene = new QGraphicsScene(this);
     view = new QGraphicsView(scene, ui->visualizador);
 
+    //configurações da camera
+    float a[4][4] = {
+        {1.0, 0.0, 0.0, 0.0},
+        {0.0, 1.0, 0.0, 0.0},
+        {0.0, 0.0, 1.0, 0.0},
+        {0.0, 0.0, 0.0, 1.0},
+    };
+    Matrix4x4 mat(a);
+
+    camera.setProjection(mat);
+
     //configurando o displayFile
     inicialSetupDisplayFile();
 
@@ -50,9 +61,10 @@ void MainWindow::updateFrame() {
 // desenha os items na tela
 void MainWindow::paint(){
     scene->removeItem(pixmapItem);
+    delete pixmapItem;
 
     canvas.fill(Qt::white);
-    displayFile.drawAll(canvas, camera.getMatrix(), Vector3<float>(ui->visualizador->width(),ui->visualizador->height(),1.0) );
+    displayFile.drawAll(canvas, camera.getView(), Vector3<float>(ui->visualizador->width(),ui->visualizador->height(),1.0) );
     pixmapItem = new QGraphicsPixmapItem(QPixmap::fromImage(canvas));
 
     scene->addItem(pixmapItem);
@@ -87,18 +99,16 @@ void MainWindow::inicialSetupDisplayFile(){
     Object charizard;
     Object umbreon;
     if(charizard.loadObj("charizard.obj")==0) {
-        displayFile.insert("charizard", charizard);
         Matrix4x4 m = Matrix4x4::identity();
         m.scale(Vector3<float>(10.0,10.0,10.0));
         m.translate(Vector3<float>(100,00,0));
-        displayFile.setMatrix("charizard", m);
+        displayFile.insert("charizard", charizard.multiply(m));
     }
     if(umbreon.loadObj("umbreon.obj")==0) {
-        displayFile.insert("umbreon", umbreon);
         Matrix4x4 m = Matrix4x4::identity();
         m.scale(Vector3<float>(60.0,60.0,60.0));
         m.translate(Vector3<float>(-100, 50, 0));
-        displayFile.setMatrix("umbreon", m);
+        displayFile.insert("umbreon", umbreon.multiply(m));
     }
     //===================
 }
@@ -115,7 +125,7 @@ void MainWindow::on_applyTransform_clicked()
 
     //ROTAÇÃO
     matrix.translate(-rot);
-    matrix.rotate(angle, 0, 1);
+    matrix.rotateZ(angle);
     matrix.translate(rot);
 
     //atribui nova matriz ao objeto
@@ -187,41 +197,40 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event) {
 }
 
 void MainWindow::keyHandler(){
-    Matrix4x4 m = Matrix4x4::identity();
-    Matrix4x4 q = Matrix4x4::identity();
-    Matrix4x4 n = Matrix4x4::identity();
+    Matrix4x4 direction = Matrix4x4::identity();
+    Matrix4x4 position = Matrix4x4::identity();
 
     const float movementChange = 0.03;
 
     //rotation
     if (keysPressed.contains(Qt::Key_K))
-        m.rotate(0.01,0,1);
+        direction.rotateZ(0.01);
     if (keysPressed.contains(Qt::Key_I))
-        m.rotate(-0.01,0,1);
+        direction.rotateZ(-0.01);
     if (keysPressed.contains(Qt::Key_J))
-        q.rotate(0.01,0,2);
+        direction.rotateY(0.01);
     if (keysPressed.contains(Qt::Key_L))
-        q.rotate(-0.01,0,2);
-    camera.setUp(m*camera.getUp());
-    camera.setDir(q*camera.getDir());
+        direction.rotateY(-0.01);
+    camera.setUp(direction*camera.getUp());
+    camera.setDir(direction*camera.getDir());
 
     Vector3<float> up = camera.getUp()*movementChange;
     Vector3<float> side = camera.getRight()*movementChange;
-    //Vector3<float> front = camera.getDir()*movementChange;
+    Vector3<float> front = camera.getDir()*movementChange;
     //movement
     if (keysPressed.contains(Qt::Key_A))
-        n.translate(-side);
+        position.translate(-side);
     if (keysPressed.contains(Qt::Key_W))
-        n.translate(up);
+        position.translate(front);
     if (keysPressed.contains(Qt::Key_S))
-        n.translate(-up);
+        position.translate(-front);
     if (keysPressed.contains(Qt::Key_D))
-        n.translate(side);
+        position.translate(side);
     if (keysPressed.contains(Qt::Key_Shift))
-        n.translate(-up);
+        position.translate(-up);
     if (keysPressed.contains(Qt::Key_Space))
-        n.translate(up);
-    camera.setPos(n*camera.getPos());
+        position.translate(up);
+    camera.setPos(position*camera.getPos());
 
     //zoom
     const float zoomChange = 1.02;
