@@ -83,11 +83,26 @@ void Window::updateView() {
     this->view.rotateZ(pitch);
     this->view.rotateZ(roll);
 
-    this->view.scale(Vector3<float>(1/rightScale, 1/up.length(), 1.0));
+    this->view.scale(Vector3<float>(1/rightScale, 1/up.length(), 1/dir.length()));
 
     this->view = this->projection * this->view;
 }
 
-void Window::setProjection(Matrix4x4 matrix){
-    this->projection = matrix;
+void Window::setProjection(bool perspective, float FOV){
+    if(!perspective){
+        this->projection = Matrix4x4::identity();
+        return;
+    }
+    float s = 1/tan((FOV*M_PI)/360);
+    //float f = dir.length();
+    //float n = 0.0f;
+
+    float a[4][4] = {
+        {s, 0.0, 0.0, 0.0},
+        {0.0, s, 0.0, 0.0},
+        {0.0, 0.0, 1.0, 0.0},//(f+n)/(f-n), -(2*f*n)/(f-n)},
+        {0.0, 0.0, 1.0, 0.0},
+     };
+    Matrix4x4 mat(a);
+    this->projection = mat;
 }

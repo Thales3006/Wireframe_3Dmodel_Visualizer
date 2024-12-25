@@ -24,7 +24,7 @@ public:
     void setUp(Vector3<float> up);
     void setDir(Vector3<float> dir);
     void setRightScale(float scalar);
-    void setProjection(Matrix4x4 matrix);
+    void setProjection(bool perspective, float FOV);
 
     Vector3<float> getPos();
     Vector3<float> getUp();

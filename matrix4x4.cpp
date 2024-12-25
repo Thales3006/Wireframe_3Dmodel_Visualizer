@@ -165,7 +165,7 @@ Vector3<float> Matrix4x4::operator*(Vector3<float> vec){
         vec.x*arr[1][0] + vec.y*arr[1][1] + vec.z*arr[1][2] + arr[1][3],
         vec.x*arr[2][0] + vec.y*arr[2][1] + vec.z*arr[2][2] + arr[2][3]
         );
-    return w == 1.0? newVec : newVec/w ;
+    return w == 1.0? newVec : w? newVec/w : newVec/0.000000001 ;
 }
 
 std::ostream& operator<<(std::ostream& s, Matrix4x4& m) {

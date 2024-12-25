@@ -7,7 +7,7 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    camera(Vector3<float>(0.0, 0.0, 0.0), Vector3<float>(0.0, 250.0, 0.0), Vector3<float>(0.0, 0.0, 1.0), 250.0),
+    camera(Vector3<float>(0.0, 0.0, 0.0), Vector3<float>(0.0, 250.0, 0.0), Vector3<float>(0.0, 0.0, 250.0), 250.0),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
@@ -27,15 +27,8 @@ MainWindow::MainWindow(QWidget *parent) :
     view = new QGraphicsView(scene, ui->visualizador);
 
     //configurações da camera
-    float a[4][4] = {
-        {1.0, 0.0, 0.0, 0.0},
-        {0.0, 1.0, 0.0, 0.0},
-        {0.0, 0.0, 1.0, 0.0},
-        {0.0, 0.0, 0.0, 1.0},
-    };
-    Matrix4x4 mat(a);
 
-    camera.setProjection(mat);
+    camera.setProjection(true, 90);
 
     //configurando o displayFile
     inicialSetupDisplayFile();

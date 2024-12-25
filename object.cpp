@@ -89,7 +89,7 @@ std::unique_ptr<Geometry> Object::multiply(Matrix4x4& matrix) {
     std::vector<Polygon> polygons = this->polygons;
     for(auto& poly : polygons)
         poly = *dynamic_cast<Polygon*>(poly.multiply(matrix).get());
-    return std::make_unique<Object>(Object(polygons));
+    return std::make_unique<Object>(polygons);
 }
 
 Vector3<float> Object::mean() {
