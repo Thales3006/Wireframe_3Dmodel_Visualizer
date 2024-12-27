@@ -8,6 +8,8 @@
 #include <iostream>
 #include <filesystem>
 #include <QFileDialog>
+#include <QFileInfo>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -115,6 +117,12 @@ void MainWindow::inicialSetupDisplayFile(){
 void MainWindow::on_applyTransform_clicked()
 {
     std::string objName = ui->objList->currentText().toStdString();
+
+    if(!displayFile.exist(objName)){
+        QMessageBox::information(this, tr("Erro"), "Objeto não existente ou não selecionado!");
+        return;
+    }
+
     Matrix4x4 matrix = Matrix4x4::identity();
 
     float roll = (float)ui->angleDial->value()/100.0 * M_PI * 2;
@@ -135,6 +143,12 @@ void MainWindow::on_applyTransform_clicked()
 void MainWindow::on_applyTransform_scale_clicked()
 {
     std::string objName = ui->objList->currentText().toStdString();
+
+    if(!displayFile.exist(objName)){
+        QMessageBox::information(this, tr("Erro"), "Objeto não existente ou não selecionado!");
+        return;
+    }
+
     Matrix4x4 matrix = Matrix4x4::identity();
 
     Vector3<float> center = displayFile.getMean(objName);
@@ -151,6 +165,12 @@ void MainWindow::on_applyTransform_scale_clicked()
 void MainWindow::on_applyTransform_translate_clicked()
 {
     std::string objName = ui->objList->currentText().toStdString();
+
+    if(!displayFile.exist(objName)){
+        QMessageBox::information(this, tr("Erro"), "Objeto não existente ou não selecionado!");
+        return;
+    }
+
     Matrix4x4 matrix = Matrix4x4::identity();
 
     Vector3<float> newCoord = Vector3<float>(ui->translateCoordX->text().toFloat(), ui->translateCoordY->text().toFloat(), ui->translateCoordZ->text().toFloat());
@@ -254,6 +274,15 @@ void MainWindow::keyHandler(){
         }
     }
 
+    //FOV
+    int FOV = camera.getFOV();
+    if (keysPressed.contains(Qt::Key_N) && FOV < 180)
+        FOV++;
+    if (keysPressed.contains(Qt::Key_M) && FOV > 0)
+        FOV--;
+    camera.setProjection(true, FOV);
+
+
     //resizeVIEWPORT
     if (keysPressed.contains(Qt::Key_Right))
         ui->visualizador->resize(ui->visualizador->width() + 5, ui->visualizador->height());
@@ -286,24 +315,42 @@ void MainWindow::on_objloadbutton_clicked() {
         "obj files (*.obj);;All files (*.*)"
         );
 
-    const QString suffix = QString::fromStdString(".obj");
-    if(!fileName.endsWith(suffix))
+    if(fileName.isEmpty())
         return;
 
-    Object obj;
-    if(obj.loadObj(fileName.toStdString()) == ALL_GOOD){
-        displayFile.insert(fileName.chopped(suffix.size()).toStdString(), obj);
-        ui->objList->addItem(fileName.chopped(suffix.size()));
+    const QString suffix = QString::fromStdString(".obj");
+
+    if(!fileName.endsWith(suffix)){
+        QMessageBox::information(this, tr("Erro"), "Arquivo não é compatível (Apenas arquivos com extensão .obj)");
+        return;
     }
+
+    Object obj;
+    QString newName = QFileInfo(fileName).fileName().chopped(suffix.size());
+
+    if(obj.loadObj(fileName.toStdString()) == ALL_GOOD){
+        int count = 0;
+        while(displayFile.exist(newName.toStdString())){
+            newName = newName + QString::fromStdString(std::to_string(++count));
+        }
+
+        displayFile.insert(newName.toStdString(), obj);
+        ui->objList->addItem(newName);
+        return;
+    }
+
+    QMessageBox::information(this, tr("Erro"), "Não foi possível carregar o arquivo.");
 }
 
 
 void MainWindow::on_objdestroybutton_clicked()
 {
-    if(displayFile.isEmpty())
-        return;
-
     std::string objName = ui->objList->currentText().toStdString();
+
+    if(displayFile.empty()){
+        QMessageBox::information(this, tr("Erro"), "Não há mais objetos no display file!");
+        return;
+    }
 
     ui->objList->removeItem(ui->objList->currentIndex());
     displayFile.remove(objName);

@@ -9,6 +9,7 @@ Window::Window(Vector3<float> pos, Vector3<float> up, Vector3<float> dir, float 
     this->right = (up^dir).normalize() * rightScale;
 
     this->projection = Matrix4x4::identity();
+    this->FOV = 0;
 
     this->updateView();
 }
@@ -90,6 +91,7 @@ void Window::updateView() {
 }
 
 void Window::setProjection(bool perspective, float FOV){
+    this->FOV = FOV;
     if(!perspective){
         this->projection = Matrix4x4::identity();
         return;
@@ -106,4 +108,8 @@ void Window::setProjection(bool perspective, float FOV){
      };
     Matrix4x4 mat(a);
     this->projection = mat;
+}
+
+float Window::getFOV(){
+    return FOV;
 }

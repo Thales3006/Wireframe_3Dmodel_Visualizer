@@ -1,15 +1,20 @@
 #include "displayfile.h"
 
 void DisplayFile::insert(std::string name, std::unique_ptr<Geometry> obj){
-    objects[name] = std::move(obj);
+    if(!exist(name))
+        objects[name] = std::move(obj);
 }
 
 void DisplayFile::remove(std::string name){
-    objects.erase(name);
+    if(exist(name))
+        objects.erase(name);
 }
 
 Vector3<float> DisplayFile::getMean(std::string name){
-    return objects[name]->mean();
+    if(exist(name))
+        return objects[name]->mean();
+
+    return Vector3<float>(0.0,0.0,0.0);
 }
 
 void DisplayFile::drawAll(QImage& canvas, Matrix4x4 cameraMatrix, Vector3<float> viewportSize){
@@ -35,10 +40,18 @@ void DisplayFile::drawAll(QImage& canvas, Matrix4x4 cameraMatrix, Vector3<float>
         object->draw(canvas);
 }
 
-bool DisplayFile::isEmpty(){
+bool DisplayFile::empty(){
     return objects.empty();
 }
 
+bool DisplayFile::exist(std::string name){
+    if (objects.find(name) != objects.end())
+        return true;
+
+    return false;
+}
+
 void DisplayFile::multiply(std::string name, Matrix4x4 mat){
-    objects[name] = objects[name]->multiply(mat);
+    if(exist(name))
+        objects[name] = objects[name]->multiply(mat);
 }

@@ -15,6 +15,7 @@ private:
     Vector3<float> dir;
 
     float rightScale;
+    float FOV;
 
     void updateView();
 public:
@@ -32,6 +33,7 @@ public:
     Vector3<float> getRight();
     float getRightScale();
     Matrix4x4 getView();
+    float getFOV();
 };
 
 #endif // WINDOW_H
