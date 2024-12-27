@@ -311,7 +311,7 @@ void MainWindow::on_objloadbutton_clicked() {
     const QString fileName= QFileDialog::getOpenFileName(
         this,
         tr("Abrir"),
-        QString::fromStdString(std::filesystem::current_path().string()),
+        QString::fromStdString(std::filesystem::current_path().string() + "/../../objs"),
         "obj files (*.obj);;All files (*.*)"
         );
 
