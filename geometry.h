@@ -8,7 +8,6 @@
 
 class Geometry{
 public:
-    Matrix4x4 matrix = Matrix4x4::identity();
 
     virtual ~Geometry() {}
 

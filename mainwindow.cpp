@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "geometry.h"
 #include "matrix4x4.h"
+#include "object.h"
 #include "enums.h"
 
 #include <iostream>
@@ -36,8 +37,8 @@ MainWindow::MainWindow(QWidget *parent) :
     //configurando o displayFile
     inicialSetupDisplayFile();
 
-    for(std::string& name : displayFile.names)
-        ui->objList->addItem(QString::fromStdString(name));
+    for(const auto& pair: displayFile.objects)
+        ui->objList->addItem(QString::fromStdString(pair.first));
 
     pixmapItem = new QGraphicsPixmapItem(QPixmap::fromImage(canvas));
     scene->addItem(pixmapItem);
@@ -114,7 +115,7 @@ void MainWindow::inicialSetupDisplayFile(){
 void MainWindow::on_applyTransform_clicked()
 {
     std::string objName = ui->objList->currentText().toStdString();
-    Matrix4x4 matrix = displayFile.getMatrix(objName);
+    Matrix4x4 matrix = Matrix4x4::identity();
 
     float roll = (float)ui->angleDial->value()/100.0 * M_PI * 2;
     float yaw = (float)ui->angleDial_2->value()/100.0 * M_PI * 2;
@@ -127,14 +128,14 @@ void MainWindow::on_applyTransform_clicked()
     matrix.translate(rot);
 
     //atribui nova matriz ao objeto
-    displayFile.setMatrix(objName, matrix);
+    displayFile.multiply(objName, matrix);
 }
 
 
 void MainWindow::on_applyTransform_scale_clicked()
 {
     std::string objName = ui->objList->currentText().toStdString();
-    Matrix4x4 matrix = displayFile.getMatrix(objName);
+    Matrix4x4 matrix = Matrix4x4::identity();
 
     Vector3<float> center = displayFile.getMean(objName);
     Vector3<float> scalar = Vector3<float>(ui->scaleBar->value()/100.0*4, ui->scaleBar->value()/100.0*4, ui->scaleBar->value()/100.0*4);
@@ -143,21 +144,21 @@ void MainWindow::on_applyTransform_scale_clicked()
     matrix.scale(scalar);
     matrix.translate(center);
 
-    displayFile.setMatrix(objName, matrix);
+    displayFile.multiply(objName, matrix);
 }
 
 
 void MainWindow::on_applyTransform_translate_clicked()
 {
     std::string objName = ui->objList->currentText().toStdString();
-    Matrix4x4 matrix = displayFile.getMatrix(objName);
+    Matrix4x4 matrix = Matrix4x4::identity();
 
     Vector3<float> newCoord = Vector3<float>(ui->translateCoordX->text().toFloat(), ui->translateCoordY->text().toFloat(), ui->translateCoordZ->text().toFloat());
 
     //TRANSLAÇÃO
     matrix.translate(newCoord);
 
-    displayFile.setMatrix(objName, matrix);
+    displayFile.multiply(objName, matrix);
 }
 
 void MainWindow::on_scaleBar_valueChanged(int value)
@@ -303,8 +304,10 @@ void MainWindow::on_objdestroybutton_clicked()
         return;
 
     std::string objName = ui->objList->currentText().toStdString();
-    displayFile.remove(displayFile.getIndex(objName));
+
     ui->objList->removeItem(ui->objList->currentIndex());
+    displayFile.remove(objName);
+
     ui->objList->setCurrentIndex(0);
 }
 

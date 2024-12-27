@@ -2,33 +2,29 @@
 #define DISPLAYFILE_H
 
 #include "geometry.h"
-#include "object.h"
+#include <map>
 
 class DisplayFile
 {
 public:
-    std::vector<std::unique_ptr<Geometry>> displayFileList;
-    std::vector<std::string> names;
+    std::map<std::string, std::unique_ptr<Geometry>> objects;
 
-    void insert(std::string name, Point obj);
-    void insert(std::string name, Line obj);
-    void insert(std::string name, Polygon obj);
-    void insert(std::string name, Object obj);
+    template <typename T>
+    void insert(std::string name, T obj){
+        static_assert(std::is_base_of<Geometry, T>::value, "T deve ser derivado de Geometry");
+        objects[name] = std::make_unique<T>(obj);
+    }
+
     void insert(std::string name, std::unique_ptr<Geometry> obj);
 
-    void remove(int index);
-    void pop();
+    void remove(std::string name);
 
-    std::string getName(int index);
-    int getIndex(std::string nome);
-    Vector3<float> getMean(std::string nome);
-    Matrix4x4 getMatrix(std::string nome);
-
-    void setMatrix(std::string nome, Matrix4x4 matrix);
+    Vector3<float> getMean(std::string name);
 
     void drawAll(QImage& canvas, Matrix4x4 cameraMatrix, Vector3<float> viewportSize);
-
     bool isEmpty();
+
+    void multiply(std::string name, Matrix4x4 mat);
 private:
     std::vector<std::unique_ptr<Geometry>> buffer;
 
