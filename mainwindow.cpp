@@ -7,7 +7,7 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    camera(Vector3<float>(0.0, 0.0, 0.0), Vector3<float>(0.0, 250.0, 0.0), Vector3<float>(0.0, 0.0, 250.0), 250.0),
+    camera(Vector3<float>(0.0, 0.0, -200.0), Vector3<float>(0.0, 250.0, 0.0), Vector3<float>(0.0, 0.0, 250.0), 250.0),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
@@ -196,14 +196,18 @@ void MainWindow::keyHandler(){
     const float movementChange = 0.03;
 
     //rotation
-    if (keysPressed.contains(Qt::Key_K))
-        direction.rotateZ(0.01);
-    if (keysPressed.contains(Qt::Key_I))
+    if (keysPressed.contains(Qt::Key_U))
         direction.rotateZ(-0.01);
+    if (keysPressed.contains(Qt::Key_O))
+        direction.rotateZ(0.01);
     if (keysPressed.contains(Qt::Key_J))
-        direction.rotateY(0.01);
-    if (keysPressed.contains(Qt::Key_L))
         direction.rotateY(-0.01);
+    if (keysPressed.contains(Qt::Key_L))
+        direction.rotateY(0.01);
+    if (keysPressed.contains(Qt::Key_I))
+        direction.rotateX(-0.01);
+    if (keysPressed.contains(Qt::Key_K))
+        direction.rotateX(0.01);
     camera.setUp(direction*camera.getUp());
     camera.setDir(direction*camera.getDir());
 
