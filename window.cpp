@@ -103,7 +103,7 @@ void Window::setProjection(bool perspective, float FOV){
     float a[4][4] = {
         {s, 0.0, 0.0, 0.0},
         {0.0, s, 0.0, 0.0},
-        {0.0, 0.0, 1.0, 0.0},//(f+n)/(f-n), -(2*f*n)/(f-n)},
+        {0.0, 0.0, 0.0, 1.0},//(f+n)/(f-n), -(2*f*n)/(f-n)},
         {0.0, 0.0, 1.0, 0.0},
      };
     Matrix4x4 mat(a);

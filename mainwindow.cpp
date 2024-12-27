@@ -10,6 +10,7 @@
 #include <QFileDialog>
 #include <QFileInfo>
 #include <QMessageBox>
+#include <QElapsedTimer>
 
 float calcAngle(float value){
     return value/100.0*360;
@@ -17,7 +18,7 @@ float calcAngle(float value){
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    camera(Vector3<float>(0.0, 0.0, -200.0), Vector3<float>(0.0, 250.0, 0.0), Vector3<float>(0.0, 0.0, 250.0), 250.0),
+    camera(Vector3<float>(0.0, 100.0, -500.0), Vector3<float>(0.0, 250.0, 0.0), Vector3<float>(0.0, 0.0, 1000.0), 250.0),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
@@ -38,7 +39,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //configurações da camera
 
-    camera.setProjection(true, 90);
+    camera.setProjection(true, 120);
 
     //configurando o displayFile
     inicialSetupDisplayFile();
@@ -57,7 +58,7 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::updateFrame() {
-    paint();
+    paint();   
     keyHandler();
 }
 
@@ -235,27 +236,28 @@ void MainWindow::keyHandler(){
     Matrix4x4 direction = Matrix4x4::identity();
     Matrix4x4 position = Matrix4x4::identity();
 
-    const float movementChange = 0.03;
+    float w = 0.03;
+    float vel = 10;
 
     //rotation
     if (keysPressed.contains(Qt::Key_U))
-        direction.rotateZ(-0.01);
+        direction.rotateZ(-w);
     if (keysPressed.contains(Qt::Key_O))
-        direction.rotateZ(0.01);
+        direction.rotateZ(w);
     if (keysPressed.contains(Qt::Key_J))
-        direction.rotateY(-0.01);
+        direction.rotateY(-w);
     if (keysPressed.contains(Qt::Key_L))
-        direction.rotateY(0.01);
+        direction.rotateY(w);
     if (keysPressed.contains(Qt::Key_I))
-        direction.rotateX(-0.01);
+        direction.rotateX(-w);
     if (keysPressed.contains(Qt::Key_K))
-        direction.rotateX(0.01);
+        direction.rotateX(w);
     camera.setUp(direction*camera.getUp());
     camera.setDir(direction*camera.getDir());
 
-    Vector3<float> up = camera.getUp()*movementChange;
-    Vector3<float> side = camera.getRight()*movementChange;
-    Vector3<float> front = camera.getDir()*movementChange;
+    Vector3<float> up = camera.getUp().normalize()*vel;
+    Vector3<float> side = camera.getRight().normalize()*vel;
+    Vector3<float> front = camera.getDir().normalize()*vel;
     //movement
     if (keysPressed.contains(Qt::Key_A))
         position.translate(-side);
