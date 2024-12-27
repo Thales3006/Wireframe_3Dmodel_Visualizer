@@ -11,6 +11,10 @@
 #include <QFileInfo>
 #include <QMessageBox>
 
+float calcAngle(float value){
+    return value/100.0*360;
+}
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     camera(Vector3<float>(0.0, 0.0, -200.0), Vector3<float>(0.0, 250.0, 0.0), Vector3<float>(0.0, 0.0, 250.0), 250.0),
@@ -125,14 +129,16 @@ void MainWindow::on_applyTransform_clicked()
 
     Matrix4x4 matrix = Matrix4x4::identity();
 
-    float roll = (float)ui->angleDial->value()/100.0 * M_PI * 2;
-    float yaw = (float)ui->angleDial_2->value()/100.0 * M_PI * 2;
+    float roll = (float)ui->angleDial_R->value()/100.0 * M_PI * 2;
+    float yaw = (float)ui->angleDial_Y->value()/100.0 * M_PI * 2;
+    float pitch = (float)ui->angleDial_P->value()/100.0 * M_PI * 2;
     Vector3<float> rot = Vector3<float>(ui->rotateCoordX->text().toFloat(), ui->rotateCoordY->text().toFloat(), ui->rotateCoordZ->text().toFloat());
 
     //ROTAÇÃO
     matrix.translate(-rot);
-    matrix.rotateZ(roll);
     matrix.rotateY(yaw);
+    matrix.rotateX(pitch);
+    matrix.rotateZ(roll);
     matrix.translate(rot);
 
     //atribui nova matriz ao objeto
@@ -189,14 +195,19 @@ void MainWindow::on_scaleBar_valueChanged(int value)
 }
 
 
-void MainWindow::on_angleDial_valueChanged(int value)
+void MainWindow::on_angleDial_R_valueChanged(int value)
 {
-    ui->angleLabel->setText(QString::number(value/100.0*360)+"º");
+    ui->angleLabel_R->setText(QString::number(calcAngle(value))+"º");
 }
 
-void MainWindow::on_angleDial_2_valueChanged(int value)
+void MainWindow::on_angleDial_Y_valueChanged(int value)
 {
-    ui->angleLabel_2->setText(QString::number(value/100.0*360)+"º");
+    ui->angleLabel_Y->setText(QString::number(calcAngle(value))+"º");
+}
+
+void MainWindow::on_angleDial_P_valueChanged(int value)
+{
+    ui->angleLabel_P->setText(QString::number(calcAngle(value))+"º");
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event) {

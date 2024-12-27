@@ -58,9 +58,11 @@ private slots:
 
     void on_scaleBar_valueChanged(int value);
 
-    void on_angleDial_valueChanged(int value);
+    void on_angleDial_R_valueChanged(int value);
 
-    void on_angleDial_2_valueChanged(int value);
+    void on_angleDial_Y_valueChanged(int value);
+
+    void on_angleDial_P_valueChanged(int value);
 
     void on_objloadbutton_clicked();
 
