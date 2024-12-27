@@ -97,3 +97,7 @@ void DisplayFile::drawAll(QImage& canvas, Matrix4x4 cameraMatrix, Vector3<float>
     for(const auto& object : buffer)
         object->draw(canvas);
 }
+
+bool DisplayFile::isEmpty(){
+    return displayFileList.empty();
+}

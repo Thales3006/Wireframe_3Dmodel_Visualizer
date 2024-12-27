@@ -2,8 +2,11 @@
 #include "ui_mainwindow.h"
 #include "geometry.h"
 #include "matrix4x4.h"
+#include "enums.h"
 
 #include <iostream>
+#include <filesystem>
+#include <QFileDialog>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -91,13 +94,13 @@ void MainWindow::inicialSetupDisplayFile(){
     //TESTING ============
     Object charizard;
     Object umbreon;
-    if(charizard.loadObj("charizard.obj")==0) {
+    if(charizard.loadObj("../../objs/charizard.obj")==ALL_GOOD) {
         Matrix4x4 m = Matrix4x4::identity();
         m.scale(Vector3<float>(10.0,10.0,10.0));
         m.translate(Vector3<float>(100,00,0));
         displayFile.insert("charizard", charizard.multiply(m));
     }
-    if(umbreon.loadObj("umbreon.obj")==0) {
+    if(umbreon.loadObj("../../objs/umbreon.obj")==ALL_GOOD) {
         Matrix4x4 m = Matrix4x4::identity();
         m.scale(Vector3<float>(60.0,60.0,60.0));
         m.translate(Vector3<float>(-100, 50, 0));
@@ -113,12 +116,14 @@ void MainWindow::on_applyTransform_clicked()
     std::string objName = ui->objList->currentText().toStdString();
     Matrix4x4 matrix = displayFile.getMatrix(objName);
 
-    float angle = (float)ui->angleDial->value()/100.0 * M_PI * 2;
-    Vector3<float> rot = Vector3<float>(ui->rotateCoordX->text().toFloat(), ui->rotateCoordY->text().toFloat(), 0);
+    float roll = (float)ui->angleDial->value()/100.0 * M_PI * 2;
+    float yaw = (float)ui->angleDial_2->value()/100.0 * M_PI * 2;
+    Vector3<float> rot = Vector3<float>(ui->rotateCoordX->text().toFloat(), ui->rotateCoordY->text().toFloat(), ui->rotateCoordZ->text().toFloat());
 
     //ROTAÇÃO
     matrix.translate(-rot);
-    matrix.rotateZ(angle);
+    matrix.rotateZ(roll);
+    matrix.rotateY(yaw);
     matrix.translate(rot);
 
     //atribui nova matriz ao objeto
@@ -147,7 +152,7 @@ void MainWindow::on_applyTransform_translate_clicked()
     std::string objName = ui->objList->currentText().toStdString();
     Matrix4x4 matrix = displayFile.getMatrix(objName);
 
-    Vector3<float> newCoord = Vector3<float>(ui->translateCoordX->text().toFloat(), ui->translateCoordY->text().toFloat(), 0);
+    Vector3<float> newCoord = Vector3<float>(ui->translateCoordX->text().toFloat(), ui->translateCoordY->text().toFloat(), ui->translateCoordZ->text().toFloat());
 
     //TRANSLAÇÃO
     matrix.translate(newCoord);
@@ -166,6 +171,11 @@ void MainWindow::on_scaleBar_valueChanged(int value)
 void MainWindow::on_angleDial_valueChanged(int value)
 {
     ui->angleLabel->setText(QString::number(value/100.0*360)+"º");
+}
+
+void MainWindow::on_angleDial_2_valueChanged(int value)
+{
+    ui->angleLabel_2->setText(QString::number(value/100.0*360)+"º");
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event) {
@@ -266,3 +276,35 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event) {
 
     return QObject::eventFilter(obj, event);
 }
+
+void MainWindow::on_objloadbutton_clicked() {
+    const QString fileName= QFileDialog::getOpenFileName(
+        this,
+        tr("Abrir"),
+        QString::fromStdString(std::filesystem::current_path().string()),
+        "obj files (*.obj);;All files (*.*)"
+        );
+
+    const QString suffix = QString::fromStdString(".obj");
+    if(!fileName.endsWith(suffix))
+        return;
+
+    Object obj;
+    if(obj.loadObj(fileName.toStdString()) == ALL_GOOD){
+        displayFile.insert(fileName.chopped(suffix.size()).toStdString(), obj);
+        ui->objList->addItem(fileName.chopped(suffix.size()));
+    }
+}
+
+
+void MainWindow::on_objdestroybutton_clicked()
+{
+    if(displayFile.isEmpty())
+        return;
+
+    std::string objName = ui->objList->currentText().toStdString();
+    displayFile.remove(displayFile.getIndex(objName));
+    ui->objList->removeItem(ui->objList->currentIndex());
+    ui->objList->setCurrentIndex(0);
+}
+

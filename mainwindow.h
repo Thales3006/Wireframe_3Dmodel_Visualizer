@@ -60,6 +60,12 @@ private slots:
 
     void on_angleDial_valueChanged(int value);
 
+    void on_angleDial_2_valueChanged(int value);
+
+    void on_objloadbutton_clicked();
+
+    void on_objdestroybutton_clicked();
+
 private:
     Ui::MainWindow *ui;
 };

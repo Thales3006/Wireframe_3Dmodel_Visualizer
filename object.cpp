@@ -1,5 +1,7 @@
 #include "object.h"
 
+#include "enums.h"
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -28,10 +30,10 @@ int Object::loadObj(const std::string FileName) {
     if(!polygons.empty())
         polygons.clear();
 
-    file.open("../../objs/"+FileName);
+    file.open(FileName);
     if (!file.is_open()) {
         std::cout << "Nao foi possivel abrir o arquivo \"" << FileName << '"' << std::endl;
-        return 2;
+        return NOT_FOUND;
     }
 
     while (std::getline(file, line)) {
@@ -74,7 +76,7 @@ int Object::loadObj(const std::string FileName) {
     }
     */
     file.close();
-    return 0;
+    return ALL_GOOD;
 }
 
 std::vector<std::unique_ptr<Geometry>> Object::drawable() {

@@ -28,9 +28,9 @@
     <property name="geometry">
      <rect>
       <x>550</x>
-      <y>20</y>
+      <y>6</y>
       <width>241</width>
-      <height>455</height>
+      <height>567</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="edit">
@@ -40,6 +40,30 @@
         <string>Selecionar Objeto</string>
        </property>
       </widget>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="objloader">
+       <item>
+        <widget class="QPushButton" name="objloadbutton">
+         <property name="focusPolicy">
+          <enum>Qt::FocusPolicy::ClickFocus</enum>
+         </property>
+         <property name="text">
+          <string>Carregar Objeto</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="objdestroybutton">
+         <property name="focusPolicy">
+          <enum>Qt::FocusPolicy::ClickFocus</enum>
+         </property>
+         <property name="text">
+          <string>Excluír objeto</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
      </item>
      <item>
       <widget class="Line" name="line_4">
@@ -72,6 +96,9 @@
        </item>
        <item>
         <widget class="QSlider" name="scaleBar">
+         <property name="focusPolicy">
+          <enum>Qt::FocusPolicy::ClickFocus</enum>
+         </property>
          <property name="minimum">
           <number>1</number>
          </property>
@@ -95,6 +122,9 @@
        </item>
        <item>
         <widget class="QPushButton" name="applyTransform_scale">
+         <property name="focusPolicy">
+          <enum>Qt::FocusPolicy::ClickFocus</enum>
+         </property>
          <property name="text">
           <string>Aplicar Escala</string>
          </property>
@@ -156,10 +186,26 @@
            </property>
           </widget>
          </item>
+         <item>
+          <widget class="QLineEdit" name="translateCoordZ">
+           <property name="inputMethodHints">
+            <set>Qt::InputMethodHint::ImhNone</set>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="placeholderText">
+            <string>z = 0</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </item>
        <item>
         <widget class="QPushButton" name="applyTransform_translate">
+         <property name="focusPolicy">
+          <enum>Qt::FocusPolicy::ClickFocus</enum>
+         </property>
          <property name="text">
           <string>Aplicar Translação</string>
          </property>
@@ -224,14 +270,45 @@
            </property>
           </widget>
          </item>
+         <item>
+          <widget class="QLineEdit" name="rotateCoordZ">
+           <property name="inputMethodHints">
+            <set>Qt::InputMethodHint::ImhNone</set>
+           </property>
+           <property name="text">
+            <string/>
+           </property>
+           <property name="placeholderText">
+            <string>z = 0</string>
+           </property>
+          </widget>
+         </item>
         </layout>
        </item>
        <item>
         <layout class="QHBoxLayout" name="angle">
          <item>
           <widget class="QLabel" name="angleLabel">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>45</width>
+             <height>16</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>16777215</width>
+             <height>16</height>
+            </size>
+           </property>
            <property name="text">
-            <string>ângulo</string>
+            <string>Roll</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
@@ -240,6 +317,50 @@
          </item>
          <item>
           <widget class="QDial" name="angleDial">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="maximum">
+            <number>100</number>
+           </property>
+           <property name="wrapping">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="angleLabel_2">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>46</width>
+             <height>16</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>Yaw</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignmentFlag::AlignRight|Qt::AlignmentFlag::AlignTrailing|Qt::AlignmentFlag::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QDial" name="angleDial_2">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
            <property name="maximum">
             <number>100</number>
            </property>
@@ -278,8 +399,8 @@
      </rect>
     </property>
     <property name="text">
-     <string>WASD - move a window
-I J K L  - giram a window
+     <string>WASD Shift Space - move a window
+I J K L U O  - giram a window
 Z X - aumentam e diminuem o zoom
 ←↑→↓ - Mudam o tamanho da viewport </string>
     </property>
