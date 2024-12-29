@@ -238,9 +238,10 @@ void MainWindow::keyHandler(){
     float w = 0.03;
     float vel = 10;
 
-    static float yaw = 0;
-    static float pitch = 0;
-    static float roll = 0;
+    Vector3<float> angle = camera.getAngle();
+    float yaw = angle.x;
+    float pitch = angle.y;
+    float roll = angle.z;
 
     //rotation
     if (keysPressed.contains(Qt::Key_U))
