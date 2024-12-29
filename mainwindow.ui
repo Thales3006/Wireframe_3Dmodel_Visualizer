@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>803</width>
+    <height>620</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
@@ -30,7 +36,7 @@
       <x>550</x>
       <y>10</y>
       <width>231</width>
-      <height>541</height>
+      <height>551</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="edit">
@@ -288,6 +294,58 @@
        <item>
         <layout class="QVBoxLayout" name="rotateDials">
          <item>
+          <layout class="QHBoxLayout" name="dials">
+           <item>
+            <widget class="QDial" name="angleDial_R">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="maximum">
+              <number>99</number>
+             </property>
+             <property name="wrapping">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QDial" name="angleDial_Y">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="maximum">
+              <number>99</number>
+             </property>
+             <property name="wrapping">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QDial" name="angleDial_P">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="maximum">
+              <number>99</number>
+             </property>
+             <property name="wrapping">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </item>
+         <item>
           <layout class="QHBoxLayout" name="dialTitles">
            <item>
             <widget class="QLabel" name="angleLabel_R">
@@ -369,58 +427,6 @@
            </item>
           </layout>
          </item>
-         <item>
-          <layout class="QHBoxLayout" name="dials">
-           <item>
-            <widget class="QDial" name="angleDial_R">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="maximum">
-              <number>99</number>
-             </property>
-             <property name="wrapping">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QDial" name="angleDial_Y">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="maximum">
-              <number>99</number>
-             </property>
-             <property name="wrapping">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QDial" name="angleDial_P">
-             <property name="sizePolicy">
-              <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="maximum">
-              <number>99</number>
-             </property>
-             <property name="wrapping">
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </item>
         </layout>
        </item>
        <item>
@@ -463,7 +469,7 @@ n m - Mudam o FOV
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
+     <width>803</width>
      <height>21</height>
     </rect>
    </property>
