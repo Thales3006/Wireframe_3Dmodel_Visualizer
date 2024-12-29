@@ -36,7 +36,7 @@ Point::Point(Vector3<float> p, unsigned char r0, unsigned char g0, unsigned char
 
 void Point::draw(QImage& canvas){
     int nY = canvas.height()-pos.y;
-    if(pos.x >= 0 && pos.x < canvas.width() && nY >= 0 && nY < canvas.height() && pos.z >= 1)
+    if(pos.z >= 1)
         canvas.setPixel(pos.x, nY, qRgb(r,g,b));
 }
 
