@@ -3,6 +3,8 @@
 
 #include "geometry.h"
 #include <map>
+#include <thread>
+#include <mutex>
 
 class DisplayFile
 {
@@ -27,6 +29,8 @@ public:
     void multiply(std::string name, Matrix4x4 mat);
     void drawAll(QImage& canvas, Matrix4x4 cameraMatrix, Vector3<float> viewportSize);
 private:
+    std::vector<std::thread> threads;
+    std::mutex mtx;
     std::vector<std::unique_ptr<Geometry>> buffer;
 
 };

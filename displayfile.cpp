@@ -28,13 +28,21 @@ void DisplayFile::drawAll(QImage& canvas, Matrix4x4 cameraMatrix, Vector3<float>
     viewportMatrix.scale(viewportSize);
     viewportMatrix.translate(viewportSize);
 
-    std::map<std::string, std::unique_ptr<Geometry>>::iterator it;
-    for(it=objects.begin(); it!=objects.end(); ++it){
-        drawableVec = it->second->multiply(cameraMatrix)->drawable();
-
+    //THREADING ======== CLIPPING
+    auto drawable = [](std::unique_ptr<Geometry>& obj, Matrix4x4& viewportMatrix, Matrix4x4& cameraMatrix, DisplayFile* display){
+        std::vector<std::unique_ptr<Geometry>> drawableVec = obj->multiply(cameraMatrix)->drawable();
+        display->mtx.lock();
         for(const auto& drawableObj : drawableVec)
-            buffer.push_back( drawableObj->multiply(viewportMatrix) );
-    }
+            display->buffer.push_back( drawableObj->multiply(viewportMatrix) );
+        display->mtx.unlock();
+    };
+
+    std::map<std::string, std::unique_ptr<Geometry>>::iterator it;
+    for(it=objects.begin(); it!=objects.end(); ++it)
+        threads.push_back(std::thread(drawable, std::ref(it->second), std::ref(viewportMatrix), std::ref(cameraMatrix), this) );
+    for(auto &thread : threads)
+        thread.join();
+    threads.clear();
 
     for(const auto& object : buffer)
         object->draw(canvas);
