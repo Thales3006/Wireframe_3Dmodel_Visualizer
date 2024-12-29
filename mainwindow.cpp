@@ -18,7 +18,7 @@ float calcAngle(float value){
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    camera(Vector3<float>(0.0, 100.0, -500.0), Vector3<float>(0.0, 250.0, 0.0), Vector3<float>(0.0, 0.0, 1000.0), 250.0),
+    camera(Vector3<float>(0,100,-500), Vector3<float>(1000,250,250), Vector3<float>(0,0,0)),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
@@ -279,13 +279,13 @@ void MainWindow::keyHandler(){
     const float zoomChange = 1.02;
 
     if (keysPressed.contains(Qt::Key_Z)){
-        camera.setUp(camera.getUp()*zoomChange);
-        camera.setRightScale(camera.getRightScale()*zoomChange);
+        camera.setUp(camera.getUpScale()*zoomChange);
+        camera.setRight(camera.getRightScale()*zoomChange);
     }
     if (keysPressed.contains(Qt::Key_X)){
-        if(camera.getUp().length()>=0.02*zoomChange&&camera.getRightScale()>=0.02*zoomChange) {
-            camera.setUp(camera.getUp()/zoomChange);
-            camera.setRightScale(camera.getRightScale()/zoomChange);
+        if(camera.getUpScale()>=0.02*zoomChange&&camera.getRightScale()>=0.02*zoomChange) {
+            camera.setUp(camera.getUpScale()/zoomChange);
+            camera.setRight(camera.getRightScale()/zoomChange);
         }
     }
 
