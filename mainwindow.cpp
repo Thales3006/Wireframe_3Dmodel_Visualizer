@@ -233,27 +233,29 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event) {
 }
 
 void MainWindow::keyHandler(){
-    Matrix4x4 direction = Matrix4x4::identity();
     Matrix4x4 position = Matrix4x4::identity();
 
     float w = 0.03;
     float vel = 10;
 
+    static float yaw = 0;
+    static float pitch = 0;
+    static float roll = 0;
+
     //rotation
     if (keysPressed.contains(Qt::Key_U))
-        direction.rotateZ(-w);
+        roll -= w;
     if (keysPressed.contains(Qt::Key_O))
-        direction.rotateZ(w);
+        roll += w;
     if (keysPressed.contains(Qt::Key_J))
-        direction.rotateY(-w);
+        yaw -= w;
     if (keysPressed.contains(Qt::Key_L))
-        direction.rotateY(w);
+        yaw += w;
     if (keysPressed.contains(Qt::Key_I))
-        direction.rotateX(-w);
+        pitch -= w;
     if (keysPressed.contains(Qt::Key_K))
-        direction.rotateX(w);
-    camera.setUp(direction*camera.getUp());
-    camera.setDir(direction*camera.getDir());
+        pitch += w;
+    camera.setAngle(Vector3<float>(yaw, pitch, roll));
 
     Vector3<float> up = camera.getUp().normalize()*vel;
     Vector3<float> side = camera.getRight().normalize()*vel;

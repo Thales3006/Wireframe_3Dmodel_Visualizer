@@ -17,6 +17,10 @@ private:
     float rightScale;
     float FOV;
 
+    float pitch;
+    float yaw;
+    float roll;
+
     void updateView();
 public:
     Window(Vector3<float> pos, Vector3<float> up, Vector3<float> dir, float rightScale);
@@ -24,6 +28,7 @@ public:
     void setPos(Vector3<float> pos);
     void setUp(Vector3<float> up);
     void setDir(Vector3<float> dir);
+    void setAngle(Vector3<float> angle);
     void setRightScale(float scalar);
     void setProjection(bool perspective, float FOV);
 
@@ -34,6 +39,7 @@ public:
     float getRightScale();
     Matrix4x4 getView();
     float getFOV();
+    Vector3<float> getAngle();
 };
 
 #endif // WINDOW_H

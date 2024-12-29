@@ -73,17 +73,13 @@ Matrix4x4 Window::getView() {
 
 void Window::updateView() {
     //REFAZER ANGULOS
-    Vector3<float> nDir = dir.normalize(), nUp = up.normalize(), nRight = right.normalize();
-    float pitch = -asin(-nDir.y);
-    float roll = -atan2(nUp.y,nRight.y)+M_PI/2;
-    float yaw = -atan2(nDir.x,nDir.z);;
     this->view = Matrix4x4::identity();
 
     this->view.translate(-pos);
 
-    this->view.rotateY(yaw);
-    this->view.rotateX(pitch);
-    this->view.rotateZ(roll);
+    this->view.rotateY(-yaw);
+    this->view.rotateX(-pitch);
+    this->view.rotateZ(-roll);
 
     this->view.scale(Vector3<float>(1/rightScale, 1/up.length(), 1/dir.length()));
 
@@ -112,4 +108,23 @@ void Window::setProjection(bool perspective, float FOV){
 
 float Window::getFOV(){
     return FOV;
+}
+
+void Window::setAngle(Vector3<float> angle){
+    Matrix4x4 direction = Matrix4x4::identity();
+
+    yaw = angle.x;
+    pitch = angle.y;
+    roll = angle.z;
+
+    direction.rotateZ(roll);
+    direction.rotateX(pitch);
+    direction.rotateY(yaw);
+
+    setUp(direction*Vector3<float>(0.0, 1.0, 0.0)*250);
+    setDir(direction*Vector3<float>(0.0, 0.0, 1.0)*1000);
+}
+
+Vector3<float> Window::getAngle(){
+    return Vector3<float>(yaw, pitch, roll);
 }
