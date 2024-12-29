@@ -25,7 +25,7 @@ void DisplayFile::drawAll(QImage& canvas, Matrix4x4 cameraMatrix, Vector3<float>
 
     viewportSize = viewportSize/2.0;
     viewportMatrix = Matrix4x4::identity();
-    viewportMatrix.scale(viewportSize);
+    viewportMatrix.scale(viewportSize/1.1);
     viewportMatrix.translate(viewportSize);
 
     //THREADING ======== CLIPPING
