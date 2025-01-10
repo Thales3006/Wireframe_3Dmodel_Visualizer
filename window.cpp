@@ -91,13 +91,13 @@ void Window::setProjection(bool perspective, float FOV){
         return;
     }
     float s = 1/tan((FOV*M_PI)/360);
-    //float f = dir.length();
-    //float n = 0.0f;
+    float f = 400.0;
+    float n = 0.01f;
 
     float a[4][4] = {
         {s, 0.0, 0.0, 0.0},
         {0.0, s, 0.0, 0.0},
-        {0.0, 0.0, 0.0, 1.0},//(f+n)/(f-n), -(2*f*n)/(f-n)},
+        {0.0, 0.0, (f+n)/(f-n), -(2*f*n)/(f-n)},
         {0.0, 0.0, 1.0, 0.0},
      };
     Matrix4x4 mat(a);
