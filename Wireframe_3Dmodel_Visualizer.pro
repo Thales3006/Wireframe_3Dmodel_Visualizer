@@ -19,6 +19,7 @@ SOURCES += \
 
 HEADERS += \
     displayfile.h \
+    enums.h \
     geometry.h \
     mainwindow.h \
     matrix4x4.h \

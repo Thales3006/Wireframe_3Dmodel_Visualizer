@@ -1,5 +1,7 @@
 #include "object.h"
 
+#include "enums.h"
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -25,15 +27,13 @@ int Object::loadObj(const std::string FileName) {
     std::vector<Vector3<float>> vertices;
     std::vector<Vector3<unsigned int>> faces;
 
-    if(!polygons.empty()) {
-        std::cout << "O object ja foi definido anteriormente!" << std::endl;
-        return 1;
-    }
+    if(!polygons.empty())
+        polygons.clear();
 
-    file.open("../../objs/"+FileName);
+    file.open(FileName);
     if (!file.is_open()) {
         std::cout << "Nao foi possivel abrir o arquivo \"" << FileName << '"' << std::endl;
-        return 2;
+        return NOT_FOUND;
     }
 
     while (std::getline(file, line)) {
@@ -53,15 +53,30 @@ int Object::loadObj(const std::string FileName) {
         }
     }
 
-    for(Vector3<unsigned int> face : faces)
+    for(auto& face : faces)
         polygons.push_back(Polygon(
             Point(vertices[face.x-1]),
             Point(vertices[face.y-1]),
             Point(vertices[face.z-1])
         ));
-
+    /*
+    int equal;
+    for (auto it = polygons.begin(); it != polygons.end(); ++it){
+        equal = 0;
+        for(auto& otherPoly: polygons){
+            if(otherPoly.l1 >= (*it).l1 || otherPoly.l1 >= (*it).l2 || otherPoly.l1 >= (*it).l3)
+                equal++;
+            if(otherPoly.l2 >= (*it).l1 || otherPoly.l2 >= (*it).l2 || otherPoly.l2 >= (*it).l3)
+                equal++;
+            if(otherPoly.l3 >= (*it).l1 || otherPoly.l3 >= (*it).l2 || otherPoly.l3 >=(*it).l3)
+                equal++;
+        }
+        if(equal < 3) continue;
+        polygons.erase(it);
+    }
+    */
     file.close();
-    return 0;
+    return ALL_GOOD;
 }
 
 std::vector<std::unique_ptr<Geometry>> Object::drawable() {
@@ -76,7 +91,7 @@ std::unique_ptr<Geometry> Object::multiply(Matrix4x4& matrix) {
     std::vector<Polygon> polygons = this->polygons;
     for(auto& poly : polygons)
         poly = *dynamic_cast<Polygon*>(poly.multiply(matrix).get());
-    return std::make_unique<Object>(Object(polygons));
+    return std::make_unique<Object>(polygons);
 }
 
 Vector3<float> Object::mean() {
@@ -88,8 +103,6 @@ Vector3<float> Object::mean() {
 }
 
 void Object::print() {
-    // for(auto& poly : polygons)
-        // std::cout << "p1: "<< poly.l1.p1.x << " " << poly.l1.p1.y << " " << poly.l1.p1.z << "p2: "<< poly.l2.p1.x << " " << poly.l2.p1.y << " " << poly.l2.p1.z << "p3: "<< poly.l3.p1.x << " " << poly.l3.p1.y << " " << poly.l3.p1.z << std::endl;
     std::cout << this;
 }
 
@@ -105,4 +118,13 @@ std::ostream& operator<<(std::ostream& s, const Object& o) {
     }
     s << " ]";
     return s;
+}
+
+std::unique_ptr<Geometry> Object::divideZ() {
+    std::vector<Polygon> polys;
+    for(auto poly : polygons){
+        poly = *dynamic_cast<Polygon*>(poly.divideZ().get());
+        polys.push_back(poly);
+    }
+    return std::make_unique<Object>(polys);
 }

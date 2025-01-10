@@ -2,12 +2,23 @@
 #include "ui_mainwindow.h"
 #include "geometry.h"
 #include "matrix4x4.h"
+#include "object.h"
+#include "enums.h"
 
 #include <iostream>
+#include <filesystem>
+#include <QFileDialog>
+#include <QFileInfo>
+#include <QMessageBox>
+#include <QElapsedTimer>
+
+float calcAngle(float value){
+    return value/100.0*360;
+}
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    camera(Vector3<float>(0.0, 0.0, 0.0), Vector3<float>(0.0, 250.0, 0.0), Vector3<float>(0.0, 0.0, 1.0), 250.0),
+    camera(Vector3<float>(0,100,-500), Vector3<float>(1000,250,250), Vector3<float>(0,0,0)),
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
@@ -27,21 +38,14 @@ MainWindow::MainWindow(QWidget *parent) :
     view = new QGraphicsView(scene, ui->visualizador);
 
     //configurações da camera
-    float a[4][4] = {
-        {1.0, 0.0, 0.0, 0.0},
-        {0.0, 1.0, 0.0, 0.0},
-        {0.0, 0.0, 1.0, 0.0},
-        {0.0, 0.0, 0.0, 1.0},
-    };
-    Matrix4x4 mat(a);
 
-    camera.setProjection(mat);
+    camera.setProjection(true, 120);
 
     //configurando o displayFile
     inicialSetupDisplayFile();
 
-    for(std::string& name : displayFile.names)
-        ui->objList->addItem(QString::fromStdString(name));
+    for(const auto& pair: displayFile.objects)
+        ui->objList->addItem(QString::fromStdString(pair.first));
 
     pixmapItem = new QGraphicsPixmapItem(QPixmap::fromImage(canvas));
     scene->addItem(pixmapItem);
@@ -54,7 +58,7 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::updateFrame() {
-    paint();
+    paint();   
     keyHandler();
 }
 
@@ -98,13 +102,13 @@ void MainWindow::inicialSetupDisplayFile(){
     //TESTING ============
     Object charizard;
     Object umbreon;
-    if(charizard.loadObj("charizard.obj")==0) {
+    if(charizard.loadObj("../../objs/charizard.obj")==ALL_GOOD) {
         Matrix4x4 m = Matrix4x4::identity();
         m.scale(Vector3<float>(10.0,10.0,10.0));
         m.translate(Vector3<float>(100,00,0));
         displayFile.insert("charizard", charizard.multiply(m));
     }
-    if(umbreon.loadObj("umbreon.obj")==0) {
+    if(umbreon.loadObj("../../objs/umbreon.obj")==ALL_GOOD) {
         Matrix4x4 m = Matrix4x4::identity();
         m.scale(Vector3<float>(60.0,60.0,60.0));
         m.translate(Vector3<float>(-100, 50, 0));
@@ -118,25 +122,41 @@ void MainWindow::inicialSetupDisplayFile(){
 void MainWindow::on_applyTransform_clicked()
 {
     std::string objName = ui->objList->currentText().toStdString();
-    Matrix4x4 matrix = displayFile.getMatrix(objName);
 
-    float angle = (float)ui->angleDial->value()/100.0 * M_PI * 2;
-    Vector3<float> rot = Vector3<float>(ui->rotateCoordX->text().toFloat(), ui->rotateCoordY->text().toFloat(), 0);
+    if(!displayFile.exist(objName)){
+        QMessageBox::information(this, tr("Erro"), "Objeto não existente ou não selecionado!");
+        return;
+    }
+
+    Matrix4x4 matrix = Matrix4x4::identity();
+
+    float roll = (float)ui->angleDial_R->value()/100.0 * M_PI * 2;
+    float yaw = (float)ui->angleDial_Y->value()/100.0 * M_PI * 2;
+    float pitch = (float)ui->angleDial_P->value()/100.0 * M_PI * 2;
+    Vector3<float> rot = Vector3<float>(ui->rotateCoordX->text().toFloat(), ui->rotateCoordY->text().toFloat(), ui->rotateCoordZ->text().toFloat());
 
     //ROTAÇÃO
     matrix.translate(-rot);
-    matrix.rotate(angle, 0, 1);
+    matrix.rotateY(yaw);
+    matrix.rotateX(pitch);
+    matrix.rotateZ(roll);
     matrix.translate(rot);
 
     //atribui nova matriz ao objeto
-    displayFile.setMatrix(objName, matrix);
+    displayFile.multiply(objName, matrix);
 }
 
 
 void MainWindow::on_applyTransform_scale_clicked()
 {
     std::string objName = ui->objList->currentText().toStdString();
-    Matrix4x4 matrix = displayFile.getMatrix(objName);
+
+    if(!displayFile.exist(objName)){
+        QMessageBox::information(this, tr("Erro"), "Objeto não existente ou não selecionado!");
+        return;
+    }
+
+    Matrix4x4 matrix = Matrix4x4::identity();
 
     Vector3<float> center = displayFile.getMean(objName);
     Vector3<float> scalar = Vector3<float>(ui->scaleBar->value()/100.0*4, ui->scaleBar->value()/100.0*4, ui->scaleBar->value()/100.0*4);
@@ -145,21 +165,27 @@ void MainWindow::on_applyTransform_scale_clicked()
     matrix.scale(scalar);
     matrix.translate(center);
 
-    displayFile.setMatrix(objName, matrix);
+    displayFile.multiply(objName, matrix);
 }
 
 
 void MainWindow::on_applyTransform_translate_clicked()
 {
     std::string objName = ui->objList->currentText().toStdString();
-    Matrix4x4 matrix = displayFile.getMatrix(objName);
 
-    Vector3<float> newCoord = Vector3<float>(ui->translateCoordX->text().toFloat(), ui->translateCoordY->text().toFloat(), 0);
+    if(!displayFile.exist(objName)){
+        QMessageBox::information(this, tr("Erro"), "Objeto não existente ou não selecionado!");
+        return;
+    }
+
+    Matrix4x4 matrix = Matrix4x4::identity();
+
+    Vector3<float> newCoord = Vector3<float>(ui->translateCoordX->text().toFloat(), ui->translateCoordY->text().toFloat(), ui->translateCoordZ->text().toFloat());
 
     //TRANSLAÇÃO
     matrix.translate(newCoord);
 
-    displayFile.setMatrix(objName, matrix);
+    displayFile.multiply(objName, matrix);
 }
 
 void MainWindow::on_scaleBar_valueChanged(int value)
@@ -170,9 +196,19 @@ void MainWindow::on_scaleBar_valueChanged(int value)
 }
 
 
-void MainWindow::on_angleDial_valueChanged(int value)
+void MainWindow::on_angleDial_R_valueChanged(int value)
 {
-    ui->angleLabel->setText(QString::number(value/100.0*360)+"º");
+    ui->angleLabel_R->setText(QString::number(calcAngle(value))+"º");
+}
+
+void MainWindow::on_angleDial_Y_valueChanged(int value)
+{
+    ui->angleLabel_Y->setText(QString::number(calcAngle(value))+"º");
+}
+
+void MainWindow::on_angleDial_P_valueChanged(int value)
+{
+    ui->angleLabel_P->setText(QString::number(calcAngle(value))+"º");
 }
 
 void MainWindow::keyPressEvent(QKeyEvent *event) {
@@ -197,55 +233,71 @@ void MainWindow::keyReleaseEvent(QKeyEvent *event) {
 }
 
 void MainWindow::keyHandler(){
-    Matrix4x4 m = Matrix4x4::identity();
-    Matrix4x4 q = Matrix4x4::identity();
-    Matrix4x4 n = Matrix4x4::identity();
+    Matrix4x4 position = Matrix4x4::identity();
 
-    const float movementChange = 0.03;
+    float w = 0.03;
+    float vel = 10;
+
+    Vector3<float> angle = camera.getAngle();
+    float yaw = angle.x;
+    float pitch = angle.y;
+    float roll = angle.z;
 
     //rotation
-    if (keysPressed.contains(Qt::Key_K))
-        m.rotate(0.01,0,1);
-    if (keysPressed.contains(Qt::Key_I))
-        m.rotate(-0.01,0,1);
+    if (keysPressed.contains(Qt::Key_U))
+        roll -= w;
+    if (keysPressed.contains(Qt::Key_O))
+        roll += w;
     if (keysPressed.contains(Qt::Key_J))
-        q.rotate(0.01,0,2);
+        yaw -= w;
     if (keysPressed.contains(Qt::Key_L))
-        q.rotate(-0.01,0,2);
-    camera.setUp(m*camera.getUp());
-    camera.setDir(q*camera.getDir());
+        yaw += w;
+    if (keysPressed.contains(Qt::Key_I))
+        pitch -= w;
+    if (keysPressed.contains(Qt::Key_K))
+        pitch += w;
+    camera.setAngle(Vector3<float>(yaw, pitch, roll));
 
-    Vector3<float> up = camera.getUp()*movementChange;
-    Vector3<float> side = camera.getRight()*movementChange;
-    //Vector3<float> front = camera.getDir()*movementChange;
+    Vector3<float> up = camera.getUp().normalize()*vel;
+    Vector3<float> side = camera.getRight().normalize()*vel;
+    Vector3<float> front = camera.getDir().normalize()*vel;
     //movement
     if (keysPressed.contains(Qt::Key_A))
-        n.translate(-side);
+        position.translate(-side);
     if (keysPressed.contains(Qt::Key_W))
-        n.translate(up);
+        position.translate(front);
     if (keysPressed.contains(Qt::Key_S))
-        n.translate(-up);
+        position.translate(-front);
     if (keysPressed.contains(Qt::Key_D))
-        n.translate(side);
+        position.translate(side);
     if (keysPressed.contains(Qt::Key_Shift))
-        n.translate(-up);
+        position.translate(-up);
     if (keysPressed.contains(Qt::Key_Space))
-        n.translate(up);
-    camera.setPos(n*camera.getPos());
+        position.translate(up);
+    camera.setPos(position*camera.getPos());
 
     //zoom
     const float zoomChange = 1.02;
 
     if (keysPressed.contains(Qt::Key_Z)){
-        camera.setUp(camera.getUp()*zoomChange);
-        camera.setRightScale(camera.getRightScale()*zoomChange);
+        camera.setUp(camera.getUpScale()*zoomChange);
+        camera.setRight(camera.getRightScale()*zoomChange);
     }
     if (keysPressed.contains(Qt::Key_X)){
-        if(camera.getUp().length()>=0.02*zoomChange&&camera.getRightScale()>=0.02*zoomChange) {
-            camera.setUp(camera.getUp()/zoomChange);
-            camera.setRightScale(camera.getRightScale()/zoomChange);
+        if(camera.getUpScale()>=0.02*zoomChange&&camera.getRightScale()>=0.02*zoomChange) {
+            camera.setUp(camera.getUpScale()/zoomChange);
+            camera.setRight(camera.getRightScale()/zoomChange);
         }
     }
+
+    //FOV
+    int FOV = camera.getFOV();
+    if (keysPressed.contains(Qt::Key_N) && FOV < 180)
+        FOV++;
+    if (keysPressed.contains(Qt::Key_M) && FOV > 0)
+        FOV--;
+    camera.setProjection(true, FOV);
+
 
     //resizeVIEWPORT
     if (keysPressed.contains(Qt::Key_Right))
@@ -270,3 +322,55 @@ bool MainWindow::eventFilter(QObject *obj, QEvent *event) {
 
     return QObject::eventFilter(obj, event);
 }
+
+void MainWindow::on_objloadbutton_clicked() {
+    const QString fileName= QFileDialog::getOpenFileName(
+        this,
+        tr("Abrir"),
+        QString::fromStdString(std::filesystem::current_path().string() + "/../../objs"),
+        "obj files (*.obj);;All files (*.*)"
+        );
+
+    if(fileName.isEmpty())
+        return;
+
+    const QString suffix = QString::fromStdString(".obj");
+
+    if(!fileName.endsWith(suffix)){
+        QMessageBox::information(this, tr("Erro"), "Arquivo não é compatível (Apenas arquivos com extensão .obj)");
+        return;
+    }
+
+    Object obj;
+    QString newName = QFileInfo(fileName).fileName().chopped(suffix.size());
+
+    if(obj.loadObj(fileName.toStdString()) == ALL_GOOD){
+        int count = 0;
+        while(displayFile.exist(newName.toStdString())){
+            newName = newName + QString::fromStdString(std::to_string(++count));
+        }
+
+        displayFile.insert(newName.toStdString(), obj);
+        ui->objList->addItem(newName);
+        return;
+    }
+
+    QMessageBox::information(this, tr("Erro"), "Não foi possível carregar o arquivo.");
+}
+
+
+void MainWindow::on_objdestroybutton_clicked()
+{
+    std::string objName = ui->objList->currentText().toStdString();
+
+    if(displayFile.empty()){
+        QMessageBox::information(this, tr("Erro"), "Não há mais objetos no display file!");
+        return;
+    }
+
+    ui->objList->removeItem(ui->objList->currentIndex());
+    displayFile.remove(objName);
+
+    ui->objList->setCurrentIndex(0);
+}
+

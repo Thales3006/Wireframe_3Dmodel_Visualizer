@@ -20,8 +20,9 @@ public:
 
     int loadObj(const std::string FileName);
 
-    void print();
+    void print() override;
     friend std::ostream& operator<<(std::ostream& s, const Object& o);
+    std::unique_ptr<Geometry> divideZ() override;
 };
 
 #endif // OBJECT_H

@@ -58,7 +58,15 @@ private slots:
 
     void on_scaleBar_valueChanged(int value);
 
-    void on_angleDial_valueChanged(int value);
+    void on_angleDial_R_valueChanged(int value);
+
+    void on_angleDial_Y_valueChanged(int value);
+
+    void on_angleDial_P_valueChanged(int value);
+
+    void on_objloadbutton_clicked();
+
+    void on_objdestroybutton_clicked();
 
 private:
     Ui::MainWindow *ui;

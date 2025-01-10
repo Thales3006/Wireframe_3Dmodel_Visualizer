@@ -95,16 +95,45 @@ Matrix4x4 Matrix4x4::identity() {
     return I;
 }
 
-void Matrix4x4::rotate(float angle, int planeI, int planeJ) {
-    Matrix4x4 id = Matrix4x4::identity();
-    id.set(planeI, planeI, cos(angle));
-    id.set(planeI, planeJ, -sin(angle));
-    id.set(planeJ, planeI, sin(angle));
-    id.set(planeJ, planeJ, cos(angle));
+void Matrix4x4::rotateX(float angle){
+    float co = cos(angle);
+    float si = sin(angle);
+    float a[4][4] = {
+        {1.0, 0.0, 0.0, 0.0},
+        {0.0, co , -si, 0.0},
+        {0.0, si , co , 0.0},
+        {0.0, 0.0, 0.0, 1.0},
+    };
+    Matrix4x4 mat(a);
+    *this = mat * (*this);
+}
 
-    Matrix4x4 result = id * (*this);
+void Matrix4x4::rotateY(float angle){
+    float co = cos(angle);
+    float si = sin(angle);
+    float a[4][4] = {
+        {co , 0.0, si , 0.0},
+        {0.0, 1.0, 0.0, 0.0},
+        {-si, 0.0, co , 0.0},
+        {0.0, 0.0, 0.0, 1.0},
+    };
+    Matrix4x4 mat(a);
 
-    *this = result;
+    *this = mat * (*this);
+}
+
+void Matrix4x4::rotateZ(float angle){
+    float co = cos(angle);
+    float si = sin(angle);
+    float a[4][4] = {
+        {co , -si, 0.0, 0.0},
+        {si , co , 0.0, 0.0},
+        {0.0, 0.0, 1.0, 0.0},
+        {0.0, 0.0, 0.0, 1.0},
+    };
+    Matrix4x4 mat(a);
+
+    *this = mat * (*this);
 }
 
 void Matrix4x4::translate(Vector3<float> trans) {
@@ -130,11 +159,13 @@ void Matrix4x4::scale(Vector3<float> scalar){
 }
 
 Vector3<float> Matrix4x4::operator*(Vector3<float> vec){
-    return Vector3<float>(
+    float w = vec.x*arr[3][0] + vec.y*arr[3][1] + vec.z*arr[3][2] + arr[3][3];
+    Vector3<float> newVec(
         vec.x*arr[0][0] + vec.y*arr[0][1] + vec.z*arr[0][2] + arr[0][3],
         vec.x*arr[1][0] + vec.y*arr[1][1] + vec.z*arr[1][2] + arr[1][3],
         vec.x*arr[2][0] + vec.y*arr[2][1] + vec.z*arr[2][2] + arr[2][3]
         );
+    return w == 1.0? newVec : w? newVec/w : newVec/0.000000001 ;
 }
 
 std::ostream& operator<<(std::ostream& s, Matrix4x4& m) {
