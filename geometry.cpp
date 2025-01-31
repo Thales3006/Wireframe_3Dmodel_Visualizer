@@ -93,18 +93,16 @@ void Line::draw(QImage& canvas){
     int sx = x0 < x1 ? 1 : -1, sy = y0 < y1 ? 1 : -1;
     int error = dx + dy;
 
-    while(true){
+    while(x0 != x1 || y0 != y1){
         canvas.setPixel(x0, y0, qRgb(p1.r,p1.g,p1.b));
         int e2 = 2 * error;
         if(e2 >= dy){
-            if(x0 == x1) break;
-            error = error + dy;
-            x0 = x0 + sx;
+            error += dy;
+            x0 += sx;
         }
         if(e2 <= dx){
-            if(y0 == y1) break;
-            error = error + dx;
-            y0 = y0 + sy;
+            error += dx;
+            y0 += sy;
         }
     }
 }
