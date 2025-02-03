@@ -63,7 +63,7 @@ bool Point::operator==(const Point& p) {
 }
 
 char Point::getRC() {
-    return (char)((pos.x<-1 ? 8 : (pos.x>1 ? 4 : 0)) | (pos.y<-1 ? 2 : (pos.y>1 ? 1 : 0)));
+    return (char)((pos.z<-1 ? 32 : (pos.z>1 ? 16 : 0)) | (pos.x<-1 ? 8 : (pos.x>1 ? 4 : 0)) | (pos.y<-1 ? 2 : (pos.y>1 ? 1 : 0)));
 }
 
 void Point::print() {
@@ -122,7 +122,7 @@ std::unique_ptr<Line> Line::drawableLine() {
         float k;
         if(rc==0)
             return std::optional<Vector3<float>>{v};
-        else if(((rc&3) && dir.y==0) || ((rc&12) && dir.x==0))
+        else if(((rc&3) && dir.y==0) || ((rc&12) && dir.x==0) || ((rc&48) && dir.z==0))
             return std::optional<Vector3<float>>{};
 
         dir=dir.normalize();
@@ -145,21 +145,38 @@ std::unique_ptr<Line> Line::drawableLine() {
 
         v+=dir*k;
 
-        if(v.y>1||v.y<-1)
+        if(v.z>1)
+            k=(1-v.z)/dir.z;
+        else if(v.z<-1)
+            k=(-1-v.z)/dir.z;
+        else
+            k=0;
+
+        v+=dir*k;
+
+        if(v.y>1||v.y<-1||v.x>1||v.x<-1)
             return std::optional<Vector3<float>>{};
         else
             return std::optional<Vector3<float>>{v};
     };
 
     d = (v2-v1).normalize();
+    // if(v1.z<-1)
+        // std::cout << "v1: " << v1 << std::endl;
+    // if(v2.z<-1)
+        // std::cout << "v2: " << v2 << std::endl;
 
     std::optional<Vector3<float>> maybeV1=interceptBorder(d, v1, rc1);
-    if(!maybeV1)
+    if(!maybeV1) {
+        std::cout << "invalid v1: " << v1 << std::endl;
         return NULL;
+    }
 
     std::optional<Vector3<float>> maybeV2=interceptBorder(d, v2, rc2);
-    if(!maybeV2)
+    if(!maybeV2) {
+        std::cout << "invalid v2: " << v2 << std::endl;
         return NULL;
+    }
 
     v1 = std::move(*maybeV1);
     v2 = std::move(*maybeV2);
