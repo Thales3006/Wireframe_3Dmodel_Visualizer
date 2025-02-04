@@ -119,7 +119,8 @@ std::unique_ptr<Line> Line::drawableLine() {
     Vector3<float> d;
 
     auto interceptBorder = [](Vector3<float> dir, Vector3<float> v, char rc) {
-        float k;
+        float kx, ky, kz;
+        Vector3<float> inter;
         if(rc==0)
             return std::optional<Vector3<float>>{v};
         else if(((rc&3) && dir.y==0) || ((rc&12) && dir.x==0) || ((rc&48) && dir.z==0))
@@ -127,37 +128,52 @@ std::unique_ptr<Line> Line::drawableLine() {
 
         dir=dir.normalize();
 
-        if(rc&1)
-            k=(1-v.y)/dir.y;
-        else if(rc&2)
-            k=(-1-v.y)/dir.y;
-        else
-            k=0;
+        if(rc&3) {
+            if(rc&1)
+                ky=(1-v.y)/dir.y;
+            else
+                ky=(-1-v.y)/dir.y;
+        } else
+            ky=0;
 
-        v+=dir*k;
+        if(rc&12) {
+            if(rc&4)
+                kx=(1-v.x)/dir.x;
+            else
+                kx=(-1-v.x)/dir.x;
+        } else
+            kx=0;
 
-        if(v.x>1)
-            k=(1-v.x)/dir.x;
-        else if(v.x<-1)
-            k=(-1-v.x)/dir.x;
-        else
-            k=0;
+        if(rc&48) {
+            if(rc&16)
+                kz=(1-v.z)/dir.z;
+            else
+                kz=(-1-v.z)/dir.z;
+        } else
+            kz=0;
 
-        v+=dir*k;
+        if(kx!=0) {
+            inter=v+dir*kx;
 
-        if(v.z>1)
-            k=(1-v.z)/dir.z;
-        else if(v.z<-1)
-            k=(-1-v.z)/dir.z;
-        else
-            k=0;
+            if(inter.y>=-1 && inter.y<=1 && inter.z>=-1 && inter.z<=1)
+                return std::optional<Vector3<float>>{inter};
+        }
 
-        v+=dir*k;
+        if(ky!=0) {
+            inter=v+dir*ky;
 
-        if(v.y>1||v.y<-1||v.x>1||v.x<-1)
-            return std::optional<Vector3<float>>{};
-        else
-            return std::optional<Vector3<float>>{v};
+            if(inter.x>=-1 && inter.x<=1 && inter.z>=-1 && inter.z<=1)
+                return std::optional<Vector3<float>>{inter};
+        }
+
+        if(kz!=0) {
+            inter=v+dir*kz;
+
+            if(inter.y>=-1 && inter.y<=1 && inter.x>=-1 && inter.x<=1)
+                return std::optional<Vector3<float>>{inter};
+        }
+
+        return std::optional<Vector3<float>>{};
     };
 
     d = (v2-v1).normalize();
@@ -168,13 +184,13 @@ std::unique_ptr<Line> Line::drawableLine() {
 
     std::optional<Vector3<float>> maybeV1=interceptBorder(d, v1, rc1);
     if(!maybeV1) {
-        std::cout << "invalid v1: " << v1 << std::endl;
+        // std::cout << "invalid v1: " << v1 << std::endl;
         return NULL;
     }
 
     std::optional<Vector3<float>> maybeV2=interceptBorder(d, v2, rc2);
     if(!maybeV2) {
-        std::cout << "invalid v2: " << v2 << std::endl;
+        // std::cout << "invalid v2: " << v2 << std::endl;
         return NULL;
     }
 
