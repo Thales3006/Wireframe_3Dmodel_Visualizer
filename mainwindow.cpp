@@ -39,7 +39,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //configurações da camera
 
-    camera.setProjection(true, 120);
+    camera.setProjection(true, 120, 0.01, 1);
 
     //configurando o displayFile
     inicialSetupDisplayFile();
@@ -292,11 +292,23 @@ void MainWindow::keyHandler(){
 
     //FOV
     int FOV = camera.getFOV();
+    float minDrawDistance = camera.getMinDrawDistance();
+    float maxDrawDistance = camera.getMaxDrawDistance();
+    const float drawDistanceUnit = 0.01;
+
     if (keysPressed.contains(Qt::Key_N) && FOV < 180)
         FOV++;
     if (keysPressed.contains(Qt::Key_M) && FOV > 0)
         FOV--;
-    camera.setProjection(true, FOV);
+    if (keysPressed.contains(Qt::Key_Y) && minDrawDistance < maxDrawDistance)
+        minDrawDistance += drawDistanceUnit;
+    if (keysPressed.contains(Qt::Key_H) && minDrawDistance > 0)
+        minDrawDistance -= drawDistanceUnit;
+    if (keysPressed.contains(Qt::Key_BracketLeft))
+        maxDrawDistance += drawDistanceUnit;
+    if (keysPressed.contains(Qt::Key_BracketRight) && maxDrawDistance > minDrawDistance)
+        maxDrawDistance -= drawDistanceUnit;
+    camera.setProjection(true, FOV, minDrawDistance, maxDrawDistance);
 
 
     //resizeVIEWPORT

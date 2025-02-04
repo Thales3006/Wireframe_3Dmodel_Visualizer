@@ -36,7 +36,7 @@
       <x>550</x>
       <y>10</y>
       <width>231</width>
-      <height>551</height>
+      <height>672</height>
      </rect>
     </property>
     <layout class="QVBoxLayout" name="edit">
@@ -445,8 +445,8 @@
      <rect>
       <x>20</x>
       <y>430</y>
-      <width>241</width>
-      <height>91</height>
+      <width>301</width>
+      <height>151</height>
      </rect>
     </property>
     <property name="text">
@@ -454,6 +454,8 @@
 I J K L U O  - giram a window
 Z X - aumentam e diminuem o zoom
 n m - Mudam o FOV
+[ ] - Mudam o DrawDistance máximo
+Y H - Mudam o DrawDistance mínimo
 ←↑→↓ - Mudam o tamanho da viewport </string>
     </property>
     <property name="alignment">
@@ -470,7 +472,7 @@ n m - Mudam o FOV
      <x>0</x>
      <y>0</y>
      <width>803</width>
-     <height>21</height>
+     <height>25</height>
     </rect>
    </property>
   </widget>

@@ -63,7 +63,7 @@ bool Point::operator==(const Point& p) {
 }
 
 char Point::getRC() {
-    return (char)((pos.x<-1 ? 8 : (pos.x>1 ? 4 : 0)) | (pos.y<-1 ? 2 : (pos.y>1 ? 1 : 0)));
+    return (char)((pos.z<-1 ? 32 : (pos.z>1 ? 16 : 0)) | (pos.x<-1 ? 8 : (pos.x>1 ? 4 : 0)) | (pos.y<-1 ? 2 : (pos.y>1 ? 1 : 0)));
 }
 
 void Point::print() {
@@ -119,36 +119,61 @@ std::unique_ptr<Line> Line::drawableLine() {
     Vector3<float> d;
 
     auto interceptBorder = [](Vector3<float> dir, Vector3<float> v, char rc) {
-        float k;
+        float kx, ky, kz;
+        Vector3<float> inter;
         if(rc==0)
             return std::optional<Vector3<float>>{v};
-        else if(((rc&3) && dir.y==0) || ((rc&12) && dir.x==0))
+        else if(((rc&3) && dir.y==0) || ((rc&12) && dir.x==0) || ((rc&48) && dir.z==0))
             return std::optional<Vector3<float>>{};
 
         dir=dir.normalize();
 
-        if(rc&1)
-            k=(1-v.y)/dir.y;
-        else if(rc&2)
-            k=(-1-v.y)/dir.y;
-        else
-            k=0;
+        if(rc&3) {
+            if(rc&1)
+                ky=(1-v.y)/dir.y;
+            else
+                ky=(-1-v.y)/dir.y;
+        } else
+            ky=0;
 
-        v+=dir*k;
+        if(rc&12) {
+            if(rc&4)
+                kx=(1-v.x)/dir.x;
+            else
+                kx=(-1-v.x)/dir.x;
+        } else
+            kx=0;
 
-        if(v.x>1)
-            k=(1-v.x)/dir.x;
-        else if(v.x<-1)
-            k=(-1-v.x)/dir.x;
-        else
-            k=0;
+        if(rc&48) {
+            if(rc&16)
+                kz=(1-v.z)/dir.z;
+            else
+                kz=(-1-v.z)/dir.z;
+        } else
+            kz=0;
 
-        v+=dir*k;
+        if(kx!=0) {
+            inter=v+dir*kx;
 
-        if(v.y>1||v.y<-1)
-            return std::optional<Vector3<float>>{};
-        else
-            return std::optional<Vector3<float>>{v};
+            if(inter.y>=-1 && inter.y<=1 && inter.z>=-1 && inter.z<=1)
+                return std::optional<Vector3<float>>{inter};
+        }
+
+        if(ky!=0) {
+            inter=v+dir*ky;
+
+            if(inter.x>=-1 && inter.x<=1 && inter.z>=-1 && inter.z<=1)
+                return std::optional<Vector3<float>>{inter};
+        }
+
+        if(kz!=0) {
+            inter=v+dir*kz;
+
+            if(inter.y>=-1 && inter.y<=1 && inter.x>=-1 && inter.x<=1)
+                return std::optional<Vector3<float>>{inter};
+        }
+
+        return std::optional<Vector3<float>>{};
     };
 
     d = (v2-v1).normalize();
