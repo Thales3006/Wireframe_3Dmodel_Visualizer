@@ -19,6 +19,8 @@ private:
     float dirScale;
     float rightScale;
     float FOV;
+    float minDrawDistance;
+    float maxDrawDistance;
 
     float pitch;
     float yaw;
@@ -34,7 +36,7 @@ public:
     void setDir(float scale);
     void setAngle(Vector3<float> angle);
     void setRight(float scale);
-    void setProjection(bool perspective, float FOV);
+    void setProjection(bool perspective, float FOV, float minDrawDistance, float maxDrawDistance);
 
     Vector3<float> getPos();
     Vector3<float> getUp();
@@ -46,6 +48,8 @@ public:
     Matrix4x4 getView();
     float getFOV();
     Vector3<float> getAngle();
+    float getMinDrawDistance();
+    float getMaxDrawDistance();
 };
 
 #endif // WINDOW_H

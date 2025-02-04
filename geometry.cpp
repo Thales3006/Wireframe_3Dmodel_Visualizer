@@ -177,22 +177,14 @@ std::unique_ptr<Line> Line::drawableLine() {
     };
 
     d = (v2-v1).normalize();
-    // if(v1.z<-1)
-        // std::cout << "v1: " << v1 << std::endl;
-    // if(v2.z<-1)
-        // std::cout << "v2: " << v2 << std::endl;
 
     std::optional<Vector3<float>> maybeV1=interceptBorder(d, v1, rc1);
-    if(!maybeV1) {
-        // std::cout << "invalid v1: " << v1 << std::endl;
+    if(!maybeV1)
         return NULL;
-    }
 
     std::optional<Vector3<float>> maybeV2=interceptBorder(d, v2, rc2);
-    if(!maybeV2) {
-        // std::cout << "invalid v2: " << v2 << std::endl;
+    if(!maybeV2)
         return NULL;
-    }
 
     v1 = std::move(*maybeV1);
     v2 = std::move(*maybeV2);

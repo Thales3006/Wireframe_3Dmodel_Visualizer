@@ -9,6 +9,8 @@ Window::Window(Vector3<float> pos, Vector3<float> scales, Vector3<float> angles)
 
     this->projection = Matrix4x4::identity();
     this->FOV = 0;
+    this->minDrawDistance = 0.01f;
+    this->maxDrawDistance = 1.0;
 
     this->setAngle(angles);
 }
@@ -84,15 +86,28 @@ void Window::updateView() {
     this->view = this->projection * this->view;
 }
 
-void Window::setProjection(bool perspective, float FOV){
+float Window::getMinDrawDistance() {
+    return this->minDrawDistance;
+}
+
+float Window::getMaxDrawDistance() {
+    return this->maxDrawDistance;
+}
+
+void Window::setProjection(bool perspective, float FOV, float minDrawDistance, float maxDrawDistance){
     this->FOV = FOV;
+    if(minDrawDistance>0 && minDrawDistance<maxDrawDistance) {
+        this->minDrawDistance=minDrawDistance;
+        this->maxDrawDistance=maxDrawDistance;
+    }
+
     if(!perspective){
         this->projection = Matrix4x4::identity();
         return;
     }
     float s = 1/tan((FOV*M_PI)/360);
-    float f = 400.0;
-    float n = 0.01f;
+    float f = this->maxDrawDistance;
+    float n = this->minDrawDistance;
 
     float a[4][4] = {
         {s, 0.0, 0.0, 0.0},
