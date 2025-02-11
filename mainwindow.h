@@ -48,6 +48,8 @@ public:
 
     bool eventFilter(QObject *obj, QEvent *event);
 
+    bool perspective;
+
 private slots:
 
     void on_applyTransform_clicked();
@@ -67,6 +69,8 @@ private slots:
     void on_objloadbutton_clicked();
 
     void on_objdestroybutton_clicked();
+
+    void on_perspective_stateChanged(int arg1);
 
 private:
     Ui::MainWindow *ui;
