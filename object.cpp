@@ -39,6 +39,7 @@ int Object::loadObj(const std::string FileName) {
     while (std::getline(file, line)) {
         std::istringstream iss(line);
         std::string prefix;
+        std::string temp;
         iss >> prefix;
 
         if(prefix == "v"){
@@ -48,7 +49,12 @@ int Object::loadObj(const std::string FileName) {
         }
         else if(prefix == "f"){
             Vector3<unsigned int> f;
-            iss >> f.x >> f.y >> f.z;
+            iss >> temp;
+            f.x = std::stof(temp.substr(0,temp.find('/')));
+            iss >> temp;
+            f.y = std::stof(temp.substr(0,temp.find('/')));
+            iss >> temp;
+            f.z = std::stof(temp.substr(0,temp.find('/')));
             faces.push_back(f);
         }
     }
