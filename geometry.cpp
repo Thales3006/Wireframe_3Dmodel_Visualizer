@@ -87,20 +87,23 @@ Line::Line(Point p10, Point p20) :
 { }
 
 void Line::draw(QImage& canvas){
-    Vector2<float> f(p1.pos.x, p1.pos.z);
-    Vector2<float> l(p2.pos.x, p2.pos.y);
+    int x0 = p1.pos.x, y0 = p1.pos.y;
+    int x1 = p2.pos.x, y1 = p2.pos.y;
+    int dx = abs(x1 - x0), dy = -abs(y1 - y0);
+    int sx = x0 < x1 ? 1 : -1, sy = y0 < y1 ? 1 : -1;
+    int error = dx + dy;
 
-    Vector2<float> dif(l-f);
-    Vector2<float> p;
-    float m;
-    if(dif.x >= dif.y){
-        m = dif.x/dif.y;
-
-        for(int i = 0; i <= dif.x; i++)
-            canvas.setPixel(i + f.x, m*(i) + f.y, qRgb(0,0,0));
-    }
-    else {
-
+    while(x0 != x1 || y0 != y1){
+        canvas.setPixel(x0, y0, qRgb(p1.r,p1.g,p1.b));
+        int e2 = 2 * error;
+        if(e2 >= dy){
+            error += dy;
+            x0 += sx;
+        }
+        if(e2 <= dx){
+            error += dx;
+            y0 += sy;
+        }
     }
 }
 
