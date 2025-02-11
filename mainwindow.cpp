@@ -39,6 +39,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //configurações da camera
 
+    perspective = true;
     camera.setProjection(true, 120, 0.01, 1);
 
     //configurando o displayFile
@@ -308,7 +309,7 @@ void MainWindow::keyHandler(){
         maxDrawDistance += drawDistanceUnit;
     if (keysPressed.contains(Qt::Key_BracketRight) && maxDrawDistance > minDrawDistance)
         maxDrawDistance -= drawDistanceUnit;
-    camera.setProjection(true, FOV, minDrawDistance, maxDrawDistance);
+    camera.setProjection(perspective, FOV, minDrawDistance, maxDrawDistance);
 
 
     //resizeVIEWPORT
@@ -384,5 +385,11 @@ void MainWindow::on_objdestroybutton_clicked()
     displayFile.remove(objName);
 
     ui->objList->setCurrentIndex(0);
+}
+
+
+void MainWindow::on_perspective_stateChanged(int arg1)
+{
+    perspective = arg1 == 0? false : true;
 }
 

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>803</width>
-    <height>620</height>
+    <height>734</height>
    </rect>
   </property>
   <property name="sizePolicy">
@@ -456,13 +456,41 @@ Z X - aumentam e diminuem o zoom
 n m - Mudam o FOV
 [ ] - Mudam o DrawDistance máximo
 Y H - Mudam o DrawDistance mínimo
-←↑→↓ - Mudam o tamanho da viewport </string>
+</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
     </property>
     <property name="wordWrap">
      <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="perspective">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>420</x>
+      <y>410</y>
+      <width>101</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Perspectiva</string>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>64</width>
+      <height>64</height>
+     </size>
+    </property>
+    <property name="checked">
+     <bool>true</bool>
+    </property>
+    <property name="tristate">
+     <bool>false</bool>
     </property>
    </widget>
   </widget>
@@ -472,7 +500,7 @@ Y H - Mudam o DrawDistance mínimo
      <x>0</x>
      <y>0</y>
      <width>803</width>
-     <height>25</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

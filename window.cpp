@@ -94,6 +94,10 @@ float Window::getMaxDrawDistance() {
     return this->maxDrawDistance;
 }
 
+void Window::setProjection(bool perspective){
+    setProjection(perspective, FOV, minDrawDistance, maxDrawDistance);
+}
+
 void Window::setProjection(bool perspective, float FOV, float minDrawDistance, float maxDrawDistance){
     this->FOV = FOV;
     if(minDrawDistance>0 && minDrawDistance<maxDrawDistance) {

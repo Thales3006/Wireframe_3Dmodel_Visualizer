@@ -37,6 +37,7 @@ public:
     void setAngle(Vector3<float> angle);
     void setRight(float scale);
     void setProjection(bool perspective, float FOV, float minDrawDistance, float maxDrawDistance);
+    void setProjection(bool perspective);
 
     Vector3<float> getPos();
     Vector3<float> getUp();
