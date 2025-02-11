@@ -72,7 +72,7 @@ Matrix4x4 Window::getView() {
 }
 
 void Window::updateView() {
-    //REFAZER ANGULOS
+
     this->view = Matrix4x4::identity();
 
     this->view.translate(-pos);
