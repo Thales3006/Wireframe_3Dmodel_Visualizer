@@ -15,8 +15,8 @@ and diving in a lesser abstract tool like [OpenGL](https://www.opengl.org).
 
 - [X] implement Transformations using matrices
 
-- [ ] include Viewport
+- [X] include Viewport
 
-- [ ] Read `.obj` files and display them on screen
+- [X] Read `.obj` files and display them on screen
 
 - [X] User control of transformations
